@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="SDL.lib SDLmain.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -171,6 +172,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Bone.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CBMPLoader.cpp"
 				>
 			</File>
@@ -195,14 +200,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LegNormal.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LegShort.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -212,6 +209,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Bone.hpp"
+				>
+			</File>
 			<File
 				RelativePath=".\CBMPLoader.h"
 				>
@@ -234,14 +235,6 @@
 			</File>
 			<File
 				RelativePath=".\LegCompShort.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LegNormal.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LegShort.hpp"
 				>
 			</File>
 		</Filter>

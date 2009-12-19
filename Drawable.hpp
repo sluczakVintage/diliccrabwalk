@@ -18,13 +18,14 @@ enum{ CRAB = 1 , SH_LEG, NOR_LEG , SH_COMP , LONG_COMP, PROJECTION = 10 };
 class Drawable
 {
 public:
-	Drawable();
-	~Drawable();
+	//Drawable();
+	//virtual ~Drawable();
 
 	virtual void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f) = 0;
 	virtual void CreateList() = 0;
 
-private:
+	virtual const GLfloat ReturnH() const = 0;
+
 };
 
 #endif

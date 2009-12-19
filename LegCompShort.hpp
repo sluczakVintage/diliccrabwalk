@@ -11,7 +11,7 @@
 #include "glutFunc.hpp"
 #include "Drawable.hpp"
 
-class LegCompShort
+class LegCompShort : public Drawable
 {
 public:
 	LegCompShort();
@@ -19,6 +19,7 @@ public:
 
 	void Draw(GLfloat x, GLfloat y, GLfloat z);
 	void CreateList();
+	virtual const GLfloat ReturnH() const { return h_; };
 
 private:
 	GLfloat w_;

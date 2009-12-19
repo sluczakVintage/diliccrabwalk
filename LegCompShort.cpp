@@ -68,12 +68,12 @@ void LegCompShort::Draw(GLfloat x, GLfloat y, GLfloat z)
 	//  Show when are displaying an object
 	cout << "Displaying object...\n" << endl;
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+//	glMatrixMode(GL_MODELVIEW);
+//	glLoadIdentity();
 	glCallList(PROJECTION);
 	//begin drawing short component
-	glPushMatrix();
-				glTranslatef( x, y, z );
+	//glPushMatrix();
+//				glTranslatef( x, y, z );
 				glCallList(SH_COMP);
-	glPopMatrix();
+//	glPopMatrix();
 }

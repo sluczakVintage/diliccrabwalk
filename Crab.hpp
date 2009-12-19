@@ -12,10 +12,10 @@
 #include "glutFunc.hpp"
 
 #include "Drawable.hpp"
-#include "LegNormal.hpp"
-#include "LegShort.hpp"
+//#include "LegNormal.hpp"
+//#include "LegShort.hpp"
 
-class Crab
+class Crab : public Drawable
 {
 public:
 	Crab();
@@ -24,6 +24,9 @@ public:
 	void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f);
 	void drawLegs(GLfloat x, GLfloat y, GLfloat z);
 	void CreateList();
+	virtual const GLfloat ReturnH() const { return h_; };
+
+
 
 private:
 	GLfloat w_;
