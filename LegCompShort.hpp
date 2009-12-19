@@ -17,7 +17,7 @@ public:
 	LegCompShort();
 	~LegCompShort();
 
-	void Draw(GLfloat x, GLfloat y, GLfloat z);
+	void Draw();//GLfloat x, GLfloat y, GLfloat z);
 	void CreateList();
 	virtual const GLfloat ReturnH() const { return h_; };
 

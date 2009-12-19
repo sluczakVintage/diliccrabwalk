@@ -8,16 +8,7 @@ Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 {	
 	CreateList();
 	cout << "Crab has been created!" << endl;
-	//firstLeft; 
-	//firstRight;
-	//secondLeft;
-	//secondRight;
-	//thirdLeft;
-	//thirdRight;
-	//forthLeft;
-	//forthRight;
-	//fifthLeft;
-	//fifthRight;
+
 }
 
 void Crab::CreateList()
@@ -80,21 +71,23 @@ void Crab::drawLegs(GLfloat x, GLfloat y, GLfloat z)
 
 }
 
-void Crab::Draw(GLfloat x, GLfloat y, GLfloat z)
+void Crab::Draw()//GLfloat x, GLfloat y, GLfloat z)
 {
+	int x=0,y=0,z =0;
 	GLfloat cube_diffuse[]   = { 0.0, 0.7, 0.7, 1.0 };
 	//  Show when are displaying an object
 	cout << "Displaying object...\n" << endl;
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glCallList(PROJECTION);
+	
 	//begin drawing crab torso
 	glPushMatrix();
 				glTranslatef( x, y, z );
+				glCallList(PROJECTION);
 				glCallList(CRAB);
 				glPushMatrix();
-					drawLegs(x, y, z );
+					//drawLegs(x, y, z );
 				glPopMatrix();
 	glPopMatrix();
 }

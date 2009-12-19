@@ -63,17 +63,22 @@ void LegCompShort::CreateList()
 }
 
 
-void LegCompShort::Draw(GLfloat x, GLfloat y, GLfloat z)
+void LegCompShort::Draw()//GLfloat x, GLfloat y, GLfloat z)
 {
 	//  Show when are displaying an object
 	cout << "Displaying object...\n" << endl;
 
-//	glMatrixMode(GL_MODELVIEW);
+int x=0,y=0,z =0;
+//  glMatrixMode(GL_MODELVIEW);
 //	glLoadIdentity();
-	glCallList(PROJECTION);
-	//begin drawing short component
-	//glPushMatrix();
+
+//	glPushMatrix();
 //				glTranslatef( x, y, z );
-				glCallList(SH_COMP);
+//				glCallList(PROJECTION);
+	//begin drawing short component
+				glTranslatef(h_/2,0.0f,0.0f);
+				glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+				glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+				glCallList(SH_COMP);				
 //	glPopMatrix();
 }
