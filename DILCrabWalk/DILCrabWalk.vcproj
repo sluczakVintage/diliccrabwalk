@@ -175,6 +175,34 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Crab.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Drawable.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\glutFunc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegCompLong.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegCompShort.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegNormal.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegShort.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -186,6 +214,34 @@
 			>
 			<File
 				RelativePath=".\CBMPLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Crab.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Drawable.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\glutFunc.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegCompLong.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegCompShort.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegNormal.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegShort.hpp"
 				>
 			</File>
 		</Filter>

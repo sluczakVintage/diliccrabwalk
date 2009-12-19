@@ -1,302 +1,245 @@
-/*
- * CrabWalk
- */
+//*************************************************************************
+//
+//  File Name	: GLUT Window Template
+//  Author		: Ali BaderEddin
+//  Date		: December 2003
+//  
+//  Description	: Openning an OpenGL window using GLUT library...
+//  
+//*************************************************************************
 
-
-#define STRICT
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
+//  Input\Output Stream
 #include <iostream>
-#include <GL/gl.h>
+//  Include GLUT, OpenGL, and GLU libraries
 #include "glut.h"
-#include "CBMPLoader.h"
+
+#include "glutFunc.hpp"
+#include "Crab.hpp"
+//
+#include "LegCompShort.hpp"
+
 
 using namespace std;
+using namespace glut;
+//  Initialization
+void init ();
 
-static float g_fSpinX = 45.0f;
-static float g_fSpinY = -15.0f;
+//  Callback functions
+void display (void);
+void reshape (int w, int h);
 
+//  Support Functions
+void centerOnScreen ();
+void drawObject();
+void createProjection();
+//VARIABLES
+//Rotation of observer
+float xRot = 0, yRot = 0;
+float xMov = 0, yMov = 0, zMov = 0;
 
-	struct Vertex
-	{
-		float x, y, z;
-	};
+//glOrtho range
+GLfloat nRange = 10.0f;
 
-	struct Color
-	{
-		float r, g, b;
-	};
+//  define the window position on screen
+int window_x;
+int window_y;
 
-	struct TexCoord
-	{
-		float tu, tv;
-	};
+//  variables representing the window size
+int window_width = 1000;
+int window_height = 750;
 
-	Vertex g_Vertices[] =
-	{//Front_bottom
-		{ -1.0f, 0.0f, 2.0f },
-		{  1.0f, 0.0f, 2.0f },
-		{  1.0f, 1.0f, 1.0f },
-		{ -1.0f, 1.0f, 1.0f },
-	//Front_top
-		{ -1.0f,-1.0f, 1.0f },
-		{  1.0f,-1.0f, 1.0f },
-		{  1.0f, 0.0f, 2.0f },
-		{ -1.0f, 0.0f, 2.0f },
-	//Rear
-		{ -1.0f,-1.0f,-3.0f },
-		{ -1.0f, 1.0f,-3.0f },
-		{  1.0f, 1.0f,-3.0f },
-		{  1.0f,-1.0f,-3.0f },
-	//Top
-		{ -1.0f, 1.0f,-3.0f },
-		{ -1.0f, 1.0f, 1.0f },
-		{  1.0f, 1.0f, 1.0f },
-		{  1.0f, 1.0f,-3.0f },
-	//Bottom
-		{ -1.0f,-1.0f,-3.0f },
-		{  1.0f,-1.0f,-3.0f },
-		{  1.0f,-1.0f, 1.0f },
-		{ -1.0f,-1.0f, 1.0f },
-	//Left
-		{  1.0f,-1.0f,-3.0f },
-		{  1.0f, 1.0f,-3.0f },
-		{  1.0f, 1.0f, 1.0f },
-		{  1.0f,-1.0f, 1.0f },
-	//Right
-		{ -1.0f,-1.0f,-3.0f },
-		{ -1.0f,-1.0f, 1.0f },
-		{ -1.0f, 1.0f, 1.0f },
-		{ -1.0f, 1.0f,-3.0f },
-	//Front_left
-		{ -1.0f, 1.0f, 1.0f },
-		{ -1.0f,-1.0f, 1.0f },
-		{ -1.0f, 0.0f, 2.0f },
-	//Front_right
-		{  1.0f, 1.0f, 1.0f },
-		{  1.0f,-1.0f, 1.0f },
-		{  1.0f, 0.0f, 2.0f }
-	};
+//  variable representing the window title
+char *window_title = "GLUT Window Template";
 
-	Color g_Colors[] =
-	{
-		{ 1.0f, 0.0f, 0.0f },
-	};
+//  Tells whether to display the window full screen or not
+//  Press Alt + Esc to exit a full screen.
+int full_screen = 0;
 
-
-	TexCoord g_TexCoords[] =
-	{//Front_bottom
-		{ 0.5f, 0.25f },
-		{ 1.0f, 0.25f },
-		{ 1.0f, 0.5f },
-		{ 0.5f, 0.5f },
-	//Front_top
-		{ 0.5f, 0.0f },
-		{ 1.0f, 0.0f },
-		{ 1.0f, 0.25f },
-		{ 0.5f, 0.25f },
-	//Rear
-		{ 0.20f, 0.0f },
-		{ 0.20f, 0.5f },
-		{ 0.0f, 0.5f },
-		{ 0.0f, 0.0f },
-	//Top
-		{ 0.5f, 1.0f },
-		{ 0.5f, 0.5f },
-		{ 1.0f, 0.5f },
-		{ 1.0f, 1.0f },
-	//Bottom
-		{ 0.0f, 1.0f },
-		{ 0.5f, 1.0f },
-		{ 0.5f, 0.5f },
-		{ 0.0f, 0.5f },
-	//Left
-		{ 0.20f, 0.0f },
-		{ 0.20f, 0.5f },
-		{ 0.25f, 0.5f },
-		{ 0.25f, 0.0f },
-	//Right
-		{ 0.20f, 0.0f },
-		{ 0.25f, 0.0f },
-		{ 0.25f, 0.5f },
-		{ 0.20f, 0.5f },
-	//Front_left
-		{ 0.25f, 0.5f },
-		{ 0.25f, 0.0f },
-		{ 0.5f, 0.25f },
-	//Front_right
-		{ 0.25f, 0.5f },
-		{ 0.25f, 0.0f },
-		{ 0.5f, 0.25f }
-
-	};
-
-void updateSpot()
-{
-    float direction[] = {0.f, 0.f, 3.f};
-    float spotCutOff = 90.f;   
-    //spot direction
-    glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction);
-    //angle of the cone light emitted by the spot : value between 0 to 180
-    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, spotCutOff);
-}
-
-
-void spotInit()
-{
-	
-	    float ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};       //low ambient light
-        float diffuse[]   = {1.0f, 1.0f, 1.0f, 1.0f};
-        float position[]  = {2.0f, 0.0f, 3.0f, 1.0f};
-
-		      //properties of the light
-        glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-        glLightfv(GL_LIGHT0, GL_POSITION, position);
-       
-                
-        updateSpot();
-       
-        //exponent propertie defines the concentration of the light
-        glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 30.0f);
-       
-        //light attenuation (default values used here : no attenuation with the distance)
-        glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
-        glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.0f);
-        glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0f);
-}
-
-void ambientInit()
-{
-				
-		GLfloat light_position[] = { 0.0, 0.0, 10.0, 1.0 };
-		GLfloat lm_ambient[]     = { 0.2, 0.2,  0.2, 1.0 };
-  
-		glLightfv( GL_LIGHT0, GL_POSITION, light_position );
-		glLightModelfv( GL_LIGHT_MODEL_AMBIENT, lm_ambient );
-
-}
-	
-
-void lightInit(int i)
-{
-	if( i == 1 )
-		spotInit();
-	else {
-		ambientInit();
-		cout << "Ambient" << endl;
-	}
-}
-
-void init()
-{
- 
+//-------------------------------------------------------------------------
+//  Set OpenGL program initial state.
+//-------------------------------------------------------------------------
+void init ()
+{	
 	GLfloat mat_ambient[]    = { 1.0, 1.0,  1.0, 1.0 };
     GLfloat mat_specular[]   = { 1.0, 1.0,  1.0, 1.0 };
+    GLfloat light_position[] = { 0.0, 0.0, 10.0, 1.0 };
+    GLfloat lm_ambient[]     = { 0.2, 0.2,  0.2, 1.0 };
 
-	glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
+    glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
     glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
     glMaterialf( GL_FRONT, GL_SHININESS, 50.0 );
-
-	lightInit(0);
-
+    
+	glLightfv( GL_LIGHT0, GL_POSITION, light_position );
+    glLightModelfv( GL_LIGHT_MODEL_AMBIENT, lm_ambient );
+    
+	glEnable( GL_DEPTH_TEST );
 	glShadeModel( GL_PHONG_WIN );
-
-	glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
-	glEnable( GL_TEXTURE_2D );
+	glEnable(GL_CULL_FACE);
 
     glEnable( GL_LIGHTING );
     glEnable( GL_LIGHT0 );
 
     glDepthFunc( GL_LESS );
-    glEnable( GL_DEPTH_TEST );
 
+	glClearColor(255.f, 255.f, 255.f, 1.0f);
+	createProjection();
+
+    
 }
 
-
-void displayObjects()
+void createProjection()
 {
-	if( (g_fSpinX = (g_fSpinX - 0.2f) ) >= 360.f)
-		g_fSpinX = 0;
-//	if( (g_fSpinY = (g_fSpinY + 0.4f) ) >= 360.f)
-//		g_fSpinY = 0;
+	glNewList(PROJECTION, GL_COMPILE);
+		glBegin(GL_LINES);
+			//oX AXIS
+			glVertex3f(-nRange,0.0f,0.0f);
+			glVertex3f(nRange,0.0f,0.0f);
 
+			glVertex3f(nRange,0.0f,0.0f);
+			glVertex3f((nRange*0.95f),nRange*0.05f,0.0f);
 
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
-	glRotatef( -g_fSpinY, 1.0f, 0.0f, 0.0f );
-	glRotatef( -g_fSpinX, 0.0f, 1.0f, 0.0f );
+			glVertex3f(nRange,0.0f,0.0f);
+			glVertex3f((nRange*0.95f),-nRange*0.05f,0.0f);
 
-	glEnableClientState( GL_VERTEX_ARRAY );
-	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-	
-			glVertexPointer( 3, GL_FLOAT, 0, g_Vertices );
-			glTexCoordPointer( 2, GL_FLOAT, 0, g_TexCoords );
-	
-	glDrawArrays( GL_QUADS, 0, 28 );
-	glDrawArrays( GL_TRIANGLES, 28, 6);
+			//oZ AXIS
+			glVertex3f(0.f,0.0f,-nRange);
+			glVertex3f(0.f,0.0f,nRange);
 
-	glDisableClientState( GL_VERTEX_ARRAY );
-	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-		 
-}
-
-void display()
-{
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    displayObjects();
-    glFlush();
-	glutSwapBuffers();
-}
-
-void reshape(GLsizei w, GLsizei h)
-{   
-	float ratio;
-
-	if(h == 0)	h = 1;
-
-	ratio = 1.0f * w / h;
-
-	// Reset the coordinate system before modifying
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	// Set the viewport to be the entire window
-	glViewport(0, 0, w, h);
-
-	// Set the clipping volume
-	gluPerspective( 45.0f, ratio, 0.1f, 100.0f);
-	glTranslatef(0.0f, 0.0f, -10.f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	//gluLookAt(0, 0, 30,
-	//		  0,0,10,
-	//		  0.0f,1.0f,0.0f);
+			glVertex3f(0.0f,0.0f,nRange);
+			glVertex3f(-nRange*0.05f,0.0f,(nRange*0.95f));
 			
-}
+			glVertex3f(0.0f,0.0f,nRange);
+			glVertex3f(nRange*0.05f,0.0f,(nRange*0.95f));
+			
+			//oY AXIS
+			glVertex3f(0.f,nRange,0.0f);
+			glVertex3f(0.f,-nRange,0.0f);
 
-int main(int argc, char** argv)
+			glVertex3f(0.f,nRange,0.0f);
+			glVertex3f(nRange*0.05f,(nRange*0.95f),0.0f);
+
+			glVertex3f(0.f,nRange,0.0f);
+			glVertex3f(-nRange*0.05f,(nRange*0.95f),0.0f);
+		glEnd();
+	glEndList();
+}
+//-------------------------------------------------------------------------
+//  This function is passed to glutDisplayFunc in order to display 
+//	OpenGL contents on the window.
+//-------------------------------------------------------------------------
+void display (void)
 {
-	CBMPLoader textureLoader;
-   glutInit( &argc, argv );
 
-   glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
+	//  Clear the window or more specifically the frame buffer...
+	//  This happens by replacing all the contents of the frame
+	//  buffer by the clear color (black in our case)
+	glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+			glRotatef(xRot, 0.0f, 1.0f, 0.0f);
+			glRotatef(yRot, 1.0f, 0.0f, 0.0f);
+			xRot = yRot = 0.0f;
+			cout << xRot << endl;
+			cout << yRot << endl;
+		
+			glTranslatef(xMov, 0.0f, 0.0f);
+			glTranslatef(0.0f, yMov, 0.0f);
+			glTranslatef(0.0f, 0.0f, zMov);
+			xMov = yMov = zMov = 0.f;
+		
+		glMatrixMode(GL_MODELVIEW);
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+			//  Draw object
+			drawObject ();
+			glFlush();
 
-   glutInitWindowPosition( 0, 0 );
-   glutInitWindowSize( 1200, 1000 );
+		//  Swap contents of backward and forward frame buffers
+		glutSwapBuffers ();
+		
+	glPopMatrix();
 
-   glutCreateWindow( "Fes Train" );
-
-   glutDisplayFunc( display );
-   glutReshapeFunc( reshape );
-   glutIdleFunc( display );
-
-   init();
-   
-   cout << textureLoader.LoadBMPFile("train.bmp") << endl;
-
-   glutMainLoop();
-
-   return 0;
 }
+
+//-------------------------------------------------------------------------
+//  Draws our object.
+//-------------------------------------------------------------------------
+void drawObject ()
+{
+	static Crab* dilCrab = new Crab();
+	dilCrab->Draw(0.0, 0.0, 0.0);
+	//static LegCompShort* leg = new LegCompShort();
+	//leg->Draw(0.0, 0.0, 0.0);
+
+}
+
+//-------------------------------------------------------------------------
+//  This function is passed to the glutReshapeFunc and is called 
+//  whenever the window is resized.
+//-------------------------------------------------------------------------
+void reshape (int w, int h)
+{
+	  if( h > 0 && w > 0 ) {
+      glViewport( 0, 0, w, h );
+      glMatrixMode( GL_PROJECTION );
+      glLoadIdentity();
+      //gluPerspective(70,static_cast<GLdouble>(w/h), 1, 80);
+	   if( w <= h ) {
+         glOrtho( -nRange, nRange, -nRange*h/w, nRange*h/w, -nRange*2.0f , nRange*2.0f);
+      }
+      else {
+         glOrtho( -nRange*w/h, nRange*w/h, -nRange, nRange, -nRange*2.0f, nRange*2.0f);
+      }
+      glMatrixMode( GL_MODELVIEW );
+	  glLoadIdentity();
+    }
+	//  Print current width and height on the screen
+	cout << "Window Width: " << w << ", Window Height: " << h << endl;
+}
+
+//-------------------------------------------------------------------------
+//  This function sets the window x and y coordinates
+//  such that the window becomes centered
+//-------------------------------------------------------------------------
+void centerOnScreen ()
+{
+	window_x = (glutGet (GLUT_SCREEN_WIDTH) - window_width)/2;
+	window_y = (glutGet (GLUT_SCREEN_HEIGHT) - window_height)/2;
+
+}
+
+//-------------------------------------------------------------------------
+//  Program Main method.
+//-------------------------------------------------------------------------
+void main (int argc, char **argv)
+{
+	//  Set the window x and y coordinates such that the 
+	//  window becomes centered
+	centerOnScreen ();
+	//  Connect to the windowing system + create a window
+	//  with the specified dimensions and position
+	//  + set the display mode + specify the window title.
+	glutInit(&argc, argv);
+	glutInitWindowSize (window_width, window_height);
+	glutInitWindowPosition (window_x, window_y);
+	 glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
+	glutCreateWindow (window_title);
+
+	//  View in full screen if the full_screen flag is on
+	if (full_screen)
+		glutFullScreen ();
+
+	//  Set OpenGL program initial state.
+	init();
+	
+	// Set the callback functions
+	glutDisplayFunc (display);
+	glutReshapeFunc  (reshape);
+	glutMouseFunc (mouse);
+	glutMotionFunc (motion);
+	glutPassiveMotionFunc (pmotion);
+	glutKeyboardFunc (keyboard);
+	glutSpecialFunc (special);
+
+	//  Start GLUT event processing loop
+	glutMainLoop();
+}
+
