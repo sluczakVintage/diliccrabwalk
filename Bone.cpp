@@ -36,16 +36,9 @@ void Bone::boneAddChild(GLfloat a, GLfloat b, Drawable *mesh, string name)
 void Bone::Draw()
 {
 	glPushMatrix();
-
-	glTranslatef(x_, y_, 0.0);
-	if(a_ > M_PI/2) 
-		a_ = M_PI/2;
-	else if(a_ < -M_PI/2) 
-		a_ = -M_PI/2;
-
 	
-	glRotatef(glut::Rad2Deg(b_), 0.0, 1.0, 0.0);////
-	glRotatef(glut::Rad2Deg(a_), 0.0, 0.0, 1.0);
+	glRotatef(b_, 0.0, 1.0, 0.0);////
+	glRotatef(a_, 0.0, 0.0, 1.0);
 
 
 	glBegin(GL_LINES);

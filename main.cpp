@@ -43,7 +43,7 @@ float aa = 0;/////////////////
 float bb = 0;/////////////////
 
 //glOrtho range
-GLfloat nRange = 10.0f;
+GLfloat nRange = 25.0f;
 
 //  define the window position on screen
 int window_x;
