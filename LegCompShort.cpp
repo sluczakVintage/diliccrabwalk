@@ -17,45 +17,45 @@ void LegCompShort::CreateList()
 		glNewList(SH_COMP, GL_COMPILE);
 				glBegin(GL_TRIANGLE_STRIP);
 					//upper
-					glVertex3f(w_/2,h_/2,d_/2);
-					glVertex3f(w_/2,h_/2,-d_/2);
-					glVertex3f(-w_/2,h_/2,d_/2);
-					glVertex3f(-w_/2,h_/2,-d_/2);
+					glVertex3f(h_,d_,w_/2);
+					glVertex3f(h_,d_,-w_/2);
+					glVertex3f(0,d_,w_/2);
+					glVertex3f(0,d_,-w_/2);
 				glEnd();
 				glBegin(GL_TRIANGLE_STRIP);				
 					//front
-					glVertex3f(-w_/2,h_/2,d_/2);
-					glVertex3f(-w_/2,-h_/2,d_/2);
-					glVertex3f(w_/2,h_/2,d_/2);
-					glVertex3f(w_/2,-h_/2,d_/2);
+					glVertex3f(0,d_,w_/2);
+					glVertex3f(0,0,w_/2);
+					glVertex3f(h_,d_,w_/2);
+					glVertex3f(h_,0,w_/2);
 				glEnd();
 					//bottom
 				glBegin(GL_TRIANGLE_STRIP);
-					glVertex3f(w_/2,-h_/2,d_/2);
-					glVertex3f(-w_/2,-h_/2,d_/2);
-					glVertex3f(w_/2,-h_/2,-d_/2);
-					glVertex3f(-w_/2,-h_/2,-d_/2);	
+					glVertex3f(h_,0,w_/2);
+					glVertex3f(0,0,w_/2);
+					glVertex3f(h_,0,-w_/2);
+					glVertex3f(-0,0,-w_/2);	
 				glEnd();
 				glBegin(GL_TRIANGLE_STRIP);
 					//rear
-					glVertex3f(-w_/2,-h_/2,-d_/2);				
-					glVertex3f(-w_/2,h_/2,-d_/2);
-					glVertex3f(w_/2,-h_/2,-d_/2);
-					glVertex3f(w_/2,h_/2,-d_/2);
+					glVertex3f(0,0,-w_/2);				
+					glVertex3f(0,d_,-w_/2);
+					glVertex3f(h_,0,-w_/2);
+					glVertex3f(h_,d_,-w_/2);
 				glEnd();	
 				glBegin(GL_TRIANGLE_STRIP);
 					//left
-					glVertex3f(-w_/2,h_/2,-d_/2);				
-					glVertex3f(-w_/2,-h_/2,-d_/2);
-					glVertex3f(-w_/2,h_/2,d_/2);
-					glVertex3f(-w_/2,-h_/2,d_/2);
+					glVertex3f(0,d_,-w_/2);				
+					glVertex3f(0,0,-w_/2);
+					glVertex3f(0,d_,w_/2);
+					glVertex3f(0,0,w_/2);
 				glEnd();	
 				glBegin(GL_TRIANGLE_STRIP);
 					//right
-					glVertex3f(w_/2,h_/2,d_/2);				
-					glVertex3f(w_/2,-h_/2,d_/2);
-					glVertex3f(w_/2,h_/2,-d_/2);
-					glVertex3f(w_/2,-h_/2,-d_/2);
+					glVertex3f(h_,d_,w_/2);				
+					glVertex3f(h_,0,w_/2);
+					glVertex3f(h_,d_,-w_/2);
+					glVertex3f(h_,0,-w_/2);
 				glEnd();	
 		glEndList();
 
@@ -76,9 +76,9 @@ int x=0,y=0,z =0;
 //				glTranslatef( x, y, z );
 //				glCallList(PROJECTION);
 	//begin drawing short component
-				glTranslatef(h_/2,0.0f,0.0f);
-				glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-				glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+				//glTranslatef(h_/2,0.0f,0.0f);
+				//glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+				//glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 				glCallList(SH_COMP);				
 //	glPopMatrix();
 }

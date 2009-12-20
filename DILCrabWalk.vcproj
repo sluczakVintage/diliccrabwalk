@@ -199,6 +199,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LegNormal.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegShort.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -229,11 +237,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Leg.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LegCompLong.hpp"
 				>
 			</File>
 			<File
 				RelativePath=".\LegCompShort.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegNormal.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LegShort.hpp"
 				>
 			</File>
 		</Filter>

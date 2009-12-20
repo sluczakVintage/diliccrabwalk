@@ -8,7 +8,7 @@ using namespace std;
 
 extern float xRot, yRot;
 extern float xMov, yMov, zMov;
-extern float aa;
+extern float aa, bb;/////////////
 
 namespace glut
 {
@@ -146,12 +146,13 @@ void keyboard (unsigned char key, int x, int y)
 		//  User hits Space
 		case ' ':
 			cout << "User is hitting the Space key."<< endl;  
+			aa += (step/10.f); //////////////////////
 			break;
 
 		//  User hits back space
 		case 8:
 			cout << "User is hitting the Back Space key."<< endl; 
-			aa += (step/10.f); //////////////////////
+			aa -= (step/10.f); //////////////////////
 			break;
 
 		//  User hits ESC key
@@ -204,10 +205,12 @@ void special (int key, int x, int y)
 			cout << "F10 function key."<< endl;  
 			break;
 		case GLUT_KEY_F11 :
-			cout << "F11 function key."<< endl;  
+			cout << "F11 function key."<< endl; 
+			bb += (step/10.f); //////////////////////
 			break;
 		case GLUT_KEY_F12 :
 			cout << "F12 function key."<< endl;  
+			bb -= (step/10.f); //////////////////////
 			break;
 		case GLUT_KEY_LEFT :
 			cout << "Left directional key."<< endl;  

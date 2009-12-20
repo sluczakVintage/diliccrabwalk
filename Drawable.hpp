@@ -18,9 +18,6 @@ enum{ CRAB = 1 , SH_LEG, NOR_LEG , SH_COMP , LONG_COMP, PROJECTION = 10 };
 class Drawable
 {
 public:
-	//Drawable();
-	//virtual ~Drawable();
-
 	virtual void Draw() = 0;//GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f) = 0;
 	virtual void CreateList() = 0;
 
@@ -29,12 +26,4 @@ public:
 };
 
 #endif
-	//struct Vertex
-	//{
-	//	float x, y, z;
-	//};
 
-	//struct TexCoord
-	//{
-	//	float tu, tv;
-	//};

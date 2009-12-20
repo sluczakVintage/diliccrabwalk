@@ -40,6 +40,7 @@ void createProjection();
 float xRot = 0, yRot = 0;
 float xMov = 0, yMov = 0, zMov = 0;
 float aa = 0;/////////////////
+float bb = 0;/////////////////
 
 //glOrtho range
 GLfloat nRange = 10.0f;
@@ -169,14 +170,10 @@ void display (void)
 void drawObject ()
 {
 	static Crab* dilCrab = new Crab();
-	static LegCompShort* leg = new LegCompShort();
-	//dilCrab->Draw();
-	
-	//leg->Draw(0.0, 0.0, 0.0);
-	static Bone* bone = new Bone(NULL, 0.f, 0.f, aa, leg, "Crab");
 	glCallList(PROJECTION);
-	bone->animate(aa); ///////////////////////
-	bone->Draw();
+
+	dilCrab->Draw();
+	
 
 }
 
