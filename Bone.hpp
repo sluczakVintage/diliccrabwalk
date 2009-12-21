@@ -19,23 +19,23 @@ class Bone
 {
 public:
 	
-	Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, GLfloat b, Drawable *mesh, string name);
+	Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag , Drawable *mesh, string name);
 	~Bone();
 	
-	void boneAddChild(GLfloat x, GLfloat y, GLfloat a, GLfloat b, Drawable *mesh, string name);
-	void boneAddChild(GLfloat a, GLfloat b, Drawable *mesh, string name);
+	void boneAddChild(GLfloat x, GLfloat y, GLfloat a,int flag , Drawable *mesh, string name);
+	void boneAddChild(GLfloat a, int flag, Drawable *mesh, string name);
 	void Draw();
-	void animate(GLfloat a); ///TODo
-	void animate_child(GLfloat a);
+	void animate(); ///TODo
+	void animate_child();
 
-	GLfloat a_;
-	GLfloat b_;
 private:
 	Bone();
 
 	GLfloat x_;
 	GLfloat y_;
+	GLfloat a_;
 	GLfloat l_;
+	int flag_;
 	std::string name_;
 
 	Bone *father_;

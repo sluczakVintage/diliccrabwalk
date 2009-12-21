@@ -3,32 +3,32 @@
 #include <iostream>
 #include <string>
 
-#define _USE_MATH_DEFINES
 #include <math.h>
+
 
 
 using namespace std;
 
-Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, GLfloat b, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), b_(b), mesh_(mesh), name_(name), child_(NULL)
+Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), flag_(flag), mesh_(mesh), name_(name), child_(NULL)
 {	
 	l_ = mesh_->ReturnH();
 	
 	cout << "Bone " << name << " has been created!" << endl;
 }
 
-void Bone::boneAddChild(GLfloat x, GLfloat y, GLfloat a, GLfloat b, Drawable *mesh, string name)
+void Bone::boneAddChild(GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name)
 {
-	child_ = new Bone(this, x, y, a, b, mesh, name);
+	child_ = new Bone(this, x, y, a, flag, mesh, name);
 
 	cout << "Bone " << name << " has been added!" << endl;
 }
 
-void Bone::boneAddChild(GLfloat a, GLfloat b, Drawable *mesh, string name)
+void Bone::boneAddChild(GLfloat a, int flag, Drawable *mesh, string name)
 {
-	GLfloat x = 0, y = 0;
+	//GLfloat x = 0, y = 0;
 	//x = static_cast<GLfloat>( l_*cosf( glut::Rad2Deg(a_) ) );
 	//y = static_cast<GLfloat>( l_*sinf( glut::Rad2Deg(a_) ) );
-	child_ = new Bone(this, x, y, a, b, mesh, name);
+	child_ = new Bone(this, 0.0f, 0.0f, a, flag, mesh, name);
 
 	cout << "Bone " << name << " has been added!" << endl;
 }
@@ -37,9 +37,7 @@ void Bone::Draw()
 {
 	glPushMatrix();
 	
-	glRotatef(b_, 0.0, 1.0, 0.0);////
 	glRotatef(a_, 0.0, 0.0, 1.0);
-
 
 	glBegin(GL_LINES);
 	glColor3f(0.0, 1.0, 0.0); 	glVertex2f(0, 0);
@@ -57,16 +55,15 @@ void Bone::Draw()
 		child_->Draw();
 	}
 		
-glPopMatrix();
+	glPopMatrix();
 }
 
-///TODO
-void Bone::animate(GLfloat a)
+void Bone::animate()
 {
-	a_ = a;
+
 }
 
-void Bone::animate_child(GLfloat a)
+void Bone::animate_child()
 {
-	child_->a_ = a;
+
 }

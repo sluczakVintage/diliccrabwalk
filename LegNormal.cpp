@@ -4,9 +4,9 @@ LegNormal::LegNormal()//(GLfloat x, GLfloat y, GLfloat a, GLfloat b)
 {	
 	compShort = new LegCompShort();
 	compLong = new LegCompLong();
-	bone = new Bone(NULL, 0.f, 0.f, 0.f, 0.f, compShort, "compShort");
+	bone = new Bone(NULL, 0.f, 0.f, 0.f, 0, compShort, "compShort");
 	
-	bone->boneAddChild(0.f, 0.f, compLong , "compLong" );
+	bone->boneAddChild(0.f, 0, compLong , "compLong" );
 	cout << "LegNormal has been created!" << endl;
 	
 }

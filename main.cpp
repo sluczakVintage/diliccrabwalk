@@ -78,7 +78,7 @@ void init ()
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, lm_ambient );
     
 	glEnable( GL_DEPTH_TEST );
-	glShadeModel( GL_PHONG_WIN );
+	glShadeModel( GL_SMOOTH );
 	glEnable(GL_CULL_FACE);
 
     glEnable( GL_LIGHTING );
@@ -192,7 +192,7 @@ void reshape (int w, int h)
          glOrtho( -nRange, nRange, -nRange*h/w, nRange*h/w, -nRange*2.0f , nRange*2.0f);
       }
       else {
-         glOrtho( -nRange*w/h, nRange*w/h, -nRange, nRange, -nRange*2.0f, nRange*2.0f);
+		 glOrtho( -nRange*w/h, nRange*w/h, -nRange, nRange, -nRange*2.0f, nRange*2.0f);
       }
       glMatrixMode( GL_MODELVIEW );
 	  glLoadIdentity();
