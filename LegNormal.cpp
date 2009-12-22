@@ -1,12 +1,12 @@
 #include "LegNormal.hpp"
 
-LegNormal::LegNormal()//(GLfloat x, GLfloat y, GLfloat a, GLfloat b)
+LegNormal::LegNormal(int flag)//(GLfloat x, GLfloat y, GLfloat a, GLfloat b)
 {	
 	compShort = new LegCompShort();
 	compLong = new LegCompLong();
-	bone = new Bone(NULL, 0.f, 0.f, 0.f, 0, compShort, "compShort");
+	bone = new Bone(NULL, 0.f, 0.f, 44.f, flag, compShort, "compShort");
 	
-	bone->boneAddChild(0.f, 0, compLong , "compLong" );
+	bone->boneAddChild(0.f, flag, compLong , "compLong" );
 	cout << "LegNormal has been created!" << endl;
 	
 }
@@ -14,8 +14,8 @@ LegNormal::LegNormal()//(GLfloat x, GLfloat y, GLfloat a, GLfloat b)
 
 void LegNormal::Draw()
 {
-//	bone->animate(0.f); ///////////////////////
-//	bone->animate_child(0.f); ///////////////////////
+	bone->animate(); ///////////////////////
+	//	bone->animate_child(); ///////////////////////
 	bone->Draw();
 }
 

@@ -210,6 +210,10 @@
 				RelativePath=".\main.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Plane.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -254,6 +258,10 @@
 			</File>
 			<File
 				RelativePath=".\LegShort.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Plane.hpp"
 				>
 			</File>
 		</Filter>

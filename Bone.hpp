@@ -14,6 +14,8 @@
 
 #include "Drawable.hpp"
 
+enum{ FOR_ODD = 10, BACK_ODD, FOR_EVEN, BACK_EVEN };
+
 using namespace std;
 class Bone
 {

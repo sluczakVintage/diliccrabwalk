@@ -5,15 +5,13 @@
 
 #include <math.h>
 
-
-
 using namespace std;
 
 Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), flag_(flag), mesh_(mesh), name_(name), child_(NULL)
 {	
 	l_ = mesh_->ReturnH();
 	
-	cout << "Bone " << name << " has been created!" << endl;
+	cout << "Bone " << name << " has been created. Flag: " << flag << "!" << endl;
 }
 
 void Bone::boneAddChild(GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name)
@@ -58,12 +56,55 @@ void Bone::Draw()
 	glPopMatrix();
 }
 
-void Bone::animate()
+void Bone::animate() //time
 {
-
+	//static int an_step;
+	static GLfloat offsetA = 0.1f;
+	if(flag_ == FOR_ODD) {
+		if(a_ > 45.f || a_ < -30 )
+		{
+			offsetA *= -1;
+			a_ = static_cast<GLfloat>(floorf(static_cast<int>(a_)));
+			cout << offsetA << " " << a_ << endl;
+		}		
+		a_ += offsetA;
+	}
+	if(flag_ == FOR_EVEN) {
+		if(a_ > 45.f || a_ < -30 )
+		{
+			offsetA *= -1;
+			a_ = static_cast<GLfloat>(floorf(static_cast<int>(a_)));
+			cout << offsetA << " " << a_ << endl;
+		}		
+		a_ += offsetA;
+	}
+	if(child_!=NULL){
+		child_->animate_child();
+	}
+		
 }
 
 void Bone::animate_child()
 {
-
+	static GLfloat child_offsetA = 0.1f;
+	if(flag_ == FOR_ODD) {
+		if(a_ > 45.f || a_ < -30 )
+		{
+			child_offsetA *= -1;
+			a_ = static_cast<GLfloat>(floorf(static_cast<int>(a_)));
+			cout << child_offsetA << " " << a_ << endl;
+		}		
+		a_ += child_offsetA;
+	}
+	if(flag_ == FOR_EVEN) {
+		if(a_ > 45.f || a_ < -30 )
+		{
+			child_offsetA *= -1;
+			a_ = static_cast<GLfloat>(floorf(static_cast<int>(a_)));
+			cout << child_offsetA << " " << a_ << endl;
+		}		
+		a_ += child_offsetA;
+	}
 }
+
+

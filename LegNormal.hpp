@@ -19,11 +19,11 @@
 class LegNormal : public Leg
 {
 public:
-	LegNormal();//(GLfloat x, GLfloat y, GLfloat a, GLfloat b);
+	LegNormal(int flag);//(GLfloat x, GLfloat y, GLfloat a, GLfloat b);
 	~LegNormal();
 
 	void Draw();
-
+	void LegNormal::Animate(int i);
 
 private:
 	LegCompShort* compShort;

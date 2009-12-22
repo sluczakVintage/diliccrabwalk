@@ -14,8 +14,8 @@ LegShort::LegShort()//(GLfloat x, GLfloat y, GLfloat a, GLfloat b)
 
 void LegShort::Draw()
 {
-//	bone->animate(0.f); ///////////////////////
-//	bone->animate_child(0.f); ///////////////////////
+	bone->animate(); ///////////////////////
+	//	bone->animate_child(); ///////////////////////
 	bone->Draw();
 }
 

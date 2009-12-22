@@ -18,6 +18,7 @@
 #include "LegCompShort.hpp"
 #include "Bone.hpp"
 #include "Crab.hpp"
+#include "Plane.hpp"
 //
 
 
@@ -35,9 +36,10 @@ void reshape (int w, int h);
 void centerOnScreen ();
 void drawObject();
 void createProjection();
+void myTimer(int i);
 //VARIABLES
 //Rotation of observer
-float xRot = 0, yRot = 0;
+float xRot = 45, yRot = 30;
 float xMov = 0, yMov = 0, zMov = 0;
 float aa = 0;/////////////////
 float bb = 0;/////////////////
@@ -169,11 +171,18 @@ void display (void)
 //-------------------------------------------------------------------------
 void drawObject ()
 {
+	static Plane* plane = new Plane();
 	static Crab* dilCrab = new Crab();
 	glCallList(PROJECTION);
 
-	dilCrab->Draw();
-	
+	plane->Draw();
+	dilCrab->Draw(0.f, 8.f, 0.f);
+}
+
+void myTimer(int value){
+
+glutPostRedisplay();
+glutTimerFunc(1000/40, myTimer, 1);
 
 }
 
@@ -238,6 +247,8 @@ void main (int argc, char **argv)
 	
 	// Set the callback functions
 	glutDisplayFunc (display);
+	//glutIdleFunc(display);
+	glutTimerFunc(1000/60, myTimer, 1);
 	glutReshapeFunc  (reshape);
 	glutMouseFunc (mouse);
 	glutMotionFunc (motion);

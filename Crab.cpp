@@ -1,4 +1,5 @@
 #include "Crab.hpp"
+//#include "Bone.hpp"
 
 #include <iostream>
 using namespace std;
@@ -9,11 +10,19 @@ Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 	CreateList();
 
 	LegShort* leg_sh = new LegShort();
-	LegNormal* leg_nor = new LegNormal();
+	LegNormal* leg_for_even = new LegNormal(FOR_EVEN);
+	LegNormal* leg_for_odd = new LegNormal(FOR_ODD);
+	LegNormal* leg_back_even = new LegNormal(BACK_EVEN);
+	LegNormal* leg_back_odd = new LegNormal(BACK_ODD);
+
 	for(int i = 0; i < 2; i++)
 		legs.push_back(leg_sh);
-	for(int i = 0; i < 8; i++)
-		legs.push_back(leg_nor);
+	for(int i = 0; i < 2; i++){
+		legs.push_back(leg_for_even);
+		legs.push_back(leg_back_even);
+		legs.push_back(leg_for_odd);
+		legs.push_back(leg_back_odd);
+	}
 
 	cout << "Crab has been created!" << endl;
 	
