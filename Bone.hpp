@@ -24,12 +24,11 @@ public:
 	Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag , Drawable *mesh, string name);
 	~Bone();
 	
-	void boneAddChild(GLfloat x, GLfloat y, GLfloat a,int flag , Drawable *mesh, string name);
+	//void boneAddChild(GLfloat x, GLfloat y, GLfloat a,int flag , Drawable *mesh, string name);
 	void boneAddChild(GLfloat a, int flag, Drawable *mesh, string name);
 	void Draw();
 	void animate(); ///TODo
-	void animate_child();
-	bool anim_up();
+	void anim_up();
 	bool anim_down();
 	bool anim_idle();
 
