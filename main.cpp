@@ -14,9 +14,13 @@
 #include "glut.h"
 
 #include "glutFunc.hpp"
-#include "Crab.hpp"
-//
+
 #include "LegCompShort.hpp"
+#include "Bone.hpp"
+#include "Crab.hpp"
+#include "Plane.hpp"
+//
+
 
 
 using namespace std;
@@ -32,13 +36,16 @@ void reshape (int w, int h);
 void centerOnScreen ();
 void drawObject();
 void createProjection();
+void myTimer(int i);
 //VARIABLES
 //Rotation of observer
-float xRot = 0, yRot = 0;
+float xRot = 45, yRot = 30;
 float xMov = 0, yMov = 0, zMov = 0;
+float aa = 0;/////////////////
+float bb = 0;/////////////////
 
 //glOrtho range
-GLfloat nRange = 10.0f;
+GLfloat nRange = 25.0f;
 
 //  define the window position on screen
 int window_x;
@@ -73,7 +80,7 @@ void init ()
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, lm_ambient );
     
 	glEnable( GL_DEPTH_TEST );
-	glShadeModel( GL_PHONG_WIN );
+	glShadeModel( GL_SMOOTH );
 	glEnable(GL_CULL_FACE);
 
     glEnable( GL_LIGHTING );
@@ -164,10 +171,18 @@ void display (void)
 //-------------------------------------------------------------------------
 void drawObject ()
 {
+	static Plane* plane = new Plane();
 	static Crab* dilCrab = new Crab();
-	dilCrab->Draw(0.0, 0.0, 0.0);
-	//static LegCompShort* leg = new LegCompShort();
-	//leg->Draw(0.0, 0.0, 0.0);
+	glCallList(PROJECTION);
+
+	plane->Draw();
+	dilCrab->Draw(0.f, 10.f, 0.f);
+}
+
+void myTimer(int value){
+
+glutPostRedisplay();
+glutTimerFunc(1000/20, myTimer, 1);
 
 }
 
@@ -186,7 +201,7 @@ void reshape (int w, int h)
          glOrtho( -nRange, nRange, -nRange*h/w, nRange*h/w, -nRange*2.0f , nRange*2.0f);
       }
       else {
-         glOrtho( -nRange*w/h, nRange*w/h, -nRange, nRange, -nRange*2.0f, nRange*2.0f);
+		 glOrtho( -nRange*w/h, nRange*w/h, -nRange, nRange, -nRange*2.0f, nRange*2.0f);
       }
       glMatrixMode( GL_MODELVIEW );
 	  glLoadIdentity();
@@ -232,6 +247,8 @@ void main (int argc, char **argv)
 	
 	// Set the callback functions
 	glutDisplayFunc (display);
+	//glutIdleFunc(display);
+	glutTimerFunc(1000/60, myTimer, 1);
 	glutReshapeFunc  (reshape);
 	glutMouseFunc (mouse);
 	glutMotionFunc (motion);

@@ -12,19 +12,23 @@
 
 #include "LegCompShort.hpp"
 #include "LegCompLong.hpp"
+#include "Bone.hpp"
+#include "Leg.hpp"
 
 
-class LegNormal
+class LegNormal : public Leg
 {
 public:
-	LegNormal();
+	LegNormal(int flag);//(GLfloat x, GLfloat y, GLfloat a, GLfloat b);
 	~LegNormal();
 
-	void Draw(GLfloat x, GLfloat y, GLfloat z);
+	void Draw();
+	void LegNormal::Animate(int i);
 
 private:
-	LegCompShort compShort;
-	LegCompLong compLong;
+	LegCompShort* compShort;
+	LegCompLong* compLong;
+	Bone* bone;
 
 };
 

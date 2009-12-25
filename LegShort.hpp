@@ -12,18 +12,22 @@
 #include "glutFunc.hpp"
 
 #include "LegCompShort.hpp"
+#include "Bone.hpp"
+#include "Leg.hpp"
 
-class LegShort
+class LegShort : public Leg
 {
 public:
-	LegShort();
+	LegShort();//(GLfloat x, GLfloat y, GLfloat a, GLfloat b);
 	~LegShort();
 
-	void Draw(GLfloat x, GLfloat y, GLfloat z);
+	void Draw();
+	
 
 private:
-	LegCompShort compShort0;
-	LegCompShort compShort1;
+	LegCompShort* compShort0;
+	LegCompShort* compShort1;
+	Bone* bone;
 };
 
 #endif

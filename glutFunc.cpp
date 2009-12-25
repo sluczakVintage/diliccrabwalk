@@ -8,13 +8,14 @@ using namespace std;
 
 extern float xRot, yRot;
 extern float xMov, yMov, zMov;
+extern float aa, bb;/////////////
 
 namespace glut
 {
-//-------------------------------------------------------------------------
-//  This function is passed to the glutMouseFunc and is called 
-//  whenever the mouse is clicked.
-//-------------------------------------------------------------------------
+/*-------------------------------------------------------------------------
+  This function is passed to the glutMouseFunc and is called 
+  whenever the mouse is clicked.
+-------------------------------------------------------------------------*/
 void mouse (int button, int state, int x, int y)
 {
 	switch (button)
@@ -145,11 +146,13 @@ void keyboard (unsigned char key, int x, int y)
 		//  User hits Space
 		case ' ':
 			cout << "User is hitting the Space key."<< endl;  
+			aa += (step/10.f); //////////////////////
 			break;
 
 		//  User hits back space
 		case 8:
 			cout << "User is hitting the Back Space key."<< endl; 
+			aa -= (step/10.f); //////////////////////
 			break;
 
 		//  User hits ESC key
@@ -202,10 +205,12 @@ void special (int key, int x, int y)
 			cout << "F10 function key."<< endl;  
 			break;
 		case GLUT_KEY_F11 :
-			cout << "F11 function key."<< endl;  
+			cout << "F11 function key."<< endl; 
+			bb += (step/10.f); //////////////////////
 			break;
 		case GLUT_KEY_F12 :
 			cout << "F12 function key."<< endl;  
+			bb -= (step/10.f); //////////////////////
 			break;
 		case GLUT_KEY_LEFT :
 			cout << "Left directional key."<< endl;  
@@ -243,6 +248,10 @@ void special (int key, int x, int y)
 	glutPostRedisplay ();
 }
 
+GLfloat Rad2Deg (GLfloat Angle) {
+  static GLfloat ratio = 180.0f / 3.141592653589793238f;
+  return Angle * ratio;
+}
 
 
 }
