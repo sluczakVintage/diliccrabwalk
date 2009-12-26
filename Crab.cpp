@@ -17,7 +17,7 @@ Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 
 	for(int i = 0; i < 2; i++)
 		legs.push_back(leg_sh);
-	for(int i = 0; i < 1; i++){
+	for(int i = 0; i < 2; i++){
 		legs.push_back(leg_for_even);
 		legs.push_back(leg_back_even);
 		legs.push_back(leg_for_odd);
@@ -26,6 +26,22 @@ Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 
 	cout << "Crab has been created!" << endl;
 	
+}
+
+Crab::~Crab()
+{
+	for(vector<Leg*>::iterator it = legs.begin(); it != legs.end(); it++)
+	{
+		delete *it;
+	} 
+	legs.clear();
+
+	//delete leg_sh;
+	//delete leg_for_even;
+	//delete leg_for_odd;
+	//delete leg_back_even;
+	//delete leg_back_odd;
+
 }
 
 void Crab::CreateList()
@@ -85,7 +101,7 @@ void Crab::drawLegs()
 {
 	static GLfloat leg_interval = w_/5.0f;
 	
-	for(int a = -2, i = 0; i < 5; a++, i++ )
+	for(int a = -2, i = 0; i < 10; a++, i++ )
 	{
 		glPushMatrix();
 		glTranslatef(leg_interval*a,-h_/4, d_/2);

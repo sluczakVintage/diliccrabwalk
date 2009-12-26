@@ -19,7 +19,7 @@
 class LegNormal : public Leg
 {
 public:
-	LegNormal(int flag);//(GLfloat x, GLfloat y, GLfloat a, GLfloat b);
+	LegNormal(int flag);//, GLfloat x = 0.f, GLfloat y = 0.f);
 	~LegNormal();
 
 	void Draw();

@@ -52,8 +52,8 @@ int window_x;
 int window_y;
 
 //  variables representing the window size
-int window_width = 1000;
-int window_height = 750;
+int window_width = 600;
+int window_height = 500;
 
 //  variable representing the window title
 char *window_title = "GLUT Window Template";
@@ -61,6 +61,12 @@ char *window_title = "GLUT Window Template";
 //  Tells whether to display the window full screen or not
 //  Press Alt + Esc to exit a full screen.
 int full_screen = 0;
+
+//Crab Y
+float crab_y = 8.f;
+
+//FPS
+int fps = 100;
 
 //-------------------------------------------------------------------------
 //  Set OpenGL program initial state.
@@ -145,9 +151,7 @@ void display (void)
 			glRotatef(xRot, 0.0f, 1.0f, 0.0f);
 			glRotatef(yRot, 1.0f, 0.0f, 0.0f);
 			xRot = yRot = 0.0f;
-			cout << xRot << endl;
-			cout << yRot << endl;
-		
+			
 			glTranslatef(xMov, 0.0f, 0.0f);
 			glTranslatef(0.0f, yMov, 0.0f);
 			glTranslatef(0.0f, 0.0f, zMov);
@@ -173,16 +177,21 @@ void drawObject ()
 {
 	static Plane* plane = new Plane();
 	static Crab* dilCrab = new Crab();
+	//static Le gNormal* leg = new LegNormal(FOR_ODD);//,0.f,8.f);
 	glCallList(PROJECTION);
 
 	plane->Draw();
-	dilCrab->Draw(0.f, 10.f, 0.f);
+	/*glPushMatrix();
+	glTranslatef(0.f, 8.f, 0.f);
+	leg->Draw();
+	glPopMatrix();*/
+	dilCrab->Draw(0.f, crab_y, 0.f);
 }
 
 void myTimer(int value){
 
 glutPostRedisplay();
-glutTimerFunc(1000/20, myTimer, 1);
+glutTimerFunc(1000/fps, myTimer, 1);
 
 }
 
@@ -248,7 +257,7 @@ void main (int argc, char **argv)
 	// Set the callback functions
 	glutDisplayFunc (display);
 	//glutIdleFunc(display);
-	glutTimerFunc(1000/60, myTimer, 1);
+	glutTimerFunc(1000/fps, myTimer, 1);
 	glutReshapeFunc  (reshape);
 	glutMouseFunc (mouse);
 	glutMotionFunc (motion);

@@ -16,7 +16,7 @@ class LegCompLong : public Drawable
 {
 public:
 	LegCompLong();
-	~LegCompLong();
+	//~LegCompLong();
 
 	void Draw();//GLfloat x, GLfloat y, GLfloat z);
 	void CreateList();

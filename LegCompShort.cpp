@@ -67,7 +67,7 @@ void LegCompShort::Draw()//GLfloat x, GLfloat y, GLfloat z)
 {
 	//  Show when are displaying an object
 
-int x=0,y=0,z =0;
+//int x=0,y=0,z =0;
 //  glMatrixMode(GL_MODELVIEW);
 //	glLoadIdentity();
 

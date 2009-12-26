@@ -11,7 +11,15 @@ LegShort::LegShort()//(GLfloat x, GLfloat y, GLfloat a, GLfloat b)
 	
 }
 
-
+LegShort::~LegShort()
+{
+	delete compShort0;
+	delete compShort1;
+	delete bone;
+	compShort0 = NULL;
+	compShort1 = NULL;
+	bone = NULL;
+}
 void LegShort::Draw()
 {
 	bone->animate(); ///////////////////////
