@@ -2,11 +2,32 @@
 
 LegNormal::LegNormal(int flag)// GLfloat x, GLfloat y)
 {	
+	GLfloat a = 0.f, child_a = 0.f;
 	compShort = new LegCompShort();
 	compLong = new LegCompLong();
-	bone = new Bone(NULL, 0.f, 0.f, 15.f, flag, compShort, "compShort");
 	
-	bone->boneAddChild(-75.f, flag, compLong , "compLong" );
+	if(flag == FOR_ODD){
+		a = -20.f;
+		child_a = -110.f;
+	
+	}
+	else if(flag == FOR_EVEN){
+		a = 35.f;
+		child_a = -50.f;
+	}
+	if(flag == BACK_ODD){
+		a = -20.f;
+		child_a = -110.f;
+	
+	}
+	else if(flag == BACK_EVEN){
+		a = 35.f;
+		child_a = -50.f;
+	}
+
+	bone = new Bone(NULL, 0.f, 0.f, a, flag, compShort, "compShort");
+	
+	bone->boneAddChild(child_a, flag, compLong , "compLong" );
 	cout << "LegNormal has been created!" << endl;
 	
 }
@@ -23,8 +44,7 @@ LegNormal::~LegNormal()
 
 void LegNormal::Draw()
 {
-	bone->animate(); ///////////////////////
-	//	bone->animate_child(); ///////////////////////
+	bone->animate(); 
 	bone->Draw();
 }
 

@@ -39,7 +39,7 @@ void createProjection();
 void myTimer(int i);
 //VARIABLES
 //Rotation of observer
-float xRot = 45, yRot = 30;
+float xRot = 150, yRot = -20;
 float xMov = 0, yMov = 0, zMov = 0;
 float aa = 0;/////////////////
 float bb = 0;/////////////////
@@ -66,7 +66,7 @@ int full_screen = 0;
 float crab_y = 8.f;
 
 //FPS
-int fps = 100;
+int fps = 10;
 
 //-------------------------------------------------------------------------
 //  Set OpenGL program initial state.
