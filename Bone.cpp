@@ -54,11 +54,11 @@ Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh
 	l_ = mesh_->ReturnH();
 
 	if(flag_ == FOR_ODD){
-		animFlag_ = AN_UP_FRONT;
+		animFlag_ = AN_IDLE;
 		off_ = off;
 	}
 	else if(flag_ == FOR_EVEN){
-		animFlag_ = AN_IDLE;
+		animFlag_ = AN_DOWN;
 		off_ = off;
 	}
 	else if(flag_ == BACK_ODD){
@@ -66,7 +66,7 @@ Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh
 		off_ = -off;
 	}
 	else if(flag_ == BACK_EVEN){
-		animFlag_ = AN_UP_REAR;
+		animFlag_ = AN_DOWN;
 		off_ = -off;
 	}
 	childOffsetA_ = off_;
@@ -152,17 +152,13 @@ void Bone::animUpFront()
 	if(a_ > MaxA )
 	{
 		offsetA_ = 0.f;
-		cout << offsetA_ << " " << a_ << endl;
 	}			
 	a_ += offsetA_;
-
-	cout << "father a_: " << a_ << endl;
 
 	if(child_->a_ > MaxB )
 	{
 			animFlag_ = AN_DOWN;	
 	}
-	cout << "child a_: " << child_->a_ << endl;
 
 	child_->a_ += childOffsetA_;
 
@@ -170,26 +166,19 @@ void Bone::animUpFront()
 
 void Bone::animUpRear()
 {
-	float sin_b = sinf( deg2rad(child_->a_) );
-	float cos_b = cosf( deg2rad(child_->a_) );
 	
 	offsetA_ = -off_;
 	childOffsetA_ = off_;
 	if(a_ > MaxA )
 	{
-		animFlag_ = AN_DOWN;
 		offsetA_ *= 0.f;
-		cout << offsetA_ << " " << a_ << endl;
 	}			
 	a_ += offsetA_;
 
-	cout << "father a_: " << a_ << endl;
-
 	if(child_->a_ < MinB )
 	{
-		childOffsetA_ *= 0.f;
+		animFlag_ = AN_DOWN;
 	}
-	cout << "child a_: " << child_->a_ << endl;
 
 	child_->a_ += childOffsetA_;
 
@@ -211,15 +200,12 @@ void Bone::animDown()
 		if(flag_ == FOR_EVEN)
 			oddHit_ = false;
 	
-		if( flag_ == BACK_EVEN && flag_ == BACK_ODD )
+		if( flag_ == BACK_EVEN || flag_ == BACK_ODD )
 			animFlag_ = AN_IDLE;
 		else 
 			animFlag_ = AN_MOVE;
-		cout << "next father a_: " << a_ << endl;
 	}
 	a_ += offsetA_;
-
-	cout << "father a_: " << a_ << endl;
 
 }
 
@@ -232,11 +218,6 @@ void Bone::animMove()
 	
 	childOffsetA_ = -off_;
 
-	//if(equation <= -crab_y)
-	//	a_ = a_;
-	
-	cout << "father a_: " << a_ << endl;
-
 	if( ( flag_ == BACK_EVEN || flag_ == BACK_ODD ) && child_->a_ > MaxB ) 
 	{
 		animFlag_ = AN_UP_REAR;
@@ -245,156 +226,10 @@ void Bone::animMove()
 	{
 		animFlag_ = AN_IDLE;
 	}
-	//if( equation <= -crab_y ){
-		if(flag_ == FOR_ODD)
-			oddHit_ = true;
-		if(flag_ == FOR_EVEN)
-			oddHit_ = false;
-		a_ = rad2deg( ( pi*signum<float>( child_->l_*sin_b ) )/2 - asinf( crab_y/sqrtf( ( rl2<float>(child_->l_,l_) * cos_b ) + ( power<2>(l_) )+( power<2>(child_->l_) ) ) ) + atanf( ( child_->l_*cos_b  + l_) /( child_->l_*sin_b ) ) + pi) ; 
-		cout << "next father a_: " << a_ << endl;
-	//	}
-	cout << "child a_: " << child_->a_ << endl;
-	cout << "equation: " << equation << endl << endl;
-
+	if(flag_ == FOR_ODD)
+		oddHit_ = true;
+	if(flag_ == FOR_EVEN)
+		oddHit_ = false;
+	a_ = rad2deg( ( pi*signum<float>( child_->l_*sin_b ) )/2 - asinf( crab_y/sqrtf( ( rl2<float>(child_->l_,l_) * cos_b ) + ( power<2>(l_) )+( power<2>(child_->l_) ) ) ) + atanf( ( child_->l_*cos_b  + l_) /( child_->l_*sin_b ) ) + pi) ; 	
 	child_->a_ += childOffsetA_;
 }
-//
-//void Bone::anim_step_end()
-//{	
-//	float sin_b = sinf( deg2rad(child_->a_) );
-//	float cos_b = cosf( deg2rad(child_->a_) );
-//
-//	float equation = ( sinf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) + ( child_->l_ ) * sin_b  * cosf( deg2rad(a_) ) );
-//	
-//	offsetA_ = -off_;
-//	childOffsetA_ = -off_;
-//
-//	if(equation <= -crab_y)
-//		a_ = a_;
-//	else {
-//		if(a_ < -20.f )
-//		{
-//			offsetA_ *= -1;
-//			cout << offsetA_ << " " << a_ << endl;
-//		}			
-//		a_ += offsetA_;
-//	}
-//	cout << "father a_: " << a_ << endl;
-//
-//	if(child_->a_ < -110.f )
-//	{
-//		animFlag_ = IDLE;
-//	}
-//	if( equation <= -crab_y ){
-//		if(flag_ == FOR_ODD)
-//			oddHit_ = true;
-//		if(flag_ == FOR_EVEN)
-//			oddHit_ = false;
-//		a_ = rad2deg( ( pi*signum<float>( child_->l_*sin_b ) )/2 - asinf( crab_y/sqrtf( ( rl2<float>(child_->l_,l_) * cos_b ) + ( power<2>(l_) )+( power<2>(child_->l_) ) ) ) + atanf( ( child_->l_*cos_b  + l_) /( child_->l_*sin_b ) ) + pi) ; 
-//		cout << "next father a_: " << a_ << endl;
-//		}
-//	cout << "child a_: " << child_->a_ << endl;
-//	cout << "equation: " << equation << endl << endl;
-//
-//	child_->a_ += childOffsetA_;
-//}
-//
-//void Bone::anim_step_start()
-//{	
-//	float sin_b = sinf( deg2rad(child_->a_) );
-//	float cos_b = cosf( deg2rad(child_->a_) );
-//
-//	float equation = ( sinf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) + ( child_->l_ ) * sin_b  * cosf( deg2rad(a_) ) );
-//	
-//	offsetA_ = off_;
-//	childOffsetA_ = off_;
-//	if(a_ > 30.f )
-//	{
-//		offsetA_ *= -1;
-//		cout << offsetA_ << " " << a_ << endl;
-//	}			
-//	a_ += offsetA_;
-//
-//	cout << "father a_: " << a_ << endl;
-//
-//	if(child_->a_ > -35.f )
-//	{
-//		animFlag_ = STEP_END;
-//	}
-//
-//	cout << "child a_: " << child_->a_ << endl;
-//	cout << "equation: " << equation << endl << endl;
-//
-//	child_->a_ += childOffsetA_;
-//}
-//
-//
-//void Bone::anim_rear_step_end()
-//{	
-//	float sin_b = sinf( deg2rad(child_->a_) );
-//	float cos_b = cosf( deg2rad(child_->a_) );
-//
-//	float equation = ( sinf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) + ( child_->l_ ) * sin_b  * cosf( deg2rad(a_) ) );
-//	
-//	offsetA_ = -off_;
-//	childOffsetA_ = -off_;
-//
-//	if(equation <= -crab_y)
-//		a_ = a_;
-//	else {
-//		if(a_ < -20.f )
-//		{
-//			offsetA_ *= -1;
-//			cout << offsetA_ << " " << a_ << endl;
-//		}			
-//		a_ += offsetA_;
-//	}
-//	cout << "father a_: " << a_ << endl;
-//
-//	if(child_->a_ < -110.f )
-//	{
-//		animFlag_ = IDLE;
-//	}
-//	if( equation <= -crab_y ){
-//		if(flag_ == FOR_ODD)
-//			oddHit_ = true;
-//		if(flag_ == FOR_EVEN)
-//			oddHit_ = false;
-//		a_ = rad2deg( ( pi*signum<float>( child_->l_*sin_b ) )/2 - asinf( crab_y/sqrtf( ( rl2<float>(child_->l_,l_) * cos_b ) + ( power<2>(l_) )+( power<2>(child_->l_) ) ) ) + atanf( ( child_->l_*cos_b  + l_) /( child_->l_*sin_b ) ) + pi) ; 
-//		cout << "next father a_: " << a_ << endl;
-//		}
-//	cout << "child a_: " << child_->a_ << endl;
-//	cout << "equation: " << equation << endl << endl;
-//
-//	child_->a_ += childOffsetA_;
-//}
-//
-//void Bone::anim_rear_step_start()
-//{	
-//	float sin_b = sinf( deg2rad(child_->a_) );
-//	float cos_b = cosf( deg2rad(child_->a_) );
-//
-//	float equation = ( sinf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) + ( child_->l_ ) * sin_b  * cosf( deg2rad(a_) ) );
-//	
-//	offsetA_ = off_;
-//	childOffsetA_ = off_;
-//	if(a_ > 30.f )
-//	{
-//		offsetA_ *= -1;
-//		cout << offsetA_ << " " << a_ << endl;
-//	}			
-//	a_ += offsetA_;
-//
-//	cout << "father a_: " << a_ << endl;
-//
-//	if(child_->a_ > -35.f )
-//	{
-//		animFlag_ = STEP_END;
-//	}
-//
-//	cout << "child a_: " << child_->a_ << endl;
-//	cout << "equation: " << equation << endl << endl;
-//
-//	child_->a_ += childOffsetA_;
-//}
-
