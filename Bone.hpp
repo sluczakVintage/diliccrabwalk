@@ -15,7 +15,8 @@
 #include "Drawable.hpp"
 
 enum{ FOR_ODD, BACK_ODD, FOR_EVEN, BACK_EVEN };
-enum{ IDLE, STEP_START, STEP_END };
+enum{ AN_IDLE, AN_UP_FRONT, AN_UP_REAR, AN_DOWN, AN_MOVE };
+
 using namespace std;
 class Bone
 {
@@ -27,11 +28,17 @@ public:
 	void boneAddChild(GLfloat a, int flag, Drawable *mesh, string name);
 	void Draw();
 	void animate(); 
+	
+	void animUpFront();
+	void animUpRear();
+	void animDown();
+	void animMove();
+
 	void anim_step_end();
 	void anim_step_start();
 	void anim_rear_step_start();
 	void anim_rear_step_end();
-	void anim_idle();
+	void animIdle();
 
 private:
 	Bone();

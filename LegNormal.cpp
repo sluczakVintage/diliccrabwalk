@@ -7,22 +7,20 @@ LegNormal::LegNormal(int flag)// GLfloat x, GLfloat y)
 	compLong = new LegCompLong();
 	
 	if(flag == FOR_ODD){
-		a = -20.f;
+		a = 20.f;
 		child_a = -110.f;
-	
 	}
 	else if(flag == FOR_EVEN){
-		a = 35.f;
-		child_a = -50.f;
+		a = 20.f;
+		child_a = -110.f;
 	}
 	if(flag == BACK_ODD){
-		a = -20.f;
+		a = 20.f;
 		child_a = -110.f;
-	
 	}
 	else if(flag == BACK_EVEN){
-		a = 35.f;
-		child_a = -50.f;
+		a = -20.f;
+		child_a = -45.f;
 	}
 
 	bone = new Bone(NULL, 0.f, 0.f, a, flag, compShort, "compShort");

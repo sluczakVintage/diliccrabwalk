@@ -66,7 +66,7 @@ int full_screen = 0;
 float crab_y = 8.f;
 
 //FPS
-int fps = 10;
+int fps = 60;
 
 //-------------------------------------------------------------------------
 //  Set OpenGL program initial state.
