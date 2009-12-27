@@ -50,7 +50,7 @@ template <typename T> inline float rl2(float r, float l) {
 
 Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), flag_(flag), mesh_(mesh), name_(name), child_(NULL)
 {	
-	GLfloat off = 0.2;
+	GLfloat off = 0.4;
 	l_ = mesh_->ReturnH();
 
 	if(flag_ == FOR_ODD){
@@ -131,23 +131,48 @@ void Bone::animate() //time
 
 void Bone::animIdle()
 {
-	if( flag_ == FOR_EVEN && oddHit_ == true)
-			animFlag_ = AN_UP_FRONT;
-	else if( flag_ == BACK_EVEN && oddHit_ == true)
-			animFlag_ = AN_MOVE;
-	else if( flag_ == FOR_ODD  && oddHit_ == false)
-			animFlag_ = AN_UP_FRONT;
-	else if( flag_ == BACK_ODD  && oddHit_ == true)
-			animFlag_ = AN_MOVE;
+	cout << "animIdle()" << endl;
+	if( flag_ == FOR_EVEN && oddHit_ == true){
+		animFlag_ = AN_UP_FRONT;
+	}
+	else if( flag_ == BACK_EVEN && oddHit_ == true){
+		animFlag_ = AN_UP_REAR;
+	}
+	else if( flag_ == FOR_ODD  && oddHit_ == false){
+		animFlag_ = AN_UP_FRONT;
+	}
+	else if( flag_ == BACK_ODD  && oddHit_ == false){
+		animFlag_ = AN_UP_REAR;
+	}
 	else;
 }
 
 void Bone::animUpFront()
 {
+	cout << "animUpFront()" << endl;
 	float sin_b = sinf( deg2rad(child_->a_) );
 	float cos_b = cosf( deg2rad(child_->a_) );
 	
 	offsetA_ = off_;
+	childOffsetA_ = off_;
+	if(a_ > (MaxA - 10.f) )
+	{
+		offsetA_ = 0.f;
+	}			
+	a_ += offsetA_;
+
+	if(child_->a_ > (MaxB - 5.f) )
+	{
+			animFlag_ = AN_DOWN;	
+	}
+	child_->a_ += childOffsetA_;
+
+}
+
+void Bone::animUpRear()
+{
+	cout << "animUpRear()" << endl;
+	offsetA_ = -off_;
 	childOffsetA_ = off_;
 	if(a_ > MaxA )
 	{
@@ -155,37 +180,17 @@ void Bone::animUpFront()
 	}			
 	a_ += offsetA_;
 
-	if(child_->a_ > MaxB )
-	{
-			animFlag_ = AN_DOWN;	
-	}
-
-	child_->a_ += childOffsetA_;
-
-}
-
-void Bone::animUpRear()
-{
-	
-	offsetA_ = -off_;
-	childOffsetA_ = off_;
-	if(a_ > MaxA )
-	{
-		offsetA_ *= 0.f;
-	}			
-	a_ += offsetA_;
-
 	if(child_->a_ < MinB )
 	{
 		animFlag_ = AN_DOWN;
 	}
-
 	child_->a_ += childOffsetA_;
 
 }
 
 void Bone::animDown()
 {
+	cout << "animDown()" << endl;
 	float sin_b = sinf( deg2rad(child_->a_) );
 	float cos_b = cosf( deg2rad(child_->a_) );
 	
@@ -200,9 +205,9 @@ void Bone::animDown()
 		if(flag_ == FOR_EVEN)
 			oddHit_ = false;
 	
-		if( flag_ == BACK_EVEN || flag_ == BACK_ODD )
-			animFlag_ = AN_IDLE;
-		else 
+		//if( flag_ == BACK_EVEN || flag_ == BACK_ODD )
+		//	animFlag_ = AN_IDLE;
+		//else 
 			animFlag_ = AN_MOVE;
 	}
 	a_ += offsetA_;
@@ -211,6 +216,7 @@ void Bone::animDown()
 
 void Bone::animMove()
 {	
+	cout << "animMove()" << endl;
 	float sin_b = sinf( deg2rad(child_->a_) );
 	float cos_b = cosf( deg2rad(child_->a_) );
 
@@ -220,7 +226,8 @@ void Bone::animMove()
 
 	if( ( flag_ == BACK_EVEN || flag_ == BACK_ODD ) && child_->a_ > MaxB ) 
 	{
-		animFlag_ = AN_UP_REAR;
+		animFlag_ = AN_IDLE;
+		//animFlag_ = AN_UP_REAR;
 	}
 	else if ( ( flag_ == FOR_EVEN || flag_ == FOR_ODD ) && child_->a_ < MinB )  
 	{

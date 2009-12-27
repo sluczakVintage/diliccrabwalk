@@ -11,15 +11,15 @@ LegNormal::LegNormal(int flag)// GLfloat x, GLfloat y)
 		child_a = -110.f;
 	}
 	else if(flag == FOR_EVEN){
-		a = 20.f;
-		child_a = -110.f;
+		a = -20.f;
+		child_a = -45.f;
 	}
 	if(flag == BACK_ODD){
-		a = 20.f;
+		a = 30.f;
 		child_a = -110.f;
 	}
 	else if(flag == BACK_EVEN){
-		a = -20.f;
+		a = 20.f;
 		child_a = -45.f;
 	}
 

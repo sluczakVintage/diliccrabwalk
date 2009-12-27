@@ -60,13 +60,13 @@ char *window_title = "GLUT Window Template";
 
 //  Tells whether to display the window full screen or not
 //  Press Alt + Esc to exit a full screen.
-int full_screen = 0;
+int full_screen = 1;
 
 //Crab Y
 float crab_y = 8.f;
 
 //FPS
-int fps = 60;
+int fps = 100;
 
 //-------------------------------------------------------------------------
 //  Set OpenGL program initial state.
