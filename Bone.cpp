@@ -7,6 +7,43 @@
 
 extern float crab_y;
 
+struct Vector3f {
+	Vector3f() : x_(0), y_(0), z_(0) {};
+	Vector3f(float x, float y, float z) : x_(x), y_(y), z_(z) {};
+	float x_;
+	float y_;
+	float z_;
+};
+
+Vector3f substractV3f(Vector3f v1, Vector3f v2)
+{
+	float x = v1.x_ - v2.x_;
+	float y = v1.y_ - v2.y_;
+	float z = v1.z_ - v2.z_;
+	
+	return Vector3f(x,y,z);
+}
+
+Vector3f crossProduct(Vector3f v1, Vector3f v2) 
+{
+   float x = (v1.y_ * v2.z_) - (v2.y_ * v1.z_);
+   float y = (v1.z_ * v2.x_) - (v2.z_ * v1.x_);
+   float z = (v1.x_ * v2.y_) - (v2.x_ * v1.y_);
+   
+   return Vector3f(x,y,z);
+}
+
+Vector3f normalize(Vector3f v) 
+{
+	float r = sqrtf(v.x_*v.x_ + v.y_*v.y_ + v.z_*v.z_);
+
+	float x = v.x_/r;
+	float y = v.y_/r;
+	float z = v.z_/r;
+
+	return Vector3f(x,y,z);
+
+}
 using namespace std;
 
 bool Bone::oddHit_= false;
@@ -109,30 +146,45 @@ void Bone::Draw()
 	// Jesli ma dzieci, dokonaj odrysowania zamkniecia stawow
 	if(child_!=NULL){
 
-	float cosinus_a, sinus_a, d_, child_d, w_, child_w;
-	cosinus_a = cosf(-deg2rad(child_->a_));
-	sinus_a = sinf(-deg2rad(child_->a_));
-	d_ = mesh_->ReturnD();
-	child_d = child_->mesh_->ReturnD();
-	w_ = mesh_->ReturnW();
-	child_w = child_->mesh_->ReturnW();
-	
+	// obliczanie wartosci wierzcholkow na potrzeby przeliczenia normalnej i wyswietlenia lacznika
+	Vector3f vector1, vector2, vector3, normalV;
 
+	vector1.x_ = child_->mesh_->ReturnD() * sinf(-deg2rad(child_->a_));
+	vector1.y_ = child_->mesh_->ReturnD() * cosf(-deg2rad(child_->a_));
+	vector1.z_ = child_->mesh_->ReturnW()/2;
+
+	vector2.x_ = 0.f;
+	vector2.y_ = mesh_->ReturnD();
+	vector2.z_ = (mesh_->ReturnW()/2);
+
+	vector3.x_ = vector1.x_;
+	vector3.y_ = vector1.y_;
+	vector3.z_ = -vector1.z_;
+
+	// Obliczanie normalnej dla lacznika kryjacego staw
+	Vector3f edge1 = substractV3f(vector1, vector3);
+	Vector3f edge2 = substractV3f(vector3, vector2);
+	normalV = normalize(crossProduct(edge1, edge2));
+				
+				//Wyrysowanie lacznika miedzy obudowami kosci
 				glBegin(GL_TRIANGLE_STRIP);
-					glVertex3f(child_d *sinus_a, child_d * cosinus_a, child_w/2);
-					glVertex3f(child_d * sinus_a, child_d * cosinus_a, -child_w/2);
-					glVertex3f(0.f, d_,w_/2);
-					glVertex3f(0.f, d_,-w_/2);	
+					glNormal3f(normalV.x_, normalV.y_, normalV.z_);
+					glVertex3f(vector1.x_, vector1.y_, vector1.z_);
+					glVertex3f(vector3.x_, vector3.y_, vector3.z_);
+					glVertex3f(vector2.x_, vector2.y_, vector2.z_);
+					glVertex3f(vector2.x_, vector2.y_, -vector2.z_);	
 				glEnd();
 				glBegin(GL_TRIANGLE_STRIP);
-					glVertex3f(0.f, d_, w_/2);
-					glVertex3f(0.f, 0.f, w_/2);
-					glVertex3f(child_d * sinus_a, child_d * cosinus_a,child_w/2);
+					glNormal3f(0.0f, 0.0f, 1.0f);
+					glVertex3f(vector2.x_, vector2.y_, vector2.z_);
+					glVertex3f(vector2.x_, 0.0f, vector2.z_);
+					glVertex3f(vector1.x_, vector1.y_, vector1.z_);
 				glEnd();
 				glBegin(GL_TRIANGLE_STRIP);
-					glVertex3f(0.f, 0.f, -w_/2);
-					glVertex3f(0.f, d_, -w_/2);	
-					glVertex3f(d_ * sinus_a,child_d * cosinus_a,-child_w/2);								
+					glNormal3f(0.0f, 0.0f, -1.0f);
+					glVertex3f(vector2.x_, 0.0f, -vector2.z_);
+					glVertex3f(vector2.x_, vector2.y_, -vector2.z_);	
+					glVertex3f(vector1.x_, vector1.y_, -vector1.z_);								
 				glEnd();
 	}
 

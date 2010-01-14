@@ -1,19 +1,13 @@
-//*************************************************************************
-//
-//  File Name	: GLUT Window Template
-//  Author		: Ali BaderEddin
-//  Date		: December 2003
-//  
-//  Description	: Openning an OpenGL window using GLUT library...
-//  
-//*************************************************************************
+
 #include <vld.h>
-//  Input\Output Stream
+
 #include <iostream>
-//  Include GLUT, OpenGL, and GLU libraries
+#include <map>
+
 #include "glut.h"
 
 #include "Camera.hpp"
+#include "CBMPLoader.hpp"
 #include "glutFunc.hpp"
 
 #include "LegCompShort.hpp"
@@ -22,84 +16,164 @@
 #include "Plane.hpp"
 //
 
-
-
 using namespace std;
 using namespace glut;
-//  Initialization
+
+//  rozmiar okna
+int window_width = 800;
+int window_height = 600;
+
+//  Etykieta okna
+char *window_title = "DIL Crab Walk";
+
+//  Czy pelen ekran?
+int full_screen = 0;
+
+//FPS
+int fps = 100;
+
+// predeklaracja funkcji inicjalizujacej OGL
 void init ();
 
-//  Callback functions
+//  Funkcje typu Callback
 void display (void);
 void reshape (int w, int h);
+void myTimer(int i);
 
-//  Support Functions
+//  Funkcje dodatkowe
 void centerOnScreen ();
 void drawObject();
 void createProjection();
-void myTimer(int i);
-void keyboard (unsigned char key, int x, int y);
-//VARIABLES
 
+//Kamera
 CCamera Camera;
 
 
 //glOrtho range
 GLfloat nRange = 25.0f;
 
-//  define the window position on screen
+//  pozycja okna na ekranie
 int window_x;
 int window_y;
 
-//  variables representing the window size
-int window_width = 600;
-int window_height = 500;
 
-//  variable representing the window title
-char *window_title = "GLUT Window Template";
-
-//  Tells whether to display the window full screen or not
-//  Press Alt + Esc to exit a full screen.
-int full_screen = 0;
-
-//Crab Y
+//Wysokosc kraba //////////// @TODO
 float crab_y = 8.f;
 
-//FPS
-int fps = 100;
+//wspolzedne spot
+GLfloat xSpotDir= 0, ySpotDir= 0, zOffset= 0, spotCutOff= 80.f;
 
-//-------------------------------------------------------------------------
-//  Set OpenGL program initial state.
-//-------------------------------------------------------------------------
+//Swiatla 
+void initDirLight()
+{
+    GLfloat noAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    GLfloat whiteDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    /*
+     * Directional light source (w = 0)
+     * The light source is at an infinite distance,
+     * all the ray are parallel and have the direction (x, y, z).
+     */
+    GLfloat position[] = { 0.0, 40.0, 10.0, 0.0 };
+   
+    glLightfv(GL_LIGHT0, GL_AMBIENT, noAmbient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuse);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+	glEnable( GL_LIGHT0 );
+}
+
+/**
+ * GL_LIGHT1
+ * - positional light source
+ * - yellow ambient
+ * - yellow diffuse
+ *
+ * Rem:
+ * To have a "real" effect, set the ambient and diffuse to the same color.
+ */
+void initPosLight()
+{
+    GLfloat yellowAmbientDiffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    /*
+     * Positional light source (w = 1)
+     * The light source is positioned at (x, y, z).
+     * The ray come from this particular location (x, y, z) and goes towards all directions.
+     */
+    GLfloat position[] = { 0.0, 40.0, 10.0, 1.0 };
+   
+    glLightfv(GL_LIGHT1, GL_AMBIENT, yellowAmbientDiffuse);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, yellowAmbientDiffuse);
+    glLightfv(GL_LIGHT1, GL_POSITION, position);
+
+	glEnable( GL_LIGHT1 );
+}
+
+/*
+ * Update position, direction and cut-off of the light
+ */
+void updateSpot()
+{
+    GLfloat direction[] = {xSpotDir, ySpotDir, zOffset};
+   
+    //spot direction
+    glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, direction);
+    //angle of the cone light emitted by the spot : value between 0 to 180
+    glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, spotCutOff);
+}
+
+void initSpot()
+{
+  
+    GLfloat noAmbient[] = {0.0f, 0.0f, 0.4f, 1.0f};       
+    GLfloat diffuse[]   = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat position[]  = { 0.0, 40.0, 0.0, 1.0 };
+   
+
+    glLightfv(GL_LIGHT2, GL_AMBIENT, noAmbient);
+    glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT2, GL_POSITION, position);
+   
+    updateSpot();
+   
+    //exponent propertie defines the concentration of the light
+    glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 15.0f);
+   
+    //light attenuation (default values used here : no attenuation with the distance)
+    glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 1.0f);
+    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.0f);
+    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.0f);
+
+	glEnable( GL_LIGHT2 );
+}
+
+
+// inicjalizacja OGL
 void init ()
-{	
-	GLfloat mat_ambient[]    = { 1.0, 1.0,  1.0, 1.0 };
-    GLfloat mat_specular[]   = { 1.0, 1.0,  1.0, 1.0 };
-    GLfloat light_position[] = { 0.0, 0.0, 10.0, 1.0 };
-    GLfloat lm_ambient[]     = { 0.2, 0.2,  0.2, 1.0 };
-
-    glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-    glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-    glMaterialf( GL_FRONT, GL_SHININESS, 50.0 );
-    
-	glLightfv( GL_LIGHT0, GL_POSITION, light_position );
-    glLightModelfv( GL_LIGHT_MODEL_AMBIENT, lm_ambient );
-    
+{    
 	glEnable( GL_DEPTH_TEST );
+	glEnable( GL_TEXTURE_2D );
 	glShadeModel( GL_SMOOTH );
 	glEnable(GL_CULL_FACE);
 
-    glEnable( GL_LIGHTING );
-    glEnable( GL_LIGHT0 );
-
     glDepthFunc( GL_LESS );
 
-	glClearColor(255.f, 255.f, 255.f, 1.0f);
-	createProjection();
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+	glClearColor(255.f, 255.f, 255.f, 1.0f);
+	
+	initSpot();
+    initPosLight();
+
+	glEnable( GL_LIGHTING );
+	    
+
+	createProjection();
     
+
+	
 }
 
+// Stworz uklad wspolrzednych
 void createProjection()
 {
 	glNewList(PROJECTION, GL_COMPILE);
@@ -145,8 +219,9 @@ void display (void)
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glLoadIdentity();
 	Camera.Render();
-	
-	glTranslatef(0.f,-10.f,-14.f);
+	updateSpot();
+
+	glTranslatef(0.f,-20.f,-14.f);
 		
 	//  Draw object
 	drawObject();
@@ -194,7 +269,7 @@ void reshape (int w, int h)
       glViewport( 0, 0, w, h );
       glMatrixMode( GL_PROJECTION );
       glLoadIdentity();
-      gluPerspective(70,static_cast<GLdouble>(w/h), 1, 80);
+      gluPerspective(70,static_cast<GLdouble>(w/h), 1, 400);
 	  /* if( w <= h ) {
          glOrtho( -nRange, nRange, -nRange*h/w, nRange*h/w, -nRange*2.0f , nRange*2.0f);
       }
@@ -217,165 +292,6 @@ void centerOnScreen ()
 	window_x = (glutGet (GLUT_SCREEN_WIDTH) - window_width)/2;
 	window_y = (glutGet (GLUT_SCREEN_HEIGHT) - window_height)/2;
 
-}
-//-------------------------------------------------------------------------
-//  This function is passed to the glutKeyboardFunc and is called 
-//  whenever the user hits a key.
-//-------------------------------------------------------------------------
-
-
-void keyboard (unsigned char key, int x, int y)
-{
-	float step = 1.0f;
-	//  Print what key the user is hitting
-	cout << "User is hitting the " << key << " key."<< endl;  
-	cout << "ASCII code is "<< key << endl;  
-	
-	switch (key)
-	{
-		//  User hits q key
-		case 'q':
-			exit(0);
-			break;
-		//  User hits w key
-		case 'w':
-			Camera.MoveForwards( -0.1 ) ;
-			break;
-
-		case 'W':
-			Camera.MoveForwards( -1.0 ) ;
-			break;
-
-		//  User hits s key
-		case 's':
-			Camera.MoveForwards( 0.1 ) ;
-			break;
-		case 'S':
-			Camera.MoveForwards( 1 ) ;
-			break;
-
-		//  User hits a key
-		case 'a':
-			Camera.StrafeRight(-0.5);
-			break;
-
-		//  User hits d key
-		case 'd':
-			Camera.StrafeRight(0.5);
-			break;
-		//  User hits r key
-		case 'r':
-			break;
-		//  User hits f key
-		case 'f':
-			break;
-		//  User hits Enter
-		case '\r':
-			cout << "User is hitting the Return key."<< endl;   
-			break;
-
-		//  User hits Space
-		case ' ':
-			cout << "User is hitting the Space key."<< endl;  
-			break;
-
-		//  User hits back space
-		case 8:
-			cout << "User is hitting the Back Space key."<< endl; 
-			break;
-
-		//  User hits ESC key
-		case 27:
-			exit(0);
-			break;
-	}
-
-	glutPostRedisplay ();
-}
-
-//-------------------------------------------------------------------------
-//  This function is passed to the glutSpecialFunc and is called 
-//  whenever the user hits a special key.
-//-------------------------------------------------------------------------
-void special (int key, int x, int y)
-{
-	float step = 1.0f;
-
-
-	switch (key)
-	{
-		case GLUT_KEY_F1 :
-			cout << "F1 function key."<< endl;  
-			break;
-		case GLUT_KEY_F2 :
-			cout << "F2 function key."<< endl;  
-			break;
-		case GLUT_KEY_F3 :
-			cout << "F3 function key."<< endl;  
-			break;
-		case GLUT_KEY_F4 :
-			cout << "F4 function key."<< endl;  
-			break;
-		case GLUT_KEY_F5 :
-			cout << "F5 function key."<< endl;  
-			break;
-		case GLUT_KEY_F6 :
-			cout << "F6 function key."<< endl;  
-			break;
-		case GLUT_KEY_F7 :
-			cout << "F7 function key."<< endl;  
-			break;
-		case GLUT_KEY_F8 :
-			cout << "F8 function key."<< endl;  
-			break;
-		case GLUT_KEY_F9 :
-			cout << "F9 function key."<< endl;  
-			break;
-		case GLUT_KEY_F10 :
-			cout << "F10 function key."<< endl;  
-			break;
-		case GLUT_KEY_F11 :
-			cout << "F11 function key."<< endl; 
-			break;
-		case GLUT_KEY_F12 :
-			cout << "F12 function key."<< endl;  
-			break;
-		case GLUT_KEY_LEFT :
-			cout << "Left directional key."<< endl; 
-			Camera.RotateY(5.0);
-			break;
-		case GLUT_KEY_UP :
-			cout << "Up directional key."<< endl;  
-			Camera.Move(F3dVector(0.0,0.3,0.0));
-			break;
-		case GLUT_KEY_RIGHT :
-			cout << "Right directional key."<< endl;  
-			Camera.RotateY(-5.0);
-			break;
-		case GLUT_KEY_DOWN :
-			cout << "Down directional key."<< endl;  
-			Camera.Move(F3dVector(0.0,-0.3,0.0));
-			break;
-		case GLUT_KEY_PAGE_UP :
-			Camera.RotateX(5.0);
-			cout << "Page up directional key."<< endl;  
-			break;
-		case GLUT_KEY_PAGE_DOWN :
-			Camera.RotateX(-5.0);
-		cout << "Page down directional key."<< endl;  
-			break;
-		case GLUT_KEY_HOME :
-			cout << "Home directional key."<< endl;  
-			break;
-		case GLUT_KEY_END :
-			cout << "End directional key."<< endl;  
-			break;
-		case GLUT_KEY_INSERT :
-			cout << "Inset directional key."<< endl;  
-			break;
-	}
-	
-	glutPostRedisplay ();
 }
 
 //-------------------------------------------------------------------------
@@ -401,10 +317,22 @@ void main (int argc, char **argv)
 
 	//  Set OpenGL program initial state.
 	init();
-	
+
+
+	//Ladowanie tekstur
+	CBMPLoader CrabTex;
+
+	// teksturka
+	CrabTex.LoadBMPFile("dil.bmp");
+	CrabTex.FreeImage();
+	CrabTex.LoadBMPFile("leg.bmp");
+	CrabTex.FreeImage();
+	CrabTex.LoadBMPFile("plane.bmp");
+	CrabTex.FreeImage();
+
 	// Set the callback functions
 	glutDisplayFunc (display);
-	//glutIdleFunc(display);
+
 	glutTimerFunc(1000/fps, myTimer, 1);
 	glutReshapeFunc  (reshape);
 	glutMouseFunc (mouse);
@@ -415,5 +343,6 @@ void main (int argc, char **argv)
 
 	//  Start GLUT event processing loop
 	glutMainLoop();
+
 }
 

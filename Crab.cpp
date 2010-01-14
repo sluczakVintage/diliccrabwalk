@@ -44,51 +44,72 @@ Crab::~Crab()
 
 void Crab::CreateList()
 {
-		GLfloat cube_diffuse[]   = { 0.0, 0.7, 0.7, 1.0 };
-				glMaterialfv( GL_FRONT, GL_DIFFUSE, cube_diffuse );
 
 	glNewList(CRAB, GL_COMPILE);
-				glBegin(GL_TRIANGLE_STRIP);
-					//upper
-					glVertex3f(w_/2,h_/2,d_/2);
-					glVertex3f(w_/2,h_/2,-d_/2);
-					glVertex3f(-w_/2,h_/2,d_/2);
-					glVertex3f(-w_/2,h_/2,-d_/2);
+		GLfloat no_mat[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    	GLfloat mat_ambient[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    	GLfloat mat_ambient_color[] = {0.8f, 0.8f, 0.2f, 1.0f};
+    	GLfloat mat_diffuse[] = {0.6f, 0.6f, 0.6f, 1.0f};
+    	GLfloat mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    	GLfloat no_shininess = 0.0f;
+    	GLfloat low_shininess = 5.0f;
+    	GLfloat high_shininess = 100.0f;
+    	
+   
+        glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, no_mat);
+        glMaterialf(GL_FRONT, GL_SHININESS, no_shininess);
+        glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+
+				glBindTexture(GL_TEXTURE_2D, 1);
+				//gora
+				glBegin(GL_TRIANGLE_STRIP);					
+					glNormal3f(0.0f, 1.0f, 0.0f);
+					glTexCoord2f(0.5f, 1.0f); glVertex3f(w_/2,h_/2,d_/2); 
+					glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2,h_/2,-d_/2);
+					glTexCoord2f(0.5f, 0.0f); glVertex3f(-w_/2,h_/2,d_/2); 
+					glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2,h_/2,-d_/2); 
 				glEnd();
+				//prawa strona
 				glBegin(GL_TRIANGLE_STRIP);				
-					//front
-					glVertex3f(-w_/2,h_/2,d_/2);
-					glVertex3f(-w_/2,-h_/2,d_/2);
-					glVertex3f(w_/2,h_/2,d_/2);
-					glVertex3f(w_/2,-h_/2,d_/2);
+					glNormal3f(0.0f, 0.0f, -1.0f);
+					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,h_/2,d_/2); 
+					glTexCoord2f(0.5f, 1.0f); glVertex3f(-w_/2,-h_/2,d_/2); 
+					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,h_/2,d_/2); 
+					glTexCoord2f(0.5f, 0.0f); glVertex3f(w_/2,-h_/2,d_/2); 
 				glEnd();
-					//bottom
+					//dol
 				glBegin(GL_TRIANGLE_STRIP);
-					glVertex3f(w_/2,-h_/2,d_/2);
-					glVertex3f(-w_/2,-h_/2,d_/2);
-					glVertex3f(w_/2,-h_/2,-d_/2);
-					glVertex3f(-w_/2,-h_/2,-d_/2);	
+					glNormal3f(0.0f, -1.0f, 0.0f);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2,-h_/2,d_/2);
+					glTexCoord2f(0.7f, 1.0f); glVertex3f(-w_/2,-h_/2,d_/2);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
+					glTexCoord2f(0.7f, 0.0f); glVertex3f(-w_/2,-h_/2,-d_/2);	
 				glEnd();
+				//lewa strona
 				glBegin(GL_TRIANGLE_STRIP);
-					//rear
-					glVertex3f(-w_/2,-h_/2,-d_/2);				
-					glVertex3f(-w_/2,h_/2,-d_/2);
-					glVertex3f(w_/2,-h_/2,-d_/2);
-					glVertex3f(w_/2,h_/2,-d_/2);
+					glNormal3f(0.0f, 0.0f, 1.0f);
+					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,-h_/2,-d_/2);				
+					glTexCoord2f(0.5f, 1.0f); glVertex3f(-w_/2,h_/2,-d_/2);
+					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
+					glTexCoord2f(0.5f, 0.0f); glVertex3f(w_/2,h_/2,-d_/2);
 				glEnd();	
+				//tyl
 				glBegin(GL_TRIANGLE_STRIP);
-					//left
-					glVertex3f(-w_/2,h_/2,-d_/2);				
-					glVertex3f(-w_/2,-h_/2,-d_/2);
-					glVertex3f(-w_/2,h_/2,d_/2);
-					glVertex3f(-w_/2,-h_/2,d_/2);
+					glNormal3f(-1.0f, 0.0f, 0.0f);
+					glTexCoord2f(0.7f, 1.0f); glVertex3f(-w_/2,h_/2,-d_/2);				
+					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,-h_/2,-d_/2);
+					glTexCoord2f(0.7f, 0.5f); glVertex3f(-w_/2,h_/2,d_/2);
+					glTexCoord2f(0.6f, 0.5f); glVertex3f(-w_/2,-h_/2,d_/2);
 				glEnd();	
+				//przod
 				glBegin(GL_TRIANGLE_STRIP);
-					//right
-					glVertex3f(w_/2,h_/2,d_/2);				
-					glVertex3f(w_/2,-h_/2,d_/2);
-					glVertex3f(w_/2,h_/2,-d_/2);
-					glVertex3f(w_/2,-h_/2,-d_/2);
+					glNormal3f(1.0f, 0.0f, 0.0f);
+					glTexCoord2f(0.7f, 0.5f); glVertex3f(w_/2,h_/2,d_/2);				
+					glTexCoord2f(0.6f, 0.5f); glVertex3f(w_/2,-h_/2,d_/2);
+					glTexCoord2f(0.7f, 0.0f); glVertex3f(w_/2,h_/2,-d_/2);
+					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
 				glEnd();	
 		glEndList();
 

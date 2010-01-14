@@ -234,7 +234,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CBMPLoader.h"
+				RelativePath=".\CBMPLoader.hpp"
 				>
 			</File>
 			<File
@@ -280,7 +280,15 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\train.bmp"
+				RelativePath=".\dil.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\leg.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\plane.bmp"
 				>
 			</File>
 		</Filter>

@@ -1,3 +1,6 @@
+#ifndef CAMERA_H
+#define CAMERA_H
+
 #include "glut.h"		// Need to include it here because the GL* types are required
 #define PI 3.1415265359
 #define PIdiv180 3.1415265359/180.0
@@ -42,3 +45,6 @@ public:
 SF3dVector F3dVector ( GLfloat x, GLfloat y, GLfloat z );
 SF3dVector AddF3dVectors ( SF3dVector * u, SF3dVector * v);
 void AddF3dVectorToVector ( SF3dVector * Dst, SF3dVector * V2);
+
+
+#endif;
