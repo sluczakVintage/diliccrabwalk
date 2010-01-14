@@ -1,6 +1,6 @@
 #include "LegShort.hpp"
 
-LegShort::LegShort()//(GLfloat x, GLfloat y, GLfloat a, GLfloat b)
+LegShort::LegShort()
 {	
 	compShort0 = new LegCompShort();
 	compShort1 = new LegCompShort();
@@ -22,8 +22,7 @@ LegShort::~LegShort()
 }
 void LegShort::Draw()
 {
-	//bone->animate(); ///////////////////////
-	//	bone->animate_child(); ///////////////////////
+	
 	bone->Draw();
 }
 

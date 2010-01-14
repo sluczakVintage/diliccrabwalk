@@ -7,12 +7,13 @@
 //  Description	: Openning an OpenGL window using GLUT library...
 //  
 //*************************************************************************
-
+#include <vld.h>
 //  Input\Output Stream
 #include <iostream>
 //  Include GLUT, OpenGL, and GLU libraries
 #include "glut.h"
 
+#include "Camera.hpp"
 #include "glutFunc.hpp"
 
 #include "LegCompShort.hpp"
@@ -37,12 +38,11 @@ void centerOnScreen ();
 void drawObject();
 void createProjection();
 void myTimer(int i);
+void keyboard (unsigned char key, int x, int y);
 //VARIABLES
-//Rotation of observer
-float xRot = 150, yRot = -20;
-float xMov = 0, yMov = 0, zMov = 0;
-float aa = 0;/////////////////
-float bb = 0;/////////////////
+
+CCamera Camera;
+
 
 //glOrtho range
 GLfloat nRange = 25.0f;
@@ -60,7 +60,7 @@ char *window_title = "GLUT Window Template";
 
 //  Tells whether to display the window full screen or not
 //  Press Alt + Esc to exit a full screen.
-int full_screen = 1;
+int full_screen = 0;
 
 //Crab Y
 float crab_y = 8.f;
@@ -141,32 +141,20 @@ void createProjection()
 //	OpenGL contents on the window.
 //-------------------------------------------------------------------------
 void display (void)
-{
-
-	//  Clear the window or more specifically the frame buffer...
-	//  This happens by replacing all the contents of the frame
-	//  buffer by the clear color (black in our case)
-	glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-			glRotatef(xRot, 0.0f, 1.0f, 0.0f);
-			glRotatef(yRot, 1.0f, 0.0f, 0.0f);
-			xRot = yRot = 0.0f;
-			
-			glTranslatef(xMov, 0.0f, 0.0f);
-			glTranslatef(0.0f, yMov, 0.0f);
-			glTranslatef(0.0f, 0.0f, zMov);
-			xMov = yMov = zMov = 0.f;
+{		
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glLoadIdentity();
+	Camera.Render();
+	
+	glTranslatef(0.f,-10.f,-14.f);
 		
-		glMatrixMode(GL_MODELVIEW);
-			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-			//  Draw object
-			drawObject ();
-			glFlush();
+	//  Draw object
+	drawObject();
+	glFlush();
 
-		//  Swap contents of backward and forward frame buffers
-		glutSwapBuffers ();
-		
-	glPopMatrix();
+	//  Swap contents of backward and forward frame buffers
+	glutSwapBuffers ();
+
 
 }
 
@@ -177,11 +165,12 @@ void drawObject ()
 {
 	static Plane* plane = new Plane();
 	static Crab* dilCrab = new Crab();
-	//static Le gNormal* leg = new LegNormal(FOR_ODD);//,0.f,8.f);
+	//static LegNormal* leg = new LegNormal(FOR_ODD);//,0.f,8.f);
 	glCallList(PROJECTION);
 
 	plane->Draw();
 	/*glPushMatrix();
+	glRotatef(-90.f,0.f,1.f,0.f);
 	glTranslatef(0.f, 8.f, 0.f);
 	leg->Draw();
 	glPopMatrix();*/
@@ -205,13 +194,13 @@ void reshape (int w, int h)
       glViewport( 0, 0, w, h );
       glMatrixMode( GL_PROJECTION );
       glLoadIdentity();
-      //gluPerspective(70,static_cast<GLdouble>(w/h), 1, 80);
-	   if( w <= h ) {
+      gluPerspective(70,static_cast<GLdouble>(w/h), 1, 80);
+	  /* if( w <= h ) {
          glOrtho( -nRange, nRange, -nRange*h/w, nRange*h/w, -nRange*2.0f , nRange*2.0f);
       }
       else {
 		 glOrtho( -nRange*w/h, nRange*w/h, -nRange, nRange, -nRange*2.0f, nRange*2.0f);
-      }
+      }*/
       glMatrixMode( GL_MODELVIEW );
 	  glLoadIdentity();
     }
@@ -228,6 +217,165 @@ void centerOnScreen ()
 	window_x = (glutGet (GLUT_SCREEN_WIDTH) - window_width)/2;
 	window_y = (glutGet (GLUT_SCREEN_HEIGHT) - window_height)/2;
 
+}
+//-------------------------------------------------------------------------
+//  This function is passed to the glutKeyboardFunc and is called 
+//  whenever the user hits a key.
+//-------------------------------------------------------------------------
+
+
+void keyboard (unsigned char key, int x, int y)
+{
+	float step = 1.0f;
+	//  Print what key the user is hitting
+	cout << "User is hitting the " << key << " key."<< endl;  
+	cout << "ASCII code is "<< key << endl;  
+	
+	switch (key)
+	{
+		//  User hits q key
+		case 'q':
+			exit(0);
+			break;
+		//  User hits w key
+		case 'w':
+			Camera.MoveForwards( -0.1 ) ;
+			break;
+
+		case 'W':
+			Camera.MoveForwards( -1.0 ) ;
+			break;
+
+		//  User hits s key
+		case 's':
+			Camera.MoveForwards( 0.1 ) ;
+			break;
+		case 'S':
+			Camera.MoveForwards( 1 ) ;
+			break;
+
+		//  User hits a key
+		case 'a':
+			Camera.StrafeRight(-0.5);
+			break;
+
+		//  User hits d key
+		case 'd':
+			Camera.StrafeRight(0.5);
+			break;
+		//  User hits r key
+		case 'r':
+			break;
+		//  User hits f key
+		case 'f':
+			break;
+		//  User hits Enter
+		case '\r':
+			cout << "User is hitting the Return key."<< endl;   
+			break;
+
+		//  User hits Space
+		case ' ':
+			cout << "User is hitting the Space key."<< endl;  
+			break;
+
+		//  User hits back space
+		case 8:
+			cout << "User is hitting the Back Space key."<< endl; 
+			break;
+
+		//  User hits ESC key
+		case 27:
+			exit(0);
+			break;
+	}
+
+	glutPostRedisplay ();
+}
+
+//-------------------------------------------------------------------------
+//  This function is passed to the glutSpecialFunc and is called 
+//  whenever the user hits a special key.
+//-------------------------------------------------------------------------
+void special (int key, int x, int y)
+{
+	float step = 1.0f;
+
+
+	switch (key)
+	{
+		case GLUT_KEY_F1 :
+			cout << "F1 function key."<< endl;  
+			break;
+		case GLUT_KEY_F2 :
+			cout << "F2 function key."<< endl;  
+			break;
+		case GLUT_KEY_F3 :
+			cout << "F3 function key."<< endl;  
+			break;
+		case GLUT_KEY_F4 :
+			cout << "F4 function key."<< endl;  
+			break;
+		case GLUT_KEY_F5 :
+			cout << "F5 function key."<< endl;  
+			break;
+		case GLUT_KEY_F6 :
+			cout << "F6 function key."<< endl;  
+			break;
+		case GLUT_KEY_F7 :
+			cout << "F7 function key."<< endl;  
+			break;
+		case GLUT_KEY_F8 :
+			cout << "F8 function key."<< endl;  
+			break;
+		case GLUT_KEY_F9 :
+			cout << "F9 function key."<< endl;  
+			break;
+		case GLUT_KEY_F10 :
+			cout << "F10 function key."<< endl;  
+			break;
+		case GLUT_KEY_F11 :
+			cout << "F11 function key."<< endl; 
+			break;
+		case GLUT_KEY_F12 :
+			cout << "F12 function key."<< endl;  
+			break;
+		case GLUT_KEY_LEFT :
+			cout << "Left directional key."<< endl; 
+			Camera.RotateY(5.0);
+			break;
+		case GLUT_KEY_UP :
+			cout << "Up directional key."<< endl;  
+			Camera.Move(F3dVector(0.0,0.3,0.0));
+			break;
+		case GLUT_KEY_RIGHT :
+			cout << "Right directional key."<< endl;  
+			Camera.RotateY(-5.0);
+			break;
+		case GLUT_KEY_DOWN :
+			cout << "Down directional key."<< endl;  
+			Camera.Move(F3dVector(0.0,-0.3,0.0));
+			break;
+		case GLUT_KEY_PAGE_UP :
+			Camera.RotateX(5.0);
+			cout << "Page up directional key."<< endl;  
+			break;
+		case GLUT_KEY_PAGE_DOWN :
+			Camera.RotateX(-5.0);
+		cout << "Page down directional key."<< endl;  
+			break;
+		case GLUT_KEY_HOME :
+			cout << "Home directional key."<< endl;  
+			break;
+		case GLUT_KEY_END :
+			cout << "End directional key."<< endl;  
+			break;
+		case GLUT_KEY_INSERT :
+			cout << "Inset directional key."<< endl;  
+			break;
+	}
+	
+	glutPostRedisplay ();
 }
 
 //-------------------------------------------------------------------------

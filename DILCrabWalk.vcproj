@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="vld.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -175,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Camera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CBMPLoader.cpp"
 				>
 			</File>
@@ -222,6 +227,10 @@
 			>
 			<File
 				RelativePath=".\Bone.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Camera.hpp"
 				>
 			</File>
 			<File

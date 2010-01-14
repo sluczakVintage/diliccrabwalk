@@ -32,8 +32,9 @@ class CBMPLoader
 
       bool LoadBMPFile(char *filename);   // Load a .bmp image file.
       void FreeImage();                   // Delete a image.
+	  GLuint GetID() { return ID; }
 
-      unsigned int ID;                    // ID used for generating the textures in OpenGl.
+      GLuint ID;                    // ID used for generating the textures in OpenGl.
       int imageWidth;                     // Width of a texture.
       int imageHeight;                    // Height of a texture.
 

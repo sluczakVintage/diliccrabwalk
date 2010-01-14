@@ -1,14 +1,14 @@
 #include "Crab.hpp"
-//#include "Bone.hpp"
 
 #include <iostream>
 using namespace std;
-//extern GLfloat nRange;
+
 
 Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 {	
+	// Stworz liste
 	CreateList();
-
+	// Dodaj nogi do korpusu
 	LegShort* leg_sh = new LegShort();
 	LegNormal* leg_for_even = new LegNormal(FOR_EVEN);
 	LegNormal* leg_for_odd = new LegNormal(FOR_ODD);
@@ -24,6 +24,11 @@ Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 		legs.push_back(leg_back_odd);
 	}
 
+	//delete leg_sh;
+	//delete leg_for_even;
+	//delete leg_for_odd;
+	//delete leg_back_even;
+	//delete leg_back_odd;
 	cout << "Crab has been created!" << endl;
 	
 }
@@ -35,13 +40,6 @@ Crab::~Crab()
 		delete *it;
 	} 
 	legs.clear();
-
-	//delete leg_sh;
-	//delete leg_for_even;
-	//delete leg_for_odd;
-	//delete leg_back_even;
-	//delete leg_back_odd;
-
 }
 
 void Crab::CreateList()
@@ -121,18 +119,14 @@ void Crab::drawLegs()
 
 void Crab::Draw(GLfloat x, GLfloat y, GLfloat z)
 {
-//	int x=0,y=0,z =0;
 	GLfloat cube_diffuse[]   = { 0.0, 0.7, 0.7, 1.0 };
-	//  Show when are displaying an object
-	
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	
-	//begin drawing crab torso
+		
+	// Wyrysuj korpus ukladu 
 	glPushMatrix();
 				glTranslatef( x, y, z );
 				glCallList(CRAB);
 				glPushMatrix();
+					// Wyrysuj nogi
 					drawLegs();	
 				glPopMatrix();
 	glPopMatrix();

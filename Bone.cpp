@@ -92,6 +92,7 @@ void Bone::Draw()
 {
 	glPushMatrix();
 	
+	// Obroc zgodnie z zadanym katem
 	glRotatef(a_, 0.0, 0.0, 1.0);
 
 	glBegin(GL_LINES);
@@ -99,14 +100,45 @@ void Bone::Draw()
 	glColor3f(0.0, 0.0, 1.0);	glVertex2f(l_, 0);
 	glEnd();
 
+	// Odrysuj siatke
 	mesh_->Draw();
 
-	/* Translate to reach the new starting position */
+	// Przemiesc na koncowy punkt kosci
 	glTranslatef(l_, 0.0, 0.0);
 
-	/* Call function on my children */
+	// Jesli ma dzieci, dokonaj odrysowania zamkniecia stawow
 	if(child_!=NULL){
-		glRotatef(0.0f, 0.0, 0.0, 1.0);/////
+
+	float cosinus_a, sinus_a, d_, child_d, w_, child_w;
+	cosinus_a = cosf(-deg2rad(child_->a_));
+	sinus_a = sinf(-deg2rad(child_->a_));
+	d_ = mesh_->ReturnD();
+	child_d = child_->mesh_->ReturnD();
+	w_ = mesh_->ReturnW();
+	child_w = child_->mesh_->ReturnW();
+	
+
+				glBegin(GL_TRIANGLE_STRIP);
+					glVertex3f(child_d *sinus_a, child_d * cosinus_a, child_w/2);
+					glVertex3f(child_d * sinus_a, child_d * cosinus_a, -child_w/2);
+					glVertex3f(0.f, d_,w_/2);
+					glVertex3f(0.f, d_,-w_/2);	
+				glEnd();
+				glBegin(GL_TRIANGLE_STRIP);
+					glVertex3f(0.f, d_, w_/2);
+					glVertex3f(0.f, 0.f, w_/2);
+					glVertex3f(child_d * sinus_a, child_d * cosinus_a,child_w/2);
+				glEnd();
+				glBegin(GL_TRIANGLE_STRIP);
+					glVertex3f(0.f, 0.f, -w_/2);
+					glVertex3f(0.f, d_, -w_/2);	
+					glVertex3f(d_ * sinus_a,child_d * cosinus_a,-child_w/2);								
+				glEnd();
+	}
+
+	// wywolaj rysowanie dzieci
+	if(child_!=NULL){
+		glRotatef(0.0f, 0.0, 0.0, 1.0);
 		child_->Draw();
 	}
 		
@@ -114,7 +146,7 @@ void Bone::Draw()
 }
 
 
-void Bone::animate() //time
+void Bone::animate() 
 {
 		if(animFlag_ == AN_UP_FRONT)
 			animUpFront();

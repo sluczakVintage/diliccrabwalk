@@ -18,9 +18,10 @@
 class LegShort : public Leg
 {
 public:
-	LegShort();//(GLfloat x, GLfloat y, GLfloat a, GLfloat b);
+	LegShort();
 	~LegShort();
 
+	/// Metoda rysujaca krotka noge
 	void Draw();
 	
 

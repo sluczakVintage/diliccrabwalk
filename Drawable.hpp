@@ -20,8 +20,11 @@ class Drawable
 public:
 	virtual void Draw() = 0;//GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f) = 0;
 	virtual void CreateList() = 0;
+	
 
 	virtual const GLfloat ReturnH() const = 0;
+	virtual const GLfloat ReturnW() const = 0;
+	virtual const GLfloat ReturnD() const = 0;
 
 };
 

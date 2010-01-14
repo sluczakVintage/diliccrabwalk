@@ -17,7 +17,7 @@
 #include "LegNormal.hpp"
 #include "LegShort.hpp"
 
-class Crab //: public Drawable
+class Crab
 {
 public:
 	Crab();
