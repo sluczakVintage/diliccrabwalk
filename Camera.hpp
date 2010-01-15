@@ -1,15 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "glut.h"		// Need to include it here because the GL* types are required
+#include "glut.h"		
 #define PI 3.1415265359
 #define PIdiv180 3.1415265359/180.0
 
-/////////////////////////////////
-//Note: All angles in degrees  //
-/////////////////////////////////
 
-struct SF3dVector  //Float 3d-vect, normally used
+struct SF3dVector  
 {
 	GLfloat x,y,z;
 };
@@ -29,9 +26,9 @@ private:
 	GLfloat RotatedX, RotatedY, RotatedZ;	
 	void GetViewDir ( void );
 public:
-	CCamera();				//inits the values (Position: (0|0|0) Target: (0|0|-1) )
-	void Render ( void );	//executes some glRotates and a glTranslate command
-							//Note: You should call glLoadIdentity before using Render
+	CCamera();				
+	void Render ( void );	
+							
 	void Move ( SF3dVector Direction );
 	void RotateX ( GLfloat Angle );
 	void RotateY ( GLfloat Angle );

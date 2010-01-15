@@ -1,5 +1,6 @@
 
 #include "glutFunc.hpp"
+#include "Drawable.hpp"
 #include <math.h>
 
 using namespace std;
@@ -8,9 +9,49 @@ extern CCamera Camera;
 
 //TEST
 extern GLfloat xSpotDir, ySpotDir, zOffset, spotCutOff;
+extern GLfloat nRange;
+
 
 namespace glut
 {
+
+// Stworz uklad wspolrzednych
+void createProjection()
+{
+	glNewList(PROJECTION, GL_COMPILE);
+		glBegin(GL_LINES);
+			//oX AXIS
+			glVertex3f(-nRange,0.0f,0.0f);
+			glVertex3f(nRange,0.0f,0.0f);
+
+			glVertex3f(nRange,0.0f,0.0f);
+			glVertex3f((nRange*0.95f),nRange*0.05f,0.0f);
+
+			glVertex3f(nRange,0.0f,0.0f);
+			glVertex3f((nRange*0.95f),-nRange*0.05f,0.0f);
+
+			//oZ AXIS
+			glVertex3f(0.f,0.0f,-nRange);
+			glVertex3f(0.f,0.0f,nRange);
+
+			glVertex3f(0.0f,0.0f,nRange);
+			glVertex3f(-nRange*0.05f,0.0f,(nRange*0.95f));
+			
+			glVertex3f(0.0f,0.0f,nRange);
+			glVertex3f(nRange*0.05f,0.0f,(nRange*0.95f));
+			
+			//oY AXIS
+			glVertex3f(0.f,nRange,0.0f);
+			glVertex3f(0.f,-nRange,0.0f);
+
+			glVertex3f(0.f,nRange,0.0f);
+			glVertex3f(nRange*0.05f,(nRange*0.95f),0.0f);
+
+			glVertex3f(0.f,nRange,0.0f);
+			glVertex3f(-nRange*0.05f,(nRange*0.95f),0.0f);
+		glEnd();
+	glEndList();
+}
 /*-------------------------------------------------------------------------
   This function is passed to the glutMouseFunc and is called 
   whenever the mouse is clicked.
@@ -258,10 +299,6 @@ void special (int key, int x, int y)
 			cout << "Inset directional key."<< endl;  
 			break;
 	}
-	
-		
-	
-	
 	
 	glutPostRedisplay ();
 }

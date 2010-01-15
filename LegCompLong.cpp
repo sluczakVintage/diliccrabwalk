@@ -85,21 +85,7 @@ void LegCompLong::CreateList()
 }
 
 
-void LegCompLong::Draw()//GLfloat x, GLfloat y, GLfloat z)
+void LegCompLong::Draw()
 {
-	//  Show when are displaying an object
-
-//int x=0,y=0,z =0;
-//  glMatrixMode(GL_MODELVIEW);
-//	glLoadIdentity();
-
-//	glPushMatrix();
-//				glTranslatef( x, y, z );
-//				glCallList(PROJECTION);
-	//begin drawing short component
-				//glTranslatef(h_/2,0.0f,0.0f);
-				//glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-				//glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
 				glCallList(LONG_COMP);				
-//	glPopMatrix();
 }

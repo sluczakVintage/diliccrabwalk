@@ -1,6 +1,6 @@
 #include "LegNormal.hpp"
 
-LegNormal::LegNormal(int flag)// GLfloat x, GLfloat y)
+LegNormal::LegNormal(int flag)
 {	
 	GLfloat a = 0.f, child_a = 0.f;
 	compShort = new LegCompShort();

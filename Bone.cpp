@@ -6,6 +6,8 @@
 #include <math.h>
 
 extern float crab_y;
+extern float crab_z;
+static float last_equation = 0.0f;
 
 bool Bone::oddHit_= false;
 
@@ -79,7 +81,7 @@ template <unsigned n> inline float power(float x) {
 template <> inline float power<0>(float x) {
 	return 1.0;
 }
-//-----------------------------------------------------------------compilation time operations
+//-----------------------------------------------------------------obliczenia w czasie kompilacji
 template <typename T> inline float rl2(float r, float l) {
 	return (2.0f*r*l);
 }
@@ -147,45 +149,50 @@ void Bone::Draw()
 	if(child_!=NULL){
 
 	// obliczanie wartosci wierzcholkow na potrzeby przeliczenia normalnej i wyswietlenia lacznika
-	Vector3f vector1, vector2, vector3, normalV;
+		Vector3f vector1, vector2, vector3, normalV;
+		int segments = 10;
+		for(int i = 0; i < segments; i++)
+		{
+			vector1.x_ = child_->mesh_->ReturnD() * sinf(-deg2rad((i+1)*child_->a_/segments));
+			vector1.y_ = child_->mesh_->ReturnD() * cosf(-deg2rad((i+1)*child_->a_/segments));
+			vector1.z_ = child_->mesh_->ReturnW()/2;
 
-	vector1.x_ = child_->mesh_->ReturnD() * sinf(-deg2rad(child_->a_));
-	vector1.y_ = child_->mesh_->ReturnD() * cosf(-deg2rad(child_->a_));
-	vector1.z_ = child_->mesh_->ReturnW()/2;
+			vector2.x_ = child_->mesh_->ReturnD() * sinf(-deg2rad(i*child_->a_/segments));
+			vector2.y_ = child_->mesh_->ReturnD() * cosf(-deg2rad(i*child_->a_/segments));
+			vector2.z_ = mesh_->ReturnW()/2;
 
-	vector2.x_ = 0.f;
-	vector2.y_ = mesh_->ReturnD();
-	vector2.z_ = (mesh_->ReturnW()/2);
+			vector3.x_ = vector1.x_;
+			vector3.y_ = vector1.y_;
+			vector3.z_ = -vector1.z_;
 
-	vector3.x_ = vector1.x_;
-	vector3.y_ = vector1.y_;
-	vector3.z_ = -vector1.z_;
-
-	// Obliczanie normalnej dla lacznika kryjacego staw
-	Vector3f edge1 = substractV3f(vector1, vector3);
-	Vector3f edge2 = substractV3f(vector3, vector2);
-	normalV = normalize(crossProduct(edge1, edge2));
-				
-				//Wyrysowanie lacznika miedzy obudowami kosci
-				glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(normalV.x_, normalV.y_, normalV.z_);
-					glVertex3f(vector1.x_, vector1.y_, vector1.z_);
-					glVertex3f(vector3.x_, vector3.y_, vector3.z_);
-					glVertex3f(vector2.x_, vector2.y_, vector2.z_);
-					glVertex3f(vector2.x_, vector2.y_, -vector2.z_);	
-				glEnd();
-				glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(0.0f, 0.0f, 1.0f);
-					glVertex3f(vector2.x_, vector2.y_, vector2.z_);
-					glVertex3f(vector2.x_, 0.0f, vector2.z_);
-					glVertex3f(vector1.x_, vector1.y_, vector1.z_);
-				glEnd();
-				glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(0.0f, 0.0f, -1.0f);
-					glVertex3f(vector2.x_, 0.0f, -vector2.z_);
-					glVertex3f(vector2.x_, vector2.y_, -vector2.z_);	
-					glVertex3f(vector1.x_, vector1.y_, -vector1.z_);								
-				glEnd();
+			// Obliczanie normalnej dla lacznika kryjacego staw
+			Vector3f edge1 = substractV3f(vector1, vector3);
+			Vector3f edge2 = substractV3f(vector3, vector2);
+			normalV = normalize(crossProduct(edge1, edge2));
+			
+						//Wyrysowanie lacznika miedzy obudowami kosci
+						glBindTexture(GL_TEXTURE_2D, 2);
+						glBegin(GL_TRIANGLE_STRIP);
+							glNormal3f(normalV.x_, normalV.y_, normalV.z_);
+							glTexCoord2f(1.0f, 1.0f  ); glVertex3f(vector1.x_, vector1.y_, vector1.z_);
+							glTexCoord2f(0.8f, 1.0f  ); glVertex3f(vector3.x_, vector3.y_, vector3.z_);
+							glTexCoord2f(1.0f, 0.95f ); glVertex3f(vector2.x_, vector2.y_, vector2.z_);
+							glTexCoord2f(0.8f, 0.95f ); glVertex3f(vector2.x_, vector2.y_, -vector2.z_);	
+						glEnd();
+						glBegin(GL_TRIANGLE_STRIP);
+							glNormal3f(0.0f, 0.0f, 1.0f);
+							glTexCoord2f( 0.2f, 1.0f ); glVertex3f(vector2.x_, vector2.y_, vector2.z_);
+							glTexCoord2f( 0.0f, 1.0f ); glVertex3f(0.0f, 0.0f, vector2.z_);
+							glTexCoord2f( 0.2f, 0.95f); glVertex3f(vector1.x_, vector1.y_, vector1.z_);
+						glEnd();
+						glBegin(GL_TRIANGLE_STRIP);
+							glNormal3f(0.0f, 0.0f, -1.0f);
+							glTexCoord2f( 0.2f, 1.0f ); glVertex3f(vector2.x_, vector2.y_, -vector2.z_);
+							glTexCoord2f( 0.0f, 1.0f); glVertex3f(vector3.x_, vector3.y_, vector3.z_);								
+							glTexCoord2f( 0.2f, 0.95f ); glVertex3f(0.0f, 0.0f, -vector2.z_);	
+							
+						glEnd();
+		}
 	}
 
 	// wywolaj rysowanie dzieci
@@ -303,9 +310,12 @@ void Bone::animMove()
 	cout << "animMove()" << endl;
 	float sin_b = sinf( deg2rad(child_->a_) );
 	float cos_b = cosf( deg2rad(child_->a_) );
-
-	float equation = ( sinf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) + ( child_->l_ ) * sin_b  * cosf( deg2rad(a_) ) );
 	
+	//float equation_x = ( cosf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) - ( child_->l_ ) * sin_b  * sinf( deg2rad(a_) ) );
+
+	//crab_z += equation_x - last_equation;
+	//last_equation = equation_x;
+
 	childOffsetA_ = -off_;
 
 	if( ( flag_ == BACK_EVEN || flag_ == BACK_ODD ) && child_->a_ > MaxB ) 

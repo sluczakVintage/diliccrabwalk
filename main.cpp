@@ -5,7 +5,6 @@
 #include <map>
 
 #include "glut.h"
-//#include "glext.h"
 
 #include "Camera.hpp"
 #include "TexLoader.hpp"
@@ -23,11 +22,12 @@ using namespace glut;
 
 //Wysokosc kraba //////////// @TODO
 float crab_y = 10.f;
+float crab_z = 0.f;
 
 
 //  rozmiar okna
-int window_width = 800;
-int window_height = 600;
+int window_width = 1000;
+int window_height = 800;
 
 //  Etykieta okna
 char *window_title = "DIL Crab Walk";
@@ -36,7 +36,7 @@ char *window_title = "DIL Crab Walk";
 int full_screen = 0;
 
 //FPS
-int fps = 100;
+int fps = 60;
 
 // predeklaracja funkcji inicjalizujacej OGL
 void init ();
@@ -56,11 +56,8 @@ CCamera Camera;
 
 //mgla
  
-GLfloat fogColor[4]= {0.25f, 0.105f, 0.33f, 1.0f};	
+GLfloat fogColor[4]= {0.0f, 0.0f, 0.0f, 1.0f};	
 glut::PFNGLFOGCOORDFEXTPROC glFogCoordfEXT = NULL;					// Our glFogCoordfEXT Function
-
-//bump
-#define MAX_EMBOSS (GLfloat)0.01f						// Maximum Emboss-Translate. Increase To Get Higher Immersion
 
 //glOrtho range
 GLfloat nRange = 25.0f;
@@ -99,11 +96,11 @@ pozycyjne
  */
 void initPosLight()
 {
-    GLfloat yellowAmbientDiffuse[] = {0.6f, 0.6f, 0.6f, 1.0f};
+    GLfloat ambientDiffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
     GLfloat position[] = { 0.0, 40.0, 10.0, 1.0 };
    
-    glLightfv(GL_LIGHT1, GL_AMBIENT, yellowAmbientDiffuse);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, yellowAmbientDiffuse);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientDiffuse);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, ambientDiffuse);
     glLightfv(GL_LIGHT1, GL_POSITION, position);
 
 	glEnable( GL_LIGHT1 );
@@ -128,7 +125,7 @@ spot
 void initSpot()
 {
   
-    GLfloat noAmbient[] = {0.0f, 0.0f, 0.1f, 1.0f};       
+    GLfloat noAmbient[] = {0.0f, 0.0f, 0.5f, 1.0f};       
     GLfloat diffuse[]   = {1.0f, 1.0f, 1.0f, 1.0f};
     GLfloat position[]  = { 0.0, 30.0, 0.0, 1.0 };
    
@@ -139,7 +136,7 @@ void initSpot()
    
     updateSpot();
    
-    glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 25.0f);
+    glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 50.0f);
    
     glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 1.0f);
     glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.0f);
@@ -168,6 +165,7 @@ int Extension_Init()
 }
 
 
+
 // inicjalizacja OGL
 void init ()
 {    
@@ -175,7 +173,7 @@ void init ()
 	glEnable( GL_TEXTURE_2D );
 	glEnable(GL_CULL_FACE);
 	
-	glClearColor (0.0f, 0.0f, 0.0f, 0.5f);
+	glClearColor (1.0f, 1.0f, 1.0f, 0.5f);
 	glClearDepth (1.0f);							
 	
 	glDepthFunc (GL_LEQUAL);
@@ -188,20 +186,18 @@ void init ()
 
 	
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-
 	
-	
-	//if (!Extension_Init())
-	//	exit(0);
+	if (!Extension_Init())
+		exit(0);
 
-	//glEnable(GL_FOG);							
-	//glFogi(GL_FOG_MODE, GL_LINEAR);				
-	//glFogfv(GL_FOG_COLOR, fogColor);
-	//glFogf(GL_FOG_DENSITY, 0.02f);
-	//glFogf(GL_FOG_START,  0.0f);				
-	//glFogf(GL_FOG_END,    1.0f);				
-	//glHint(GL_FOG_HINT, GL_NICEST);				
-	//glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT);		
+	glEnable(GL_FOG);							
+	glFogi(GL_FOG_MODE, GL_LINEAR);				
+	glFogfv(GL_FOG_COLOR, fogColor);
+	glFogf(GL_FOG_DENSITY, 0.02f);
+	glFogf(GL_FOG_START,  0.0f);				
+	glFogf(GL_FOG_END,    1.0f);				
+	glHint(GL_FOG_HINT, GL_NICEST);				
+	glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT);		
 
 
 	initSpot();
@@ -210,54 +206,15 @@ void init ()
 	glEnable( GL_LIGHTING );
 	    
 
-	createProjection();
+	glut::createProjection();
     
 
 	
 }
 
-// Stworz uklad wspolrzednych
-void createProjection()
-{
-	glNewList(PROJECTION, GL_COMPILE);
-		glBegin(GL_LINES);
-			//oX AXIS
-			glVertex3f(-nRange,0.0f,0.0f);
-			glVertex3f(nRange,0.0f,0.0f);
 
-			glVertex3f(nRange,0.0f,0.0f);
-			glVertex3f((nRange*0.95f),nRange*0.05f,0.0f);
-
-			glVertex3f(nRange,0.0f,0.0f);
-			glVertex3f((nRange*0.95f),-nRange*0.05f,0.0f);
-
-			//oZ AXIS
-			glVertex3f(0.f,0.0f,-nRange);
-			glVertex3f(0.f,0.0f,nRange);
-
-			glVertex3f(0.0f,0.0f,nRange);
-			glVertex3f(-nRange*0.05f,0.0f,(nRange*0.95f));
-			
-			glVertex3f(0.0f,0.0f,nRange);
-			glVertex3f(nRange*0.05f,0.0f,(nRange*0.95f));
-			
-			//oY AXIS
-			glVertex3f(0.f,nRange,0.0f);
-			glVertex3f(0.f,-nRange,0.0f);
-
-			glVertex3f(0.f,nRange,0.0f);
-			glVertex3f(nRange*0.05f,(nRange*0.95f),0.0f);
-
-			glVertex3f(0.f,nRange,0.0f);
-			glVertex3f(-nRange*0.05f,(nRange*0.95f),0.0f);
-		glEnd();
-	glEndList();
-}
-//-------------------------------------------------------------------------
-//  This function is passed to glutDisplayFunc in order to display 
-//	OpenGL contents on the window.
-//-------------------------------------------------------------------------
-void display (void)
+// Wyswietlenie wszystkiego
+void display ()
 {		
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glLoadIdentity();
@@ -266,19 +223,16 @@ void display (void)
 
 	glTranslatef(0.f,-20.f,-14.f);
 		
-	//  Draw object
 	drawObject();
 	glFlush();
 
-	//  Swap contents of backward and forward frame buffers
+	//  Zamiana buforow
 	glutSwapBuffers ();
 
 
 }
 
-//-------------------------------------------------------------------------
-//  Draws our object.
-//-------------------------------------------------------------------------
+// Wyrysowanie sceny
 void drawObject ()
 {
 	static Plane plane;
@@ -293,9 +247,10 @@ void drawObject ()
 	glTranslatef(0.f, 8.f, 0.f);
 	leg->Draw();
 	glPopMatrix();*/
-	dilCrab.Draw(0.f, crab_y, 0.f);
+	dilCrab.Draw(0.0f, crab_y, crab_z);
 }
 
+// timer ograniczajacy predkosc animacji
 void myTimer(int value){
 
 glutPostRedisplay();
@@ -303,10 +258,7 @@ glutTimerFunc(1000/fps, myTimer, 1);
 
 }
 
-//-------------------------------------------------------------------------
-//  This function is passed to the glutReshapeFunc and is called 
-//  whenever the window is resized.
-//-------------------------------------------------------------------------
+// wywolywana przy zmianie rozmiarow okna
 void reshape (int w, int h)
 {
 	  if( h > 0 && w > 0 ) {
@@ -323,62 +275,46 @@ void reshape (int w, int h)
       glMatrixMode( GL_MODELVIEW );
 	  glLoadIdentity();
     }
-	//  Print current width and height on the screen
-	cout << "Window Width: " << w << ", Window Height: " << h << endl;
+	
+	cout << "Szer. okna: " << w << ", Wysokosc okna: " << h << endl;
 }
 
-//-------------------------------------------------------------------------
-//  This function sets the window x and y coordinates
-//  such that the window becomes centered
-//-------------------------------------------------------------------------
+// Centrowanie (okna) na srodek ekranu
 void centerOnScreen ()
 {
 	window_x = (glutGet (GLUT_SCREEN_WIDTH) - window_width)/2;
 	window_y = (glutGet (GLUT_SCREEN_HEIGHT) - window_height)/2;
 
 }
-
-//-------------------------------------------------------------------------
-//  Program Main method.
-//-------------------------------------------------------------------------
 int main (int argc, char **argv)
 {
-	//  Set the window x and y coordinates such that the 
-	//  window becomes centered
 	centerOnScreen ();
-	//  Connect to the windowing system + create a window
-	//  with the specified dimensions and position
-	//  + set the display mode + specify the window title.
 	glutInit(&argc, argv);
 	glutInitWindowSize (window_width, window_height);
 	glutInitWindowPosition (window_x, window_y);
-	 glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
+	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
 	glutCreateWindow (window_title);
 
-	//  View in full screen if the full_screen flag is on
+	// pelen ekran
 	if (full_screen)
 		glutFullScreen ();
 
-	//  Set OpenGL program initial state.
+	// inicjalizacja
 	init();
-
 
 	//Ladowanie tekstur
 	 GLuint	texture[10];	
 
-	// teksturka
-	 
 	if (!BuildTexture("dil.bmp", texture[0]))
 		return 1;	
 	if (!BuildTexture("leg.bmp", texture[1]))
 		return 1;	
-	if (!BuildTexture("plane.bmp", texture[2]))
+	if (!BuildTexture("plane.jpg", texture[2]))
 		return 1;	
 	if (!BuildTexture("alpha.gif", texture[3]))
 		return 1;	
 
-	
-	// Set the callback functions
+	// Ustawienie metod glut
 	glutDisplayFunc (display);
 
 	glutTimerFunc(1000/fps, myTimer, 1);
@@ -389,7 +325,6 @@ int main (int argc, char **argv)
 	glutKeyboardFunc (keyboard);
 	glutSpecialFunc (special);
 
-	//  Start GLUT event processing loop
 	glutMainLoop();
 
 	return 0;
