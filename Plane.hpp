@@ -16,7 +16,7 @@ class Plane //: public Drawable
 {
 public:
 	Plane();
-	~Plane();
+	//~Plane();
 
 	void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f);
 

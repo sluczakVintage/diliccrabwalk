@@ -152,7 +152,7 @@ void init ()
 {    
 	glEnable( GL_DEPTH_TEST );
 	glEnable( GL_TEXTURE_2D );
-	glShadeModel( GL_SMOOTH );
+	glShadeModel( GL_PHONG_WIN );
 	glEnable(GL_CULL_FACE);
 
     glDepthFunc( GL_LESS );
@@ -238,18 +238,19 @@ void display (void)
 //-------------------------------------------------------------------------
 void drawObject ()
 {
-	static Plane* plane = new Plane();
-	static Crab* dilCrab = new Crab();
+	static Plane plane;
+	static Crab dilCrab;
+
 	//static LegNormal* leg = new LegNormal(FOR_ODD);//,0.f,8.f);
 	glCallList(PROJECTION);
 
-	plane->Draw();
+	plane.Draw();
 	/*glPushMatrix();
 	glRotatef(-90.f,0.f,1.f,0.f);
 	glTranslatef(0.f, 8.f, 0.f);
 	leg->Draw();
 	glPopMatrix();*/
-	dilCrab->Draw(0.f, crab_y, 0.f);
+	dilCrab.Draw(0.f, crab_y, 0.f);
 }
 
 void myTimer(int value){

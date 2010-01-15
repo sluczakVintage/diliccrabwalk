@@ -9,11 +9,11 @@ Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 	// Stworz liste
 	CreateList();
 	// Dodaj nogi do korpusu
-	LegShort* leg_sh = new LegShort();
-	LegNormal* leg_for_even = new LegNormal(FOR_EVEN);
-	LegNormal* leg_for_odd = new LegNormal(FOR_ODD);
-	LegNormal* leg_back_even = new LegNormal(BACK_EVEN);
-	LegNormal* leg_back_odd = new LegNormal(BACK_ODD);
+	leg_sh = new LegShort();
+	leg_for_even = new LegNormal(FOR_EVEN);
+	leg_for_odd = new LegNormal(FOR_ODD);
+	leg_back_even = new LegNormal(BACK_EVEN);
+	leg_back_odd = new LegNormal(BACK_ODD);
 
 	for(int i = 0; i < 2; i++)
 		legs.push_back(leg_sh);
@@ -23,23 +23,20 @@ Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
 		legs.push_back(leg_for_odd);
 		legs.push_back(leg_back_odd);
 	}
-
-	//delete leg_sh;
-	//delete leg_for_even;
-	//delete leg_for_odd;
-	//delete leg_back_even;
-	//delete leg_back_odd;
-	cout << "Crab has been created!" << endl;
+ 	cout << "Crab stworzony!" << endl;
 	
 }
 
 Crab::~Crab()
 {
-	for(vector<Leg*>::iterator it = legs.begin(); it != legs.end(); it++)
-	{
-		delete *it;
-	} 
+	delete leg_sh;
+	delete leg_for_even;
+	delete leg_for_odd;
+	delete leg_back_even;
+	delete leg_back_odd;
+
 	legs.clear();
+	
 }
 
 void Crab::CreateList()
