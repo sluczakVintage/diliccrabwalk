@@ -5,9 +5,10 @@
 #include <map>
 
 #include "glut.h"
+//#include "glext.h"
 
 #include "Camera.hpp"
-#include "CBMPLoader.hpp"
+#include "TexLoader.hpp"
 #include "glutFunc.hpp"
 
 #include "LegCompShort.hpp"
@@ -18,6 +19,11 @@
 
 using namespace std;
 using namespace glut;
+
+
+//Wysokosc kraba //////////// @TODO
+float crab_y = 10.f;
+
 
 //  rozmiar okna
 int window_width = 800;
@@ -48,6 +54,13 @@ void createProjection();
 //Kamera
 CCamera Camera;
 
+//mgla
+ 
+GLfloat fogColor[4]= {0.25f, 0.105f, 0.33f, 1.0f};	
+glut::PFNGLFOGCOORDFEXTPROC glFogCoordfEXT = NULL;					// Our glFogCoordfEXT Function
+
+//bump
+#define MAX_EMBOSS (GLfloat)0.01f						// Maximum Emboss-Translate. Increase To Get Higher Immersion
 
 //glOrtho range
 GLfloat nRange = 25.0f;
@@ -56,23 +69,21 @@ GLfloat nRange = 25.0f;
 int window_x;
 int window_y;
 
-
-//Wysokosc kraba //////////// @TODO
-float crab_y = 8.f;
-
 //wspolzedne spot
-GLfloat xSpotDir= 0, ySpotDir= 0, zOffset= 0, spotCutOff= 80.f;
+GLfloat xSpotDir= 0, ySpotDir= 0, zOffset= 0, spotCutOff= 90.f;
+
+
 
 //Swiatla 
+/**
+* GL_LIGHT0
+kierunkowe
+*/
 void initDirLight()
 {
     GLfloat noAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
     GLfloat whiteDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    /*
-     * Directional light source (w = 0)
-     * The light source is at an infinite distance,
-     * all the ray are parallel and have the direction (x, y, z).
-     */
+    
     GLfloat position[] = { 0.0, 40.0, 10.0, 0.0 };
    
     glLightfv(GL_LIGHT0, GL_AMBIENT, noAmbient);
@@ -84,21 +95,11 @@ void initDirLight()
 
 /**
  * GL_LIGHT1
- * - positional light source
- * - yellow ambient
- * - yellow diffuse
- *
- * Rem:
- * To have a "real" effect, set the ambient and diffuse to the same color.
+pozycyjne
  */
 void initPosLight()
 {
-    GLfloat yellowAmbientDiffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
-    /*
-     * Positional light source (w = 1)
-     * The light source is positioned at (x, y, z).
-     * The ray come from this particular location (x, y, z) and goes towards all directions.
-     */
+    GLfloat yellowAmbientDiffuse[] = {0.6f, 0.6f, 0.6f, 1.0f};
     GLfloat position[] = { 0.0, 40.0, 10.0, 1.0 };
    
     glLightfv(GL_LIGHT1, GL_AMBIENT, yellowAmbientDiffuse);
@@ -108,25 +109,28 @@ void initPosLight()
 	glEnable( GL_LIGHT1 );
 }
 
-/*
- * Update position, direction and cut-off of the light
- */
+/**
+* odswiezanie pozycji spota
+*/
 void updateSpot()
 {
     GLfloat direction[] = {xSpotDir, ySpotDir, zOffset};
    
-    //spot direction
     glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, direction);
-    //angle of the cone light emitted by the spot : value between 0 to 180
+
     glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, spotCutOff);
 }
 
+/**
+* GL_LIGHT2
+spot
+*/
 void initSpot()
 {
   
-    GLfloat noAmbient[] = {0.0f, 0.0f, 0.4f, 1.0f};       
+    GLfloat noAmbient[] = {0.0f, 0.0f, 0.1f, 1.0f};       
     GLfloat diffuse[]   = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat position[]  = { 0.0, 40.0, 0.0, 1.0 };
+    GLfloat position[]  = { 0.0, 30.0, 0.0, 1.0 };
    
 
     glLightfv(GL_LIGHT2, GL_AMBIENT, noAmbient);
@@ -135,32 +139,71 @@ void initSpot()
    
     updateSpot();
    
-    //exponent propertie defines the concentration of the light
-    glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 15.0f);
+    glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 25.0f);
    
-    //light attenuation (default values used here : no attenuation with the distance)
     glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 1.0f);
     glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.0f);
+    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.00f);
 
 	glEnable( GL_LIGHT2 );
+}
+
+int Extension_Init()
+{
+	char Extension_Name[] = "EXT_fog_coord";
+
+	// Allocate Memory For Our Extension String
+	char* glextstring=(char *)malloc(strlen((char *)glGetString(GL_EXTENSIONS))+1);
+	strcpy (glextstring,(char *)glGetString(GL_EXTENSIONS));		// Grab The Extension List, Store In glextstring
+
+	if (!strstr(glextstring,Extension_Name))				// Check To See If The Extension Is Supported
+		return FALSE;							// If Not, Return FALSE
+
+	free(glextstring);							// Free Allocated Memory
+
+	// Setup And Enable glFogCoordEXT
+	glFogCoordfEXT = (PFNGLFOGCOORDFEXTPROC) wglGetProcAddress("glFogCoordfEXT");
+
+	return TRUE;
 }
 
 
 // inicjalizacja OGL
 void init ()
 {    
-	glEnable( GL_DEPTH_TEST );
-	glEnable( GL_TEXTURE_2D );
-	glShadeModel( GL_PHONG_WIN );
-	glEnable(GL_CULL_FACE);
-
-    glDepthFunc( GL_LESS );
-
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-	glClearColor(255.f, 255.f, 255.f, 1.0f);
 	
+	glEnable( GL_TEXTURE_2D );
+	glEnable(GL_CULL_FACE);
+	
+	glClearColor (0.0f, 0.0f, 0.0f, 0.5f);
+	glClearDepth (1.0f);							
+	
+	glDepthFunc (GL_LEQUAL);
+	glEnable( GL_DEPTH_TEST );
+	glShadeModel( GL_SMOOTH );
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	
+//	glAlphaFunc(GL_GREATER,0.1f);
+//	glEnable(GL_ALPHA_TEST);
+
+	
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+	
+	
+	//if (!Extension_Init())
+	//	exit(0);
+
+	//glEnable(GL_FOG);							
+	//glFogi(GL_FOG_MODE, GL_LINEAR);				
+	//glFogfv(GL_FOG_COLOR, fogColor);
+	//glFogf(GL_FOG_DENSITY, 0.02f);
+	//glFogf(GL_FOG_START,  0.0f);				
+	//glFogf(GL_FOG_END,    1.0f);				
+	//glHint(GL_FOG_HINT, GL_NICEST);				
+	//glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT);		
+
+
 	initSpot();
     initPosLight();
 
@@ -298,7 +341,7 @@ void centerOnScreen ()
 //-------------------------------------------------------------------------
 //  Program Main method.
 //-------------------------------------------------------------------------
-void main (int argc, char **argv)
+int main (int argc, char **argv)
 {
 	//  Set the window x and y coordinates such that the 
 	//  window becomes centered
@@ -321,16 +364,20 @@ void main (int argc, char **argv)
 
 
 	//Ladowanie tekstur
-	CBMPLoader CrabTex;
+	 GLuint	texture[10];	
 
 	// teksturka
-	CrabTex.LoadBMPFile("dil.bmp");
-	CrabTex.FreeImage();
-	CrabTex.LoadBMPFile("leg.bmp");
-	CrabTex.FreeImage();
-	CrabTex.LoadBMPFile("plane.bmp");
-	CrabTex.FreeImage();
+	 
+	if (!BuildTexture("dil.bmp", texture[0]))
+		return 1;	
+	if (!BuildTexture("leg.bmp", texture[1]))
+		return 1;	
+	if (!BuildTexture("plane.bmp", texture[2]))
+		return 1;	
+	if (!BuildTexture("alpha.gif", texture[3]))
+		return 1;	
 
+	
 	// Set the callback functions
 	glutDisplayFunc (display);
 
@@ -345,5 +392,6 @@ void main (int argc, char **argv)
 	//  Start GLUT event processing loop
 	glutMainLoop();
 
+	return 0;
 }
 

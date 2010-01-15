@@ -4,7 +4,7 @@
 using namespace std;
 
 
-Crab::Crab() : w_(20.0f), h_(2.0f), d_(8.0f)
+Crab::Crab() : w_(20.0f), h_(3.0f), d_(8.0f)
 {	
 	// Stworz liste
 	CreateList();

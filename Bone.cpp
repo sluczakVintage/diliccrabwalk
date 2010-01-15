@@ -7,6 +7,11 @@
 
 extern float crab_y;
 
+bool Bone::oddHit_= false;
+
+//-------------------------------------------------------------------angles
+GLfloat MaxA = 30.f, MaxB = -45.f, MinA = -30.f, MinB = -110.f;
+
 struct Vector3f {
 	Vector3f() : x_(0), y_(0), z_(0) {};
 	Vector3f(float x, float y, float z) : x_(x), y_(y), z_(z) {};
@@ -46,11 +51,6 @@ Vector3f normalize(Vector3f v)
 }
 using namespace std;
 
-bool Bone::oddHit_= false;
-
-//-------------------------------------------------------------------angles
-GLfloat MaxA = 30.f, MaxB = -45.f, MinA = -30.f, MinB = -110.f;
-
 //-----------------------------------------------------------------------pi
     const float pi = 3.14159265358979323846;
 
@@ -87,7 +87,7 @@ template <typename T> inline float rl2(float r, float l) {
 
 Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), flag_(flag), mesh_(mesh), name_(name), child_(NULL)
 {	
-	GLfloat off = 0.4;
+	GLfloat off = 0.8;
 	l_ = mesh_->ReturnH();
 
 	if(flag_ == FOR_ODD){

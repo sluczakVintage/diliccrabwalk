@@ -11,7 +11,7 @@
 #include "glut.h"
 #include "glutFunc.hpp"
 
-enum{ CRAB = 1 , SH_LEG, NOR_LEG , SH_COMP , LONG_COMP, PROJECTION = 10 };
+enum{ CRAB = 1 , SH_LEG, NOR_LEG , SH_COMP , LONG_COMP, PLANE, PROJECTION = 10 };
 
 
 

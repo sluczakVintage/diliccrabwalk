@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -180,10 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CBMPLoader.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Crab.cpp"
 				>
 			</File>
@@ -219,6 +215,10 @@
 				RelativePath=".\Plane.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TexLoader.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -231,10 +231,6 @@
 			</File>
 			<File
 				RelativePath=".\Camera.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CBMPLoader.hpp"
 				>
 			</File>
 			<File
@@ -273,12 +269,20 @@
 				RelativePath=".\Plane.hpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TexLoader.hpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\alpha.gif"
+				>
+			</File>
 			<File
 				RelativePath=".\dil.bmp"
 				>

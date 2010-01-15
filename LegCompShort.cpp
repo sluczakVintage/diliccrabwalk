@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-LegCompShort::LegCompShort() : w_(2.0f), h_(6.0f), d_(1.0f)
+LegCompShort::LegCompShort() : w_(2.0f), h_(4.0f), d_(1.0f)
 {	
 	CreateList();
 	cout << "LegCompShort!" << endl;

@@ -18,6 +18,8 @@ public:
 	Plane();
 	//~Plane();
 
+	void CreateList();
+
 	void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f);
 
 private:

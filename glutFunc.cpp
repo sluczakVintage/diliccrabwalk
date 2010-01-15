@@ -189,7 +189,7 @@ void special (int key, int x, int y)
 			ySpotDir -= 0.5f;
 			cout << ySpotDir << endl;  
 			break;
-		case GLUT_KEY_F3 :
+		case GLUT_KEY_F3 :	
 			break;
 		case GLUT_KEY_F4 :
 			cout << "F4 function key."<< endl;  
