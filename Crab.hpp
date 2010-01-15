@@ -33,6 +33,13 @@ private:
 	GLfloat h_;
 	GLfloat d_;
 
+	LegShort *leg_sh;
+	LegNormal* leg_for_even;
+	LegNormal* leg_for_odd;
+	LegNormal* leg_back_even;
+	LegNormal* leg_back_odd;
+		
+
 	vector<Leg*> legs;
 
 };
