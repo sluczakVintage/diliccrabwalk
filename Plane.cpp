@@ -4,7 +4,7 @@
 using namespace std;
 extern glut::PFNGLFOGCOORDFEXTPROC glFogCoordfEXT;
 
-Plane::Plane() : w_(120.0f), d_(120.0f)
+Plane::Plane() : w_(1000.0f), d_(1000.0f)
 {	
 	CreateList();
 	cout << "Plane has been created!" << endl;

@@ -102,7 +102,7 @@ template <typename T> inline float rl2(float r, float l) {
 
 Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), flag_(flag), mesh_(mesh), name_(name), child_(NULL)
 {	
-	GLfloat off = 0.8;
+	GLfloat off = 0.4f;
 	l_ = mesh_->ReturnH();
 
 	if(flag_ == FRONT_ODD){
@@ -207,7 +207,8 @@ void Bone::animUpFront()
 	{
 		offsetA_ = 0.f;
 	}			
-	a_ += offsetA_;
+	else
+		a_ += offsetA_;
 
 	if(child_->a_ > (MaxB - 20.f) )
 	{
@@ -227,7 +228,8 @@ void Bone::animUpRear()
 	{
 		offsetA_ = 0.f;
 	}			
-	a_ += offsetA_;
+	else
+		a_ += offsetA_;
 
 	if(child_->a_ < MinB )
 	{
