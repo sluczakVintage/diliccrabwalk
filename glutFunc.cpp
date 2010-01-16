@@ -6,10 +6,11 @@
 using namespace std;
 
 extern CCamera Camera;
-
+bool anim_toggle = false;
 //TEST
 extern GLfloat xSpotDir, ySpotDir, zOffset, spotCutOff;
 extern GLfloat nRange;
+extern int fps;
 
 
 namespace glut
@@ -193,6 +194,7 @@ void keyboard (unsigned char key, int x, int y)
 
 		//  User hits Space
 		case ' ':
+			anim_toggle = true;
 			cout << "User is hitting the Space key."<< endl;  
 			break;
 
@@ -208,7 +210,7 @@ void keyboard (unsigned char key, int x, int y)
 	}
 		
 
-	glutPostRedisplay ();
+	//glutPostRedisplay ();
 }
 
 //-------------------------------------------------------------------------
@@ -255,12 +257,17 @@ void special (int key, int x, int y)
 			cout << "F9 function key."<< endl;  
 			break;
 		case GLUT_KEY_F10 :
+			fps = 1;
 			cout << "F10 function key."<< endl;  
 			break;
 		case GLUT_KEY_F11 :
+			fps++;
 			cout << "F11 function key."<< endl; 
 			break;
 		case GLUT_KEY_F12 :
+			fps--;
+			if(fps < 1)
+				fps = 1;
 			cout << "F12 function key."<< endl;  
 			break;
 		case GLUT_KEY_LEFT :
@@ -300,7 +307,7 @@ void special (int key, int x, int y)
 			break;
 	}
 	
-	glutPostRedisplay ();
+	//glutPostRedisplay ();
 }
 
 

@@ -221,7 +221,8 @@ void display ()
 	Camera.Render();
 	updateSpot();
 
-	glTranslatef(0.f,-20.f,-14.f);
+	glTranslatef(0.f,-10.f,-30.f);
+	glRotatef(90.f, 0.0f, 1.0f, 0.0f);
 		
 	drawObject();
 	glFlush();
@@ -238,7 +239,7 @@ void drawObject ()
 	static Plane plane;
 	static Crab dilCrab;
 
-	//static LegNormal* leg = new LegNormal(FOR_ODD);//,0.f,8.f);
+	//static LegNormal* leg = new LegNormal(FRONT_ODD);//,0.f,8.f);
 	glCallList(PROJECTION);
 
 	plane.Draw();

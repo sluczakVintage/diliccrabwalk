@@ -6,21 +6,21 @@ LegNormal::LegNormal(int flag)
 	compShort = new LegCompShort();
 	compLong = new LegCompLong();
 	
-	if(flag == FOR_ODD){
-		a = 20.f;
-		child_a = -110.f;
-	}
-	else if(flag == FOR_EVEN){
-		a = -20.f;
-		child_a = -45.f;
-	}
-	if(flag == BACK_ODD){
+	if(flag == FRONT_ODD){
 		a = 30.f;
-		child_a = -110.f;
+		child_a = -105.f;
 	}
-	else if(flag == BACK_EVEN){
-		a = 20.f;
-		child_a = -45.f;
+	else if(flag == FRONT_EVEN){
+		a = 30.f;
+		child_a = -105.f;
+	}
+	if(flag == REAR_ODD){
+		a = 30.f;
+		child_a = -105.f;
+	}
+	else if(flag == REAR_EVEN){
+		a = 30.f;
+		child_a = -105.f;
 	}
 
 	bone = new Bone(NULL, 0.f, 0.f, a, flag, compShort, "compShort");
@@ -28,6 +28,11 @@ LegNormal::LegNormal(int flag)
 	bone->boneAddChild(child_a, flag, compLong , "compLong" );
 	cout << "LegNormal has been created!" << endl;
 	
+}
+
+void LegNormal::animToggle() 
+{
+	bone->animToggle();
 }
 
 LegNormal::~LegNormal()

@@ -20,7 +20,7 @@ public:
 
 	void CreateList();
 
-	void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f);
+	void Draw(GLfloat x = 0.0f, GLfloat y = -0.2f, GLfloat z = 0.0f);
 
 private:
 	GLfloat w_;

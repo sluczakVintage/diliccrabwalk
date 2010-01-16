@@ -7,12 +7,25 @@
 
 extern float crab_y;
 extern float crab_z;
-static float last_equation = 0.0f;
 
-bool Bone::oddHit_= false;
+static float last_equation_x = 0.0f;
+static float mov_offset = 0.0f;
+
+static float max_x = 0.0f;
+static float min_x = 0.0f;
+
+bool Bone::oddHit_= true;
+bool Bone::evenHit_= false;
+
+bool Bone::readyFront_ = false;
+bool Bone::readyRear_ = false;
+
+bool Bone::started_ = false;
+
+
 
 //-------------------------------------------------------------------angles
-GLfloat MaxA = 30.f, MaxB = -45.f, MinA = -30.f, MinB = -110.f;
+GLfloat MaxA = 50.f, MaxB = -45.f, MinA = -30.f, MinB = -110.f;
 
 struct Vector3f {
 	Vector3f() : x_(0), y_(0), z_(0) {};
@@ -92,31 +105,30 @@ Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh
 	GLfloat off = 0.8;
 	l_ = mesh_->ReturnH();
 
-	if(flag_ == FOR_ODD){
-		animFlag_ = AN_IDLE;
+	if(flag_ == FRONT_ODD){
 		off_ = off;
 	}
-	else if(flag_ == FOR_EVEN){
-		animFlag_ = AN_DOWN;
+	else if(flag_ == FRONT_EVEN){
 		off_ = off;
 	}
-	else if(flag_ == BACK_ODD){
-		animFlag_ = AN_IDLE;
+	else if(flag_ == REAR_ODD){
 		off_ = -off;
 	}
-	else if(flag_ == BACK_EVEN){
-		animFlag_ = AN_DOWN;
+	else if(flag_ == REAR_EVEN){
 		off_ = -off;
 	}
 	childOffsetA_ = off_;
 	offsetA_ = off_;
+
+	animInit();
+
 	cout << "Bone " << name << " has been created. Flag: " << flag_ << "!" << endl;
 }
 
 void Bone::boneAddChild(GLfloat a, int flag, Drawable *mesh, string name)
 {
 	child_ = new Bone(this, 0.0f, 0.0f, a, flag, mesh, name);
-	cout << "Bone " << name << " has been added!" << endl;
+	cout << "Bone " << name << " has been added as child!" << endl;
 }
 
 Bone::~Bone()
@@ -125,6 +137,181 @@ Bone::~Bone()
 		delete child_;
 		child_ = NULL;
 	}
+}
+
+
+void Bone::animate() 
+{
+	if(started_)
+	{
+		if(animFlag_ == AN_UP_FRONT)
+			animUpFront();
+		else if(animFlag_ == AN_UP_REAR)
+			animUpRear();
+		else if(animFlag_ == AN_DOWN)
+			animDown();
+		else if(animFlag_ == AN_MOVE)
+			animMove();
+		else if(animFlag_ == AN_IDLE)
+		    animIdle();	
+	}
+}
+
+void Bone::animInit()
+{
+	if( flag_ == FRONT_EVEN )
+		animFlag_ = AN_UP_FRONT;
+	if( flag_ == FRONT_ODD )
+		animFlag_ = AN_IDLE;
+	if( flag_ == REAR_EVEN )
+		animFlag_ = AN_UP_REAR;
+	if( flag_ == REAR_ODD )
+		animFlag_ = AN_IDLE;
+	
+	oddHit_ = true;
+	evenHit_ = false;
+}
+
+void Bone::animToggle()
+{
+ 	started_ = !started_;
+}
+
+void Bone::animIdle()
+{
+	//cout << "animIdle()" << endl;
+	if( flag_ == FRONT_EVEN && oddHit_ == true){
+		animFlag_ = AN_UP_FRONT;
+	}
+	else if( flag_ == REAR_EVEN && oddHit_ == true){
+		animFlag_ = AN_UP_REAR;
+	}
+	else if( flag_ == FRONT_ODD  && evenHit_ == true){
+		animFlag_ = AN_UP_FRONT;
+	}
+	else if( flag_ == REAR_ODD  && evenHit_ == true){
+		animFlag_ = AN_UP_REAR;
+	}
+	else;
+}
+
+void Bone::animUpFront()
+{
+	//cout << "animUpFront()" << endl;
+	float sin_b = sinf( deg2rad(child_->a_) );
+	float cos_b = cosf( deg2rad(child_->a_) );
+	
+	offsetA_ = off_;
+	childOffsetA_ = off_;
+	if(a_ > (MaxA - 30.f) )
+	{
+		offsetA_ = 0.f;
+	}			
+	a_ += offsetA_;
+
+	if(child_->a_ > (MaxB - 20.f) )
+	{
+			animFlag_ = AN_DOWN;	
+	}
+	else
+		child_->a_ += childOffsetA_;
+
+}
+
+void Bone::animUpRear()
+{
+	//cout << "animUpRear()" << endl;
+	offsetA_ = -off_;
+	childOffsetA_ = off_;
+	if(a_ > MaxA )
+	{
+		offsetA_ = 0.f;
+	}			
+	a_ += offsetA_;
+
+	if(child_->a_ < MinB )
+	{
+			animFlag_ = AN_DOWN;	
+	}
+	else
+		child_->a_ += childOffsetA_;
+
+}
+
+void Bone::animDown()
+{
+	//cout << "animDown()" << endl;
+	float sin_b = sinf( deg2rad(child_->a_) );
+	float cos_b = cosf( deg2rad(child_->a_) );
+	
+	float equation_y = ( sinf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) + ( child_->l_ ) * sin_b  * cosf( deg2rad(a_) ) );
+
+	offsetA_ = -abs(off_);
+	childOffsetA_ = 0;
+
+	if( equation_y <= -crab_y ){
+		if(flag_ == FRONT_ODD){
+			oddHit_ = true;
+			evenHit_ = false;
+		}
+		else if(flag_ == FRONT_EVEN){
+			evenHit_ = true;
+			oddHit_ = false;
+		}	
+		// czy obie nogi moga juz ruszyc
+		if(flag_ == FRONT_ODD || flag_ == FRONT_EVEN)
+			readyFront_ = true;
+		else if(flag_ == REAR_ODD || flag_ == REAR_EVEN)
+			readyRear_ = true;
+
+		if(readyFront_ && readyRear_)
+			animFlag_ = AN_MOVE;
+	}
+	else
+		a_ += offsetA_;
+
+}
+
+
+void Bone::animMove()
+{	
+	readyRear_ = false;
+	readyFront_ = false;
+	//cout << "animMove()" << endl;
+	float sin_b = sinf( deg2rad(child_->a_) );
+	float cos_b = cosf( deg2rad(child_->a_) );
+	
+	float equation_x = ( cosf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) - ( child_->l_ ) * sin_b  * sinf( deg2rad(a_) ) );
+	//cout << equation_x << endl;
+	//crab_z += equation_x - last_equation;
+	//last_equation = equation_x;
+
+	childOffsetA_ = -off_;
+	if( ( flag_ == REAR_EVEN || flag_ == REAR_ODD )) 
+	{
+		if(min_x == 0.0f)
+			min_x = equation_x;
+		if(equation_x >= max_x)
+			animFlag_ = AN_IDLE;
+	}
+	else if ( ( flag_ == FRONT_EVEN || flag_ == FRONT_ODD ) )  
+	{
+		if( last_equation_x == 0.0f )
+			last_equation_x = equation_x;
+		if( mov_offset == 0.0f )
+			mov_offset = (last_equation_x - equation_x)/2;
+		if( max_x == 0.0f )
+			max_x = equation_x;
+
+		if( equation_x <= min_x )
+			animFlag_ = AN_IDLE;
+		else
+			crab_z += mov_offset;
+	}
+
+	a_ = rad2deg( ( pi*signum<float>( child_->l_*sin_b ) )/2 - asinf( crab_y/sqrtf( ( rl2<float>(child_->l_,l_) * cos_b ) + ( power<2>(l_) )+( power<2>(child_->l_) ) ) ) + atanf( ( child_->l_*cos_b  + l_) /( child_->l_*sin_b ) ) + pi) ; 	
+	child_->a_ += childOffsetA_;
+	
 }
 
 void Bone::Draw()
@@ -150,7 +337,7 @@ void Bone::Draw()
 
 	// obliczanie wartosci wierzcholkow na potrzeby przeliczenia normalnej i wyswietlenia lacznika
 		Vector3f vector1, vector2, vector3, normalV;
-		int segments = 10;
+		int segments = 4;
 		for(int i = 0; i < segments; i++)
 		{
 			vector1.x_ = child_->mesh_->ReturnD() * sinf(-deg2rad((i+1)*child_->a_/segments));
@@ -202,135 +389,4 @@ void Bone::Draw()
 	}
 		
 	glPopMatrix();
-}
-
-
-void Bone::animate() 
-{
-		if(animFlag_ == AN_UP_FRONT)
-			animUpFront();
-		else if(animFlag_ == AN_UP_REAR)
-			animUpRear();
-		else if(animFlag_ == AN_DOWN)
-			animDown();
-		else if(animFlag_ == AN_MOVE)
-			animMove();
-		else if(animFlag_ == AN_IDLE)
-		    animIdle();	
-}
-
-
-void Bone::animIdle()
-{
-	cout << "animIdle()" << endl;
-	if( flag_ == FOR_EVEN && oddHit_ == true){
-		animFlag_ = AN_UP_FRONT;
-	}
-	else if( flag_ == BACK_EVEN && oddHit_ == true){
-		animFlag_ = AN_UP_REAR;
-	}
-	else if( flag_ == FOR_ODD  && oddHit_ == false){
-		animFlag_ = AN_UP_FRONT;
-	}
-	else if( flag_ == BACK_ODD  && oddHit_ == false){
-		animFlag_ = AN_UP_REAR;
-	}
-	else;
-}
-
-void Bone::animUpFront()
-{
-	cout << "animUpFront()" << endl;
-	float sin_b = sinf( deg2rad(child_->a_) );
-	float cos_b = cosf( deg2rad(child_->a_) );
-	
-	offsetA_ = off_;
-	childOffsetA_ = off_;
-	if(a_ > (MaxA - 10.f) )
-	{
-		offsetA_ = 0.f;
-	}			
-	a_ += offsetA_;
-
-	if(child_->a_ > (MaxB - 5.f) )
-	{
-			animFlag_ = AN_DOWN;	
-	}
-	child_->a_ += childOffsetA_;
-
-}
-
-void Bone::animUpRear()
-{
-	cout << "animUpRear()" << endl;
-	offsetA_ = -off_;
-	childOffsetA_ = off_;
-	if(a_ > MaxA )
-	{
-		offsetA_ = 0.f;
-	}			
-	a_ += offsetA_;
-
-	if(child_->a_ < MinB )
-	{
-		animFlag_ = AN_DOWN;
-	}
-	child_->a_ += childOffsetA_;
-
-}
-
-void Bone::animDown()
-{
-	cout << "animDown()" << endl;
-	float sin_b = sinf( deg2rad(child_->a_) );
-	float cos_b = cosf( deg2rad(child_->a_) );
-	
-	float equation = ( sinf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) + ( child_->l_ ) * sin_b  * cosf( deg2rad(a_) ) );
-
-	offsetA_ = -abs(off_);
-	childOffsetA_ = 0;
-
-	if( equation <= -crab_y ){
-		if(flag_ == FOR_ODD)
-			oddHit_ = true;
-		if(flag_ == FOR_EVEN)
-			oddHit_ = false;
-	
-		//if( flag_ == BACK_EVEN || flag_ == BACK_ODD )
-		//	animFlag_ = AN_IDLE;
-		//else 
-			animFlag_ = AN_MOVE;
-	}
-	a_ += offsetA_;
-
-}
-
-void Bone::animMove()
-{	
-	cout << "animMove()" << endl;
-	float sin_b = sinf( deg2rad(child_->a_) );
-	float cos_b = cosf( deg2rad(child_->a_) );
-	
-	//float equation_x = ( cosf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) - ( child_->l_ ) * sin_b  * sinf( deg2rad(a_) ) );
-
-	//crab_z += equation_x - last_equation;
-	//last_equation = equation_x;
-
-	childOffsetA_ = -off_;
-
-	if( ( flag_ == BACK_EVEN || flag_ == BACK_ODD ) && child_->a_ > MaxB ) 
-	{
-		animFlag_ = AN_IDLE;
-		//animFlag_ = AN_UP_REAR;
-	}
-	else if ( ( flag_ == FOR_EVEN || flag_ == FOR_ODD ) && child_->a_ < MinB )  
-	{
-		animFlag_ = AN_IDLE;
-	}
-	if(flag_ == FOR_ODD)
-		oddHit_ = true;
-	if(flag_ == FOR_EVEN)
-		oddHit_ = false;
-	a_ = rad2deg( ( pi*signum<float>( child_->l_*sin_b ) )/2 - asinf( crab_y/sqrtf( ( rl2<float>(child_->l_,l_) * cos_b ) + ( power<2>(l_) )+( power<2>(child_->l_) ) ) ) + atanf( ( child_->l_*cos_b  + l_) /( child_->l_*sin_b ) ) + pi) ; 	
-	child_->a_ += childOffsetA_;
 }

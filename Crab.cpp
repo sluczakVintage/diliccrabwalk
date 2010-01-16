@@ -3,6 +3,7 @@
 #include <iostream>
 using namespace std;
 
+extern bool anim_toggle;
 
 Crab::Crab() : w_(20.0f), h_(3.0f), d_(8.0f)
 {	
@@ -10,10 +11,10 @@ Crab::Crab() : w_(20.0f), h_(3.0f), d_(8.0f)
 	CreateList();
 	// Dodaj nogi do korpusu
 	leg_sh = new LegShort();
-	leg_for_even = new LegNormal(FOR_EVEN);
-	leg_for_odd = new LegNormal(FOR_ODD);
-	leg_back_even = new LegNormal(BACK_EVEN);
-	leg_back_odd = new LegNormal(BACK_ODD);
+	leg_for_even = new LegNormal(FRONT_EVEN);
+	leg_for_odd = new LegNormal(FRONT_ODD);
+	leg_back_even = new LegNormal(REAR_EVEN);
+	leg_back_odd = new LegNormal(REAR_ODD);
 
 	for(int i = 0; i < 2; i++)
 		legs.push_back(leg_sh);
@@ -135,8 +136,18 @@ void Crab::drawLegs()
 
 }
 
+void Crab::toggleAnim()
+{
+
+}
+
 void Crab::Draw(GLfloat x, GLfloat y, GLfloat z)
 {
+	if(anim_toggle)
+	{
+		leg_for_even->animToggle();
+		anim_toggle = false;
+	}
 	GLfloat cube_diffuse[]   = { 0.0, 0.7, 0.7, 1.0 };
 		
 	// Wyrysuj korpus ukladu 

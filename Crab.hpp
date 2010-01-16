@@ -8,6 +8,7 @@
 #define CRAB_H
 
 #include <vector>
+#include <algorithm>
 
 #include "glut.h"
 #include "glutFunc.hpp"
@@ -26,6 +27,7 @@ public:
 	void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f);
 	void drawLegs();
 	void CreateList();
+	void toggleAnim();
 	virtual const GLfloat ReturnH() const { return h_; };
 
 private:

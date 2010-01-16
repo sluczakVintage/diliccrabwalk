@@ -23,7 +23,7 @@ public:
 	~LegNormal();
 
 	void Draw();
-	void LegNormal::Animate(int i);
+	void animToggle();
 
 private:
 	LegCompShort* compShort;
