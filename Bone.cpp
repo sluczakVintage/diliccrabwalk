@@ -14,13 +14,13 @@ static float mov_offset = 0.0f;
 static float max_x = 0.0f;
 static float min_x = 0.0f;
 
-bool Bone::oddHit_= true;
-bool Bone::evenHit_= false;
+static bool oddHit_= true;
+static bool evenHit_= false;
 
-bool Bone::readyFront_ = false;
-bool Bone::readyRear_ = false;
+static bool readyFront_ = false;
+static bool readyRear_ = false;
 
-bool Bone::started_ = false;
+static bool started_ = false;
 
 
 
@@ -207,8 +207,7 @@ void Bone::animUpFront()
 	{
 		offsetA_ = 0.f;
 	}			
-	else
-		a_ += offsetA_;
+	a_ += offsetA_;
 
 	if(child_->a_ > (MaxB - 20.f) )
 	{
@@ -228,8 +227,7 @@ void Bone::animUpRear()
 	{
 		offsetA_ = 0.f;
 	}			
-	else
-		a_ += offsetA_;
+	a_ += offsetA_;
 
 	if(child_->a_ < MinB )
 	{
@@ -284,9 +282,6 @@ void Bone::animMove()
 	float cos_b = cosf( deg2rad(child_->a_) );
 	
 	float equation_x = ( cosf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) - ( child_->l_ ) * sin_b  * sinf( deg2rad(a_) ) );
-	//cout << equation_x << endl;
-	//crab_z += equation_x - last_equation;
-	//last_equation = equation_x;
 
 	childOffsetA_ = -off_;
 	if( ( flag_ == REAR_EVEN || flag_ == REAR_ODD )) 

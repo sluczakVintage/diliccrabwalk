@@ -36,6 +36,7 @@ public:
 	void animUpRear();
 	void animDown();
 	void animMove();
+	void animMoveToStop();
 
 	void animIdle();
 
@@ -64,15 +65,15 @@ private:
 	int flag_;
 
 	// Rozpoczecie animacji
-	static bool started_;
+	//static bool started_;
 	// Flaga animacji
 	int animFlag_;
 	// Uderzenie w ziemie
-	static bool oddHit_;
-	static bool evenHit_;
+	//static bool oddHit_;
+	//static bool evenHit_;
 	// Gotowosc do kroku
-	static bool readyFront_;
-	static bool readyRear_;
+	//static bool readyFront_;
+	//static bool readyRear_;
 	// Wartosc maksymalna 
 //	static float max_x;
 //	static float min_x;

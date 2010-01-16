@@ -47,42 +47,42 @@ void Plane::CreateList()
 					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 0.f, d_/2);
 					glFogCoordfEXT(1.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 0.f,-d_/2);
 				glEnd();*/
-			glBindTexture(GL_TEXTURE_2D, 4);
-			//gora
-				glBegin(GL_TRIANGLE_STRIP);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2, 4.f,-d_/2);				
-					glFogCoordfEXT(0.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2, 4.f, d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 4.f,-d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 4.f, d_/2);
-				glEnd();
-			//tyl
-				glBegin(GL_TRIANGLE_STRIP);
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2, 0.f, -d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2, 4.f, -d_/2);
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 0.f, -d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 4.f,-d_/2);
-				glEnd();
-			//przod
-				glBegin(GL_TRIANGLE_STRIP);	
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(-w_/2, 0.f, d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(-w_/2, 4.f, d_/2);
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(w_/2, 0.f, d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(w_/2, 4.f, d_/2);
-				glEnd();
-			//lewo
-				glBegin(GL_TRIANGLE_STRIP);	
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2, 0.f, d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2, 4.f, d_/2);
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(w_/2, 0.f,-d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(w_/2, 4.f,-d_/2);
-				glEnd();
-			//prawo
-				glBegin(GL_TRIANGLE_STRIP);
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(-w_/2, 0.f, -d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(-w_/2, 4.f, -d_/2);
-					glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 0.f, d_/2);
-					glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 4.f, d_/2);
-				glEnd();
+			//glBindTexture(GL_TEXTURE_2D, 4);
+			////gora
+			//	glBegin(GL_TRIANGLE_STRIP);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2, 4.f,-d_/2);				
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2, 4.f, d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 4.f,-d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 4.f, d_/2);
+			//	glEnd();
+			////tyl
+			//	glBegin(GL_TRIANGLE_STRIP);
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2, 0.f, -d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2, 4.f, -d_/2);
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 0.f, -d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 4.f,-d_/2);
+			//	glEnd();
+			////przod
+			//	glBegin(GL_TRIANGLE_STRIP);	
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(-w_/2, 0.f, d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(-w_/2, 4.f, d_/2);
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(w_/2, 0.f, d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(w_/2, 4.f, d_/2);
+			//	glEnd();
+			////lewo
+			//	glBegin(GL_TRIANGLE_STRIP);	
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2, 0.f, d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2, 4.f, d_/2);
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(w_/2, 0.f,-d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(w_/2, 4.f,-d_/2);
+			//	glEnd();
+			////prawo
+			//	glBegin(GL_TRIANGLE_STRIP);
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 1.0f); glVertex3f(-w_/2, 0.f, -d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 1.0f); glVertex3f(-w_/2, 4.f, -d_/2);
+			//		glFogCoordfEXT(1.0f); glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 0.f, d_/2);
+			//		glFogCoordfEXT(0.0f); glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 4.f, d_/2);
+			//	glEnd();
 		glEndList();
 }
 
