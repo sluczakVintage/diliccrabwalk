@@ -22,7 +22,6 @@ LegShort::~LegShort()
 }
 void LegShort::Draw()
 {
-	
 	bone->Draw();
 }
 

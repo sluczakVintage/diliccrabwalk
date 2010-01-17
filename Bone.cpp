@@ -11,6 +11,8 @@ extern float crab_z;
 static float last_equation_x = 0.0f;
 static float mov_offset = 0.0f;
 
+float global_offset = 0.8f;
+
 static float max_x = 0.0f;
 static float min_x = 0.0f;
 
@@ -65,7 +67,8 @@ template <typename T> inline float rl2(float r, float l) {
 
 Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), flag_(flag), mesh_(mesh), name_(name), child_(NULL)
 {	
-	GLfloat off = 0.8f;
+	GLfloat off = global_offset;
+
 	l_ = mesh_->ReturnH();
 
 	if(flag_ == FRONT_ODD){
@@ -88,6 +91,27 @@ Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh
 	cout << "Bone " << name << " has been created. Flag: " << flag_ << "!" << endl;
 }
 
+void Bone::newOffset(GLfloat off)
+{
+	mov_offset = 0.0f;
+	last_equation_x = 0.0f;
+
+	if(flag_ == FRONT_ODD){
+		off_ = off;
+	}
+	else if(flag_ == FRONT_EVEN){
+		off_ = off;
+	}
+	else if(flag_ == REAR_ODD){
+		off_ = -off;
+	}
+	else if(flag_ == REAR_EVEN){
+		off_ = -off;
+	}
+
+}
+
+
 void Bone::boneAddChild(GLfloat a, int flag, Drawable *mesh, string name)
 {
 	child_ = new Bone(this, 0.0f, 0.0f, a, flag, mesh, name);
@@ -105,6 +129,9 @@ Bone::~Bone()
 
 void Bone::animate() 
 {
+	if(global_offset != abs(off_))
+		newOffset(global_offset);
+
 	if(started_)
 	{
 		if(animFlag_ == AN_UP_FRONT)
@@ -297,7 +324,7 @@ void Bone::Draw()
 
 	// obliczanie wartosci wierzcholkow na potrzeby przeliczenia normalnej i wyswietlenia lacznika
 		Vector3f vector1, vector2, vector3, normalV;
-		int segments = 4;
+		int segments = 8;
 		for(int i = 0; i < segments; i++)
 		{
 			vector1.x_ = child_->mesh_->ReturnD() * sinf(-deg2rad((i+1)*child_->a_/segments));
@@ -321,10 +348,10 @@ void Bone::Draw()
 						glBindTexture(GL_TEXTURE_2D, 2);
 						glBegin(GL_TRIANGLE_STRIP);
 							glNormal3f(normalV.x_, normalV.y_, normalV.z_);
-							glTexCoord2f(1.0f, 1.0f  ); glVertex3f(vector1.x_, vector1.y_, vector1.z_);
-							glTexCoord2f(0.8f, 1.0f  ); glVertex3f(vector3.x_, vector3.y_, vector3.z_);
-							glTexCoord2f(1.0f, 0.95f ); glVertex3f(vector2.x_, vector2.y_, vector2.z_);
-							glTexCoord2f(0.8f, 0.95f ); glVertex3f(vector2.x_, vector2.y_, -vector2.z_);	
+							glTexCoord2f(0.2f, 0.46f+0.03f*(i)  ); glVertex3f(vector1.x_, vector1.y_, vector1.z_);
+							glTexCoord2f(0.4f, 0.46f+0.03f*(i)  ); glVertex3f(vector3.x_, vector3.y_, vector3.z_);
+							glTexCoord2f(0.4f, 0.43f+0.03f*(i) ); glVertex3f(vector2.x_, vector2.y_, vector2.z_);
+							glTexCoord2f(0.2f, 0.43f+0.03f*(i) ); glVertex3f(vector2.x_, vector2.y_, -vector2.z_);	
 						glEnd();
 						glBegin(GL_TRIANGLE_STRIP);
 							glNormal3f(0.0f, 0.0f, 1.0f);

@@ -51,5 +51,11 @@ void LegNormal::Draw()
 	bone->Draw();
 }
 
+void LegNormal::StaticDraw()
+{
+	bone->Draw();
+}
+
+
 
 	

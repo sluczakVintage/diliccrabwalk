@@ -30,6 +30,7 @@ public:
 	void animate(); 
 
 	void animToggle();
+	void Bone::newOffset(GLfloat off);
 	
 	void animInit();
 	void animUpFront();

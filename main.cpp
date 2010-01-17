@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <time.h>
 
 #include "glut.h"
 
@@ -23,6 +24,7 @@ using namespace glut;
 //Wysokosc kraba //////////// @TODO
 float crab_y = 10.f;
 float crab_z = 0.f;
+extern float global_offset;
 
 
 //  rozmiar okna
@@ -121,7 +123,7 @@ void initSpot2()
 	GLfloat direction5[] = {0.0f, -0.4f, 1.0f};
       
     GLfloat noAmbient[] = {0.2f, 0.2f, 0.2f, 1.0f};       
-    GLfloat diffuse[]   = {0.4f, 0.4f, 0.35f, 1.0f};
+    GLfloat diffuse[]   = {0.6f, 0.6f, 0.55f, 1.0f};
 
     glLightfv(GL_LIGHT3, GL_AMBIENT, noAmbient);  glLightfv(GL_LIGHT3, GL_DIFFUSE, diffuse);
     glLightfv(GL_LIGHT3, GL_POSITION, position3); glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, direction3);  
@@ -165,7 +167,7 @@ void updateSpot()
     glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, direction);
 
     glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 90);
-	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 50);
+	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 70);
 }
 /**
 * GL_LIGHT2
@@ -175,7 +177,7 @@ spot
 void initSpot()
 {
   
-    GLfloat noAmbient[] = {0.2f, 0.2f, 0.1f, 1.0f};       
+    GLfloat noAmbient[] = {0.1f, 0.1f, 0.1f, 1.0f};       
     GLfloat diffuse[]   = {0.9f, 0.9f, 0.8f, 1.0f};
    
 
@@ -186,7 +188,7 @@ void initSpot()
    
    
     glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.00002f);
+    glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.000002f);
     glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.000009f);
 
 	glEnable( GL_LIGHT2 );
@@ -218,29 +220,29 @@ void init ()
 	glFogi(GL_FOG_MODE, GL_LINEAR);				
 	glFogfv(GL_FOG_COLOR, fogColor);
 	glFogf(GL_FOG_DENSITY, 0.2f);
-	glFogf(GL_FOG_START,  400.0f);				
+	glFogf(GL_FOG_START,  250.0f);				
 	glFogf(GL_FOG_END,    550.0f);				
-	glHint(GL_FOG_HINT, GL_NICEST);				
-	//glFogi(GL_FOG_COORDINATE_SOURCE_EXT, GL_FOG_COORDINATE_EXT);		
+	glHint(GL_FOG_HINT, GL_NICEST);					
 
 
 	initSpot();
 	initSpot2();
-   // initDirLight();
+    initDirLight();
 
 	glEnable( GL_LIGHTING );
 	    
 	createProjection();
 
+	srand(time(NULL));
 }
 
 
 // timer ograniczajacy predkosc animacji
 void myTimer(int value)
 {
-frames++;
-glutPostRedisplay();
-glutTimerFunc(1000/fps, myTimer, 1);
+	frames++;
+	glutPostRedisplay();
+	glutTimerFunc(1000/fps, myTimer, 1);
 
 }
 
@@ -271,7 +273,7 @@ void camera () {
 	static float addition = 0;
 	static float step = 0.005f;
 
-	static bool part[10] = {false, false, false, false, false, false, false, false, false, false};
+	static bool part[10] = {false, false, false, false, false, false, false, false};
 
 	if(part[0] == false) {
 		// ustawienie obrotow
@@ -281,9 +283,11 @@ void camera () {
 		ypos = (cRadius)*sinf(Deg2Rad(xrot)) + crab_y;
 		
 		//warunek zakonczenia fazy
-		if(frames > fps*2)
+		if(frames > fps*2) 
+		{
 			part[0] = true;
 			anim_toggle = true;
+		}
 	}
 	else if(part[1] == false) {
 		//jednostajnie przyspieszony ruch kamery
@@ -361,14 +365,72 @@ void camera () {
 		{
 			part[3] = true;
 			a = 0;
-			step = 0.05;
+			step = 0.005;
 			addition = 0.0;
 		}
 	}
+	else if(crab_z >=150.f && part[4] == false)
+	{
+		static int curr_frame = frames;
+		static bool done = false;
+
+		if(!done)
+		{
+			anim_toggle = true;
+			done = true;
+		}
+
+		if(frames > curr_frame + fps*2) 
+		{
+			part[4] = true;
+			anim_toggle = true;
+			global_offset = 4.0f;
+		}
+
+	}
+	else if(crab_z >= 300.f && part[5] == false)
+		{
+			
+		if(ypos < 100.f )
+		{
+			if(addition <= 1.0f)
+				addition += step;
+		}
+		else if(ypos > 400.f )
+		{
+			if(part[6] == false)
+			{
+				anim_toggle = true;
+				part[6] = true;
+			}
+			if(addition > 0.05f)
+				addition -= step;
+			else
+				addition = step;
+		}
+				
+		cRadius += 0.4;
+		a += addition*2;
+
+		if(xrot <= 75.f)
+			xrot += addition;
+
+		ypos = (cRadius)*sinf(Deg2Rad(xrot)) + crab_y + a;
+
+		if( ypos >= 500.f )
+		{
+			part[5] = true;
+			addition = 0.0f;
+			a = yrot-270.0f;
+			start = yrot - 270.0f;
+		}
+	}
 	
-	xpos = (cRadius)*cosf(Deg2Rad(yrot-270.f));
-	zpos = (cRadius)*sinf(Deg2Rad(yrot-270.f)) + crab_z;
-		
+	if(part[5] == false)
+	{
+		xpos = (cRadius)*cosf(Deg2Rad(yrot-270.f));
+		zpos = (cRadius)*sinf(Deg2Rad(yrot-270.f)) + crab_z;
+	}	
 
    	glRotatef(yrot,0.0,1.0,0.0);  
 	glRotatef(xrot,cosf(Deg2Rad(yrot)),0.0,sinf(Deg2Rad(yrot)));  
@@ -389,7 +451,6 @@ void display ()
 	glLoadIdentity();
 	updateSpot();
 
-	//glTranslatef(0.f,-30.f,-24.f);
 		
 	drawObject();
 	glFlush();
@@ -405,12 +466,12 @@ void drawObject ()
 {
 	static Plane plane;
 	static Crab dilCrab;
-
+	static Crab dilCrab2;
 	
 	//static LegNormal* leg = new LegNormal(FOR_ODD);//,0.f,8.f);
 	glCallList(PROJECTION);
 
-	plane.Draw(-300.f, -0.2f, -200.f);
+	plane.Draw(-1000.f, -0.2f, -1000.f);
 	
 	//cout << xpos << endl;
 	/*glPushMatrix();
@@ -421,8 +482,16 @@ void drawObject ()
 	
 	dilCrab.Draw(0.0f, crab_y, crab_z);
 
-	//dilCrab.StaticDraw(0.0f, crab_y, crab_z);
-	
+	for(int i = 0; i <=10; i++)
+	{
+		dilCrab2.StaticDraw(35*(i+24), 0.f, 120+15*i, 14+5*i);
+
+		dilCrab2.StaticDraw(-40, 0.f, 54*+14*i, 25-18*i);
+
+		dilCrab2.StaticDraw(26+(i*25), 0.f, 112+25*i, 90-7*i);
+
+		dilCrab2.StaticDraw(76, 0.f, 40+27*i, 30+15*i);
+	}	
 
 	glMatrixMode (GL_PROJECTION);
 glPopMatrix();
@@ -456,7 +525,7 @@ int main (int argc, char **argv)
 	//Ladowanie tekstur
 	 GLuint	texture[10];	
 
-	if (!BuildTexture("dil.bmp", texture[0]))
+	if (!BuildTexture("dil.jpg ", texture[0]))
 		return 1;	
 	if (!BuildTexture("leg.bmp", texture[1]))
 		return 1;	

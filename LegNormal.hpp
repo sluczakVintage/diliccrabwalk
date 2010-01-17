@@ -23,6 +23,7 @@ public:
 	~LegNormal();
 
 	void Draw();
+	void StaticDraw();
 	void animToggle();
 
 private:

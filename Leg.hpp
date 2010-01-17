@@ -12,6 +12,7 @@ class Leg
 {
 public:
 	virtual void Draw() = 0;
+	virtual void StaticDraw() = 0;
 	virtual void animToggle() = 0;
 
 };

@@ -4,7 +4,7 @@
 using namespace std;
 
 
-Plane::Plane() : w_(600.0f), d_(1000.0f)
+Plane::Plane() : w_(2000.0f), d_(2000.0f)
 {	
 	CreateList();
 	cout << "Plane has been created!" << endl;
@@ -35,19 +35,12 @@ void Plane::CreateList()
 			//dol
 		for(int x=0; x<w_/4; x++) {
 			for(int y=0; y<d_/4; y++) {
-				/*glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(0.0f, 1.0f, 0.0f);
-					glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2, 0.f, d_/2);
-					glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2, 0.f,-d_/2);
-					glTexCoord2f(1.0f, 0.0f); glVertex3f(-w_/2, 0.f, d_/2);
-					glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2, 0.f,-d_/2);
-				glEnd();*/
 				glBegin(GL_TRIANGLE_STRIP);
 					glNormal3f(0.0f, 1.0f, 0.0f);
-					glTexCoord2f(1.0f, 1.0f); glVertex3f(w_-4.f*(x), 0.0f, d_-4.f*(y)); 
-					glTexCoord2f(0.0f, 1.0f); glVertex3f(w_-4.f*(x), 0.0f, d_-4.f*(y+1));
-					glTexCoord2f(1.0f, 0.0f); glVertex3f(w_-4.f*(x+1), 0.0f, d_-4.f*(y));
-					glTexCoord2f(0.0f, 0.0f); glVertex3f(w_-4.f*(x+1), 0.0f, d_-4.f*(y+1));
+					glTexCoord2f(1.0f-0.1*(x%10), 1.0f-0.1*(y%10)); glVertex3f(w_-4.f*(x), 0.0f, d_-4.f*(y)); 
+					glTexCoord2f(1.0f-0.1*((x%10)+1), 1.0f-0.1*(y%10)); glVertex3f(w_-4.f*(x), 0.0f, d_-4.f*(y+1));
+					glTexCoord2f(1.0f-0.1*(x%10), 1.0f-0.1*((y%10)+1)); glVertex3f(w_-4.f*(x+1), 0.0f, d_-4.f*(y));
+					glTexCoord2f(1.0f-0.1*((x%10)+1), 1.0f-0.1*((y%10)+1)); glVertex3f(w_-4.f*(x+1), 0.0f, d_-4.f*(y+1));
 				glEnd();
 			}
 		}

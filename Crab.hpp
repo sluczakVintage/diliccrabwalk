@@ -25,7 +25,9 @@ public:
 	~Crab();
 
 	void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f);
-	void drawLegs();
+	void StaticDraw(GLfloat = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f, GLfloat roty = 0.0f);
+	void DrawLegs();
+	void StaticDrawLegs();
 	void CreateList();
 	void toggleAnim();
 	virtual const GLfloat ReturnH() const { return h_; };

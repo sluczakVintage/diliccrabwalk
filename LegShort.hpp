@@ -23,6 +23,7 @@ public:
 
 	/// Metoda rysujaca krotka noge
 	void Draw();
+	void StaticDraw() { Draw(); };
 	void animToggle() {};
 	
 

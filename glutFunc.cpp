@@ -57,7 +57,7 @@ void createProjection()
 
 			//oZ AXIS
 			glVertex3f(0.f,0.0f,-nRange);
-			glVertex3f(0.f,0.0f,nRange);
+			glVertex3f(0.f,0.0f,nRange*1000.f);
 
 			glVertex3f(0.0f,0.0f,nRange);
 			glVertex3f(-nRange*0.05f,0.0f,(nRange*0.95f));
