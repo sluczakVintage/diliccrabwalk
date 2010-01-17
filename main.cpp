@@ -7,7 +7,6 @@
 
 #include "glut.h"
 
-#include "Camera.hpp"
 #include "TexLoader.hpp"
 #include "glutFunc.hpp"
 
@@ -21,7 +20,7 @@ using namespace std;
 using namespace glut;
 
 
-//Wysokosc kraba //////////// @TODO
+//Wysokosc kraba 
 float crab_y = 10.f;
 float crab_z = 0.f;
 extern float global_offset;
@@ -539,9 +538,7 @@ int main (int argc, char **argv)
 	if (!BuildTexture("leg.bmp", texture[1]))
 		return 1;	
 	if (!BuildTexture("plane.jpg", texture[2]))
-		return 1;	
-	if (!BuildTexture("alpha.gif", texture[3]))
-		return 1;	
+		return 1;		
 
 	// Ustawienie metod glut
 	glutDisplayFunc (display);
