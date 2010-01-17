@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\camLights.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Crab.cpp"
 				>
 			</File>
@@ -219,6 +223,10 @@
 			>
 			<File
 				RelativePath=".\Bone.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\camLights.hpp"
 				>
 			</File>
 			<File

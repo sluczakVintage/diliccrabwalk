@@ -6,9 +6,9 @@ using namespace std;
 
 bool anim_toggle = false;
 
-extern GLfloat nRange;
-
 extern int fps;
+int frames = 0;
+
 extern float xpos , ypos, zpos , xrot, yrot;
 float lastx, lasty;
 
@@ -41,47 +41,7 @@ Vector3f normalize(Vector3f v)
 
 	return Vector3f(x,y,z);
 }
-	// Stworz uklad wspolrzednych
-void createProjection()
-{
-	glNewList(PROJECTION, GL_COMPILE);
-		glBegin(GL_LINES);
-			//oX AXIS
-			glVertex3f(-nRange,0.0f,0.0f);
-			glVertex3f(nRange,0.0f,0.0f);
 
-			glVertex3f(nRange,0.0f,0.0f);
-			glVertex3f((nRange*0.95f),nRange*0.05f,0.0f);
-
-			glVertex3f(nRange,0.0f,0.0f);
-			glVertex3f((nRange*0.95f),-nRange*0.05f,0.0f);
-
-			//oZ AXIS
-			glVertex3f(0.f,0.0f,-nRange);
-			glVertex3f(0.f,0.0f,nRange*1000.f);
-
-			glVertex3f(0.0f,0.0f,nRange);
-			glVertex3f(-nRange*0.05f,0.0f,(nRange*0.95f));
-			
-			glVertex3f(0.0f,0.0f,nRange);
-			glVertex3f(nRange*0.05f,0.0f,(nRange*0.95f));
-			
-			//oY AXIS
-			glVertex3f(0.f,nRange,0.0f);
-			glVertex3f(0.f,-nRange,0.0f);
-
-			glVertex3f(0.f,nRange,0.0f);
-			glVertex3f(nRange*0.05f,(nRange*0.95f),0.0f);
-
-			glVertex3f(0.f,nRange,0.0f);
-			glVertex3f(-nRange*0.05f,(nRange*0.95f),0.0f);
-		glEnd();
-	glEndList();
-}
-
-
-namespace glut
-{
 
 GLfloat Rad2Deg (GLfloat Angle) {
 	static GLfloat ratio = 180.0f / 3.141592653589793238f;
@@ -91,6 +51,18 @@ GLfloat Rad2Deg (GLfloat Angle) {
 GLfloat Deg2Rad (GLfloat Rad) {
 	static GLfloat ratio = 180.0f / 3.141592653589793238f;
 	return Rad / ratio;
+}
+
+namespace glut
+{
+
+// timer ograniczajacy predkosc animacji
+void myTimer(int value)
+{
+	frames++;
+	glutPostRedisplay();
+	glutTimerFunc(1000/fps, myTimer, 1);
+
 }
 
 void mouse (int button, int state, int x, int y) {};
