@@ -176,10 +176,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Camera.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Crab.cpp"
 				>
 			</File>
@@ -227,10 +223,6 @@
 			>
 			<File
 				RelativePath=".\Bone.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Camera.hpp"
 				>
 			</File>
 			<File

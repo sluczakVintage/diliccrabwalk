@@ -1,22 +1,46 @@
 
 #include "glutFunc.hpp"
-#include "Drawable.hpp"
-#include <math.h>
+
 
 using namespace std;
 
-extern CCamera Camera;
 bool anim_toggle = false;
 //TEST
-extern GLfloat xSpotDir, ySpotDir, zOffset, spotCutOff;
 extern GLfloat nRange;
 extern int fps;
+extern float xpos , ypos, zpos , xrot, yrot;
+float lastx, lasty;
 
 
-namespace glut
+Vector3f substractV3f(Vector3f v1, Vector3f v2)
 {
+	float x = v1.x_ - v2.x_;
+	float y = v1.y_ - v2.y_;
+	float z = v1.z_ - v2.z_;
+	
+	return Vector3f(x,y,z);
+}
 
-// Stworz uklad wspolrzednych
+Vector3f crossProduct(Vector3f v1, Vector3f v2) 
+{
+   float x = (v1.y_ * v2.z_) - (v2.y_ * v1.z_);
+   float y = (v1.z_ * v2.x_) - (v2.z_ * v1.x_);
+   float z = (v1.x_ * v2.y_) - (v2.x_ * v1.y_);
+   
+   return Vector3f(x,y,z);
+}
+
+Vector3f normalize(Vector3f v) 
+{
+	float r = sqrtf(v.x_*v.x_ + v.y_*v.y_ + v.z_*v.z_);
+
+	float x = v.x_/r;
+	float y = v.y_/r;
+	float z = v.z_/r;
+
+	return Vector3f(x,y,z);
+}
+	// Stworz uklad wspolrzednych
 void createProjection()
 {
 	glNewList(PROJECTION, GL_COMPILE);
@@ -53,6 +77,22 @@ void createProjection()
 		glEnd();
 	glEndList();
 }
+
+
+namespace glut
+{
+
+GLfloat Rad2Deg (GLfloat Angle) {
+	static GLfloat ratio = 180.0f / 3.141592653589793238f;
+	return Angle * ratio;
+}
+
+GLfloat Deg2Rad (GLfloat Rad) {
+	static GLfloat ratio = 180.0f / 3.141592653589793238f;
+	return Rad / ratio;
+}
+
+
 /*-------------------------------------------------------------------------
   This function is passed to the glutMouseFunc and is called 
   whenever the mouse is clicked.
@@ -84,8 +124,6 @@ void mouse (int button, int state, int x, int y)
 			{
 				//  Pressed
 				case GLUT_DOWN:
-					spotCutOff = static_cast<int>(spotCutOff - 0.5f)%180;
-					cout << spotCutOff << endl;  ;
 					break;
 				//  Released
 				case GLUT_UP:
@@ -121,8 +159,17 @@ void mouse (int button, int state, int x, int y)
 //-------------------------------------------------------------------------
 void motion (int x, int y)
 {
+	int diffx=x-lastx; //check the difference between the current x and the last x position
+	int diffy=y-lasty; //check the difference between the current y and the last y position
+	lastx=x; //set lastx to the current x position
+	lasty=y; //set lasty to the current y position
+	xrot += (float) diffy; //set the xrot to xrot with the addition of the difference in the y position
+	yrot += (float) diffx;	//set the xrot to yrot with the addition of the difference in the x position
+
+	cout << "xrot " << xrot << endl;
+	cout << "yrot " << yrot << endl;
 	//  Print the mouse drag position
-	cout << "Mouse Drag Position: "<<  x << ", " << y << endl;  
+	//cout << "Mouse Drag Position: "<<  x << ", " << y << endl;  
 }
 
 //-------------------------------------------------------------------------
@@ -131,6 +178,7 @@ void motion (int x, int y)
 //-------------------------------------------------------------------------
 void pmotion (int x, int y)
 {
+
 	//  Print mouse move positopn
 	//cout << "Mouse Move Position: "<<  x << ", " << y << endl;  
 }
@@ -155,37 +203,47 @@ void keyboard (unsigned char key, int x, int y)
 			break;
 		//  User hits w key
 		case 'w':
-			Camera.MoveForwards( -0.1 ) ;
+			xpos += sinf(Deg2Rad(yrot)) ;
+			zpos -= cosf(Deg2Rad(yrot)) ;
+			ypos -= sinf(Deg2Rad(xrot)) ;
+			//Camera.MoveForwards( -0.1 ) ;
 			break;
 
 		case 'W':
-			Camera.MoveForwards( -1.0 ) ;
+			//Camera.MoveForwards( -1.0 ) ;
 			break;
 
 		//  User hits s key
 		case 's':
-			Camera.MoveForwards( 0.1 ) ;
+			xpos -= sinf(Deg2Rad(yrot)) ;
+			zpos += cosf(Deg2Rad(yrot)) ;
+			ypos += sinf(Deg2Rad(xrot)) ;
+			//Camera.MoveForwards( 0.1 ) ;
 			break;
 		case 'S':
-			Camera.MoveForwards( 1.0 ) ;
+			//Camera.MoveForwards( 1.0 ) ;
 			break;
 
 		//  User hits a key
 		case 'a':
-			Camera.StrafeRight(-0.5);
+			xpos -= cosf(Deg2Rad(yrot)) * 0.2;
+			zpos -= sinf(Deg2Rad(yrot)) * 0.2;
+			//Camera.StrafeRight(-0.5);
 			break;
 
 		//  User hits d key
 		case 'd':
-			Camera.StrafeRight(0.5);
+			xpos += cosf(Deg2Rad(yrot)) * 0.2;
+			zpos += sinf(Deg2Rad(yrot)) * 0.2;
+			//Camera.StrafeRight(0.5);
 			break;
 		//  User hits r key
 		case 'r':
-			zOffset += 1.0f;
+
 			break;
 		//  User hits f key
 		case 'f':
-			zOffset -= 1.0f;
+
 			break;
 		//  User hits Enter
 		case '\r':
@@ -225,12 +283,10 @@ void special (int key, int x, int y)
 	switch (key)
 	{
 		case GLUT_KEY_F1 :
-			ySpotDir += 0.5f;
-			cout << ySpotDir << endl;  
+
 			break;
 		case GLUT_KEY_F2 :
-			ySpotDir -= 0.5f;
-			cout << ySpotDir << endl;  
+
 			break;
 		case GLUT_KEY_F3 :	
 			break;
@@ -238,13 +294,11 @@ void special (int key, int x, int y)
 			cout << "F4 function key."<< endl;  
 			break;
 		case GLUT_KEY_F5 :
-			spotCutOff = static_cast<int>(spotCutOff + 1.0f)%180;
-					cout << spotCutOff << endl;  ;
+
 			//cout << "F5 function key."<< endl;  
 			break;
 		case GLUT_KEY_F6 :
-			spotCutOff = static_cast<int>(spotCutOff - 1.0f)%180;
-					cout << spotCutOff << endl;  ;
+
 			//cout << "F6 function key."<< endl;  
 			break;
 		case GLUT_KEY_F7 :
@@ -272,35 +326,35 @@ void special (int key, int x, int y)
 			break;
 		case GLUT_KEY_LEFT :
 			cout << "Left directional key."<< endl; 
-			Camera.RotateY(5.0);
+			//Camera.RotateY(5.0);
 			break;
 		case GLUT_KEY_UP :
+			xrot += 1;
+			if (xrot >360) xrot -= 360;
 			cout << "Up directional key."<< endl;  
-			Camera.Move(F3dVector(0.0,0.3,0.0));
+			//Camera.Move(F3dVector(0.0,0.3,0.0));
 			break;
 		case GLUT_KEY_RIGHT :
 			cout << "Right directional key."<< endl;  
-			Camera.RotateY(-5.0);
+			//Camera.RotateY(-5.0);
 			break;
 		case GLUT_KEY_DOWN :
+			xrot -= 1;
+			if (xrot < -360) xrot += 360;
 			cout << "Down directional key."<< endl;  
-			Camera.Move(F3dVector(0.0,-0.3,0.0));
+			//Camera.Move(F3dVector(0.0,-0.3,0.0));
 			break;
 		case GLUT_KEY_PAGE_UP :
-			Camera.RotateX(5.0);
+			//Camera.RotateX(5.0);
 			cout << "Page up directional key."<< endl;  
 			break;
 		case GLUT_KEY_PAGE_DOWN :
-			Camera.RotateX(-5.0);
+			//Camera.RotateX(-5.0);
 		cout << "Page down directional key."<< endl;  
 			break;
 		case GLUT_KEY_HOME :
-			xSpotDir += 0.5f;
-			cout << xSpotDir << endl;  
 			break;
-		case GLUT_KEY_END :
-			xSpotDir -= 0.5f;
-			cout << xSpotDir << endl;  
+		case GLUT_KEY_END :  
 			break;
 		case GLUT_KEY_INSERT :
 			cout << "Inset directional key."<< endl;  
@@ -308,12 +362,6 @@ void special (int key, int x, int y)
 	}
 	
 	//glutPostRedisplay ();
-}
-
-
-GLfloat Rad2Deg (GLfloat Angle) {
-  static GLfloat ratio = 180.0f / 3.141592653589793238f;
-  return Angle * ratio;
 }
 
 

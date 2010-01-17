@@ -24,46 +24,9 @@ static bool started_ = false;
 
 
 
-//-------------------------------------------------------------------angles
+//-------------------------------------------------------------------Granice ruchu w stawach
 GLfloat MaxA = 50.f, MaxB = -45.f, MinA = -30.f, MinB = -110.f;
 
-struct Vector3f {
-	Vector3f() : x_(0), y_(0), z_(0) {};
-	Vector3f(float x, float y, float z) : x_(x), y_(y), z_(z) {};
-	float x_;
-	float y_;
-	float z_;
-};
-
-Vector3f substractV3f(Vector3f v1, Vector3f v2)
-{
-	float x = v1.x_ - v2.x_;
-	float y = v1.y_ - v2.y_;
-	float z = v1.z_ - v2.z_;
-	
-	return Vector3f(x,y,z);
-}
-
-Vector3f crossProduct(Vector3f v1, Vector3f v2) 
-{
-   float x = (v1.y_ * v2.z_) - (v2.y_ * v1.z_);
-   float y = (v1.z_ * v2.x_) - (v2.z_ * v1.x_);
-   float z = (v1.x_ * v2.y_) - (v2.x_ * v1.y_);
-   
-   return Vector3f(x,y,z);
-}
-
-Vector3f normalize(Vector3f v) 
-{
-	float r = sqrtf(v.x_*v.x_ + v.y_*v.y_ + v.z_*v.z_);
-
-	float x = v.x_/r;
-	float y = v.y_/r;
-	float z = v.z_/r;
-
-	return Vector3f(x,y,z);
-
-}
 using namespace std;
 
 //-----------------------------------------------------------------------pi
@@ -102,7 +65,7 @@ template <typename T> inline float rl2(float r, float l) {
 
 Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh, string name) : father_(root), x_(x), y_(y), a_(a), flag_(flag), mesh_(mesh), name_(name), child_(NULL)
 {	
-	GLfloat off = 0.4f;
+	GLfloat off = 0.8f;
 	l_ = mesh_->ReturnH();
 
 	if(flag_ == FRONT_ODD){
