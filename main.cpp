@@ -38,7 +38,7 @@ char *window_title = "DIL Crab Walk";
 int full_screen = 0;
 
 //FPS
-int fps = 60;
+int fps = 1000;
 
 static int frames = 0;
 // predeklaracja funkcji inicjalizujacej OGL
@@ -88,6 +88,8 @@ void initDirLight()
     glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuse);
     glLightfv(GL_LIGHT0, GL_POSITION, position);
 
+
+
 	glEnable( GL_LIGHT0 );
 }
 
@@ -97,12 +99,17 @@ pozycyjne
  */
 void initPosLight()
 {
-    GLfloat ambientDiffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
-    GLfloat position[] = { 0.0, 40.0, 10.0, 1.0 };
+    GLfloat ambientDiffuse[] = {0.2f, 0.2f, 0.2f, 1.0f};
+	GLfloat redDiffuse[] = {0.6f, 0.2f, 0.2f, 1.0f};
+    GLfloat position[] = { 0.f, 100.0, 100.0f, 1.0 };
    
     glLightfv(GL_LIGHT1, GL_AMBIENT, ambientDiffuse);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, ambientDiffuse);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, redDiffuse);
     glLightfv(GL_LIGHT1, GL_POSITION, position);
+
+	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.0f);
+    glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0002f);
+    glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.000004f);
 
 	glEnable( GL_LIGHT1 );
 }
@@ -110,7 +117,7 @@ void initPosLight()
 
 /**
 * GL_LIGHT3-5
-spot
+spoty
 */
 void initSpot2()
 {	
@@ -210,24 +217,20 @@ void init ()
 	glShadeModel( GL_SMOOTH );
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
-//	glAlphaFunc(GL_GREATER,0.1f);
-//	glEnable(GL_ALPHA_TEST);
-
-	
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	
+// Mg³a
 	glEnable(GL_FOG);							
 	glFogi(GL_FOG_MODE, GL_LINEAR);				
 	glFogfv(GL_FOG_COLOR, fogColor);
-	glFogf(GL_FOG_DENSITY, 0.2f);
-	glFogf(GL_FOG_START,  250.0f);				
-	glFogf(GL_FOG_END,    550.0f);				
+	glFogf(GL_FOG_DENSITY, 0.3f);
+	glFogf(GL_FOG_START,  180.0f);				
+	glFogf(GL_FOG_END,    250.0f);				
 	glHint(GL_FOG_HINT, GL_NICEST);					
 
 
 	initSpot();
 	initSpot2();
-    initDirLight();
+    //initDirLight();
 
 	glEnable( GL_LIGHTING );
 	    
@@ -269,6 +272,7 @@ void reshape (int w, int h)
 void camera () {
 	
 	static float start = 140;
+	static int rate = 60;
 	static float a = start;
 	static float addition = 0;
 	static float step = 0.005f;
@@ -283,19 +287,22 @@ void camera () {
 		ypos = (cRadius)*sinf(Deg2Rad(xrot)) + crab_y;
 		
 		//warunek zakonczenia fazy
-		if(frames > fps*2) 
+		if(frames > rate*2) 
 		{
 			part[0] = true;
+			//zacznij isc
 			anim_toggle = true;
 		}
 	}
 	else if(part[1] == false) {
-		//jednostajnie przyspieszony ruch kamery
+		//jednostajnie przyspieszony ruch kamery - obrót o 360 st wokó³ kraba
+		//przyspieszanie
 		if(a < (360 + start)/2)
 		{
 			if(addition <= 1.0f)
 				addition += step;
 		}
+		//zwalnianie
 		else if(a > 4*(360 + start)/5)
 		{
 			if(addition > 0.05f)
@@ -305,7 +312,7 @@ void camera () {
 		}
 		a += addition;	
 		yrot = a+270.f;
-
+		//jezeli wykonano caly obrot
 		if(a >= (360 + start)) 
 		{
 			part[1] = true;
@@ -316,11 +323,13 @@ void camera () {
 	}
 	else if(part[2] == false)
 	{
+		// z wolna zacznij oddalac kamere
 		if(ypos < 10.f )
 		{
 			if(addition <= 1.0f)
 				addition += step;
 		}
+		// a potem zacznij hamowac
 		else if(ypos > 30.f )
 		{
 			if(addition > 0.05f)
@@ -334,10 +343,11 @@ void camera () {
 		xrot += addition;
 
 		ypos = (cRadius)*sinf(Deg2Rad(xrot)) + crab_y + a;
-
+		// zakoncz na okreslonej wysokosci
 		if( ypos >= 40.f )
 		{
 			part[2] = true;
+			step = 0.05;
 			addition = 0.0f;
 			a = yrot-270.0f;
 			start = yrot - 270.0f;
@@ -346,22 +356,24 @@ void camera () {
 	else if(part[3] == false)
 	{
 		//jednostajnie przyspieszony ruch kamery
-		if(a < (90 + start)/2)
+		// wolno obiegaj kraba od tylu (widok na kraba od boku)
+		if(a < (60 + start)/2)
 		{
 			if(addition <= 1.0f)
-				addition += step;
+				addition += step*2;
 		}
-		else if(a > (90 + start)/2)
+		//potem hamowanie
+		else if(a > (60 + start)/2)
 		{
 			if(addition > 0.05f)
-				addition -= step;
+				addition -= step*2;
 			else
 				addition = step;
 		}
 		a += addition;	
 		yrot = a+270.f;
-
-		if(a >= (90 + start)) 
+		//zakoncz obrot w odpowiednim momencie
+		if(a >= (60 + start)) 
 		{
 			part[3] = true;
 			a = 0;
@@ -369,26 +381,28 @@ void camera () {
 			addition = 0.0;
 		}
 	}
-	else if(crab_z >=150.f && part[4] == false)
-	{
+	else if(crab_z >=100.f && part[4] == false)
+	{	// scena zwalniania ze strachu wyzwalana
 		static int curr_frame = frames;
 		static bool done = false;
+		static int odd = 10;
 
-		if(!done)
+ 		if(odd%10 == 0)
+			global_offset -=step*10;
+		odd++;
+		if(frames > curr_frame + rate*2) 
 		{
-			anim_toggle = true;
-			done = true;
+			if(odd%6 == 0)
+			global_offset +=step*100;
+			initPosLight();
+			//anim_toggle = true;
+			//zacznij uciekac
 		}
-
-		if(frames > curr_frame + fps*2) 
-		{
+		if(frames > curr_frame + rate*2.5)
 			part[4] = true;
-			anim_toggle = true;
-			global_offset = 4.0f;
-		}
 
 	}
-	else if(crab_z >= 300.f && part[5] == false)
+	else if(crab_z >= 150.f && part[5] == false)
 		{
 			
 		if(ypos < 100.f )
@@ -396,7 +410,7 @@ void camera () {
 			if(addition <= 1.0f)
 				addition += step;
 		}
-		else if(ypos > 400.f )
+		else if(ypos > 300.f )
 		{
 			if(addition > 0.05f)
 				addition -= step;
@@ -405,28 +419,29 @@ void camera () {
 		}
 				
 		cRadius += 0.4;
-		a += addition*2;
+		//a += addition*2;
 
-		if(xrot <= 75.f)
+		if(xrot <= 70.f)
 			xrot += addition;
+		if(yrot >= 790.f)
+			yrot -=addition;
+		ypos = (cRadius)*sinf(Deg2Rad(xrot)) + crab_y;
 
-		ypos = (cRadius)*sinf(Deg2Rad(xrot)) + crab_y + a;
-
-		if( ypos >= 500.f )
+		if( ypos >= 400.f )
 		{
 			part[5] = true;
-			addition = 0.0f;
-			a = yrot-270.0f;
-			start = yrot - 270.0f;
+			//addition = 0.0f;
+			//a = yrot-270.0f;
+			//start = yrot - 270.0f;
 		}
 	}
-	else if(crab_z >= 600.f && part[6] == false)
+	else if(crab_z >= 200.f && part[6] == false)
 	{
 		anim_toggle = true;
 		part[6] = true;
 	}
 	
-	if(part[5] == false)
+	if(part[4] == false)
 	{
 		xpos = (cRadius)*cosf(Deg2Rad(yrot-270.f));
 		zpos = (cRadius)*sinf(Deg2Rad(yrot-270.f)) + crab_z;
@@ -468,29 +483,23 @@ void drawObject ()
 	static Crab dilCrab;
 	static Crab dilCrab2;
 	
-	//static LegNormal* leg = new LegNormal(FOR_ODD);//,0.f,8.f);
 	glCallList(PROJECTION);
 
-	plane.Draw(-1000.f, -0.2f, -1000.f);
-	
-	//cout << xpos << endl;
-	/*glPushMatrix();
-	glRotatef(-90.f,0.f,1.f,0.f);
-	glTranslatef(0.f, 8.f, 0.f);
-	leg->Draw();
-	glPopMatrix();*/
+	plane.Draw();
 	
 	dilCrab.Draw(0.0f, crab_y, crab_z);
 
-	for(int i = 0; i <=10; i++)
+	for(int i = 0; i <= 2; i++)
 	{
-		dilCrab2.StaticDraw(35*(i+24), 0.f, 120+15*i, 14+5*i);
+		dilCrab2.StaticDraw(35+((i%2)*24), 0.f, 120+27*i, 14+27*i);
 
-		dilCrab2.StaticDraw(-40, 0.f, 54*+14*i, 25-18*i);
+		dilCrab2.StaticDraw(-60+(i)*4, 0.f, 120*+(i)*25, 25+18*i);
 
-		dilCrab2.StaticDraw(26+(i*25), 0.f, 112+25*i, 90-7*i);
+		dilCrab2.StaticDraw(-40, 0.f, 150+70*i, 25+41*i);
 
-		dilCrab2.StaticDraw(76, 0.f, 40+27*i, 30+15*i);
+		//dilCrab2.StaticDraw(-26+((i%2)*25), 0.f, 112+25*i, 90-7*i);
+
+	//	dilCrab2.StaticDraw(76, 0.f, 40+27*i, 30+15*i);
 	}	
 
 	glMatrixMode (GL_PROJECTION);

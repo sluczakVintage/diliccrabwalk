@@ -4,14 +4,14 @@
 using namespace std;
 
 
-Plane::Plane() : w_(1000.0f), d_(1000.0f)
+Plane::Plane() : w_(800.0f), d_(600.0f)
 {	
 	CreateList();
-	cout << "Plane has been created!" << endl;
+	cout << "Podloze stworzone!" << endl;
 	
 }
 
-
+// Stworz liste podloza po ktorym chodzi krab
 void Plane::CreateList()
 {
 	glNewList(PLANE, GL_COMPILE);
@@ -33,14 +33,14 @@ void Plane::CreateList()
 
 			glBindTexture(GL_TEXTURE_2D, 3);
 			//dol
-		for(int x=0; x<w_/4; x++) {
-			for(int y=0; y<d_/4; y++) {
+		for(int x=0; x<w_/8; x++) {
+			for(int z=0; z<d_/6; z++) {
 				glBegin(GL_TRIANGLE_STRIP);
 					glNormal3f(0.0f, 1.0f, 0.0f);
-					glTexCoord2f(1.0f-0.1*(x%10), 1.0f-0.1*(y%10)); glVertex3f((w_/2)-4.f*(x), 0.0f, (d_/2)-4.f*(y)); 
-					glTexCoord2f(1.0f-0.1*((x%10)+1), 1.0f-0.1*(y%10)); glVertex3f((w_/2)-4.f*(x), 0.0f, (d_/2)-4.f*(y+1));
-					glTexCoord2f(1.0f-0.1*(x%10), 1.0f-0.1*((y%10)+1)); glVertex3f((w_/2)-4.f*(x+1), 0.0f, (d_/2)-4.f*(y));
-					glTexCoord2f(1.0f-0.1*((x%10)+1), 1.0f-0.1*((y%10)+1)); glVertex3f((w_/2)-4.f*(x+1), 0.0f, (d_/2)-4.f*(y+1));
+					glTexCoord2f(1.0f-0.1*(x%10), 1.0f-0.1*(z%10)); glVertex3f((w_/2)-8.f*(x), 0.0f, (d_/2)-6.f*(z)); 
+					glTexCoord2f(1.0f-0.1*((x%10)+1), 1.0f-0.1*(z%10)); glVertex3f((w_/2)-8.f*(x), 0.0f, (d_/2)-6.f*(z+1));
+					glTexCoord2f(1.0f-0.1*(x%10), 1.0f-0.1*((z%10)+1)); glVertex3f((w_/2)-8.f*(x+1), 0.0f, (d_/2)-6.f*(z));
+					glTexCoord2f(1.0f-0.1*((x%10)+1), 1.0f-0.1*((z%10)+1)); glVertex3f((w_/2)-8.f*(x+1), 0.0f, (d_/2)-6.f*(z+1));
 				glEnd();
 			}
 		}

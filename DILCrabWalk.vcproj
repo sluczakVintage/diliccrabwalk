@@ -180,10 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Drawable.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\glutFunc.cpp"
 				>
 			</File>

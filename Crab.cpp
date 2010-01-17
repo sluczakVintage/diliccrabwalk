@@ -198,9 +198,9 @@ void Crab::StaticDraw(GLfloat x, GLfloat y, GLfloat z, GLfloat roty)
 		
 	// Wyrysuj korpus ukladu 
 	glPushMatrix();
-				glRotatef(roty, 0.0f, 1.0f, 0.0f);
 				glRotatef(180.f, 1.0f, 0.0f, 0.0f);
 				glTranslatef( -x, -y - 2.5f, -z );
+				glRotatef(roty, 0.0f, 1.0f, 0.0f);
 				glCallList(CRAB);
 				glPushMatrix();
 					// Wyrysuj nogi

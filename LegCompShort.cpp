@@ -79,7 +79,7 @@ void LegCompShort::CreateList()
 				glEnd();			
 		glEndList();
 
-		cout << "List SH_COMP created" << endl;
+		cout << "Lista SH_COMP  stworzona" << endl;
 }
 
 

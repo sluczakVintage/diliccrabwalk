@@ -5,7 +5,7 @@ LegNormal::LegNormal(int flag)
 	GLfloat a = 0.f, child_a = 0.f;
 	compShort = new LegCompShort();
 	compLong = new LegCompLong();
-	
+	// przydzielenie wartosci poczatkowych
 	if(flag == FRONT_ODD){
 		a = 30.f;
 		child_a = -105.f;
@@ -26,7 +26,7 @@ LegNormal::LegNormal(int flag)
 	bone = new Bone(NULL, 0.f, 0.f, a, flag, compShort, "compShort");
 	
 	bone->boneAddChild(child_a, flag, compLong , "compLong" );
-	cout << "LegNormal has been created!" << endl;
+	cout << "LegNormal  stworzona" << endl;
 	
 }
 

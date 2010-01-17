@@ -24,6 +24,7 @@
 *   Or Mention Of The Site In Your Readme Or The Project Itself :)          *
 *                                                                           *
 ****************************************************************************/
+// zmodyfikowane przez Sebastiana Luczaka
 
 #include <windows.h>													// Header File For Windows
 #include <gl\gl.h>														// Header File For The OpenGL32 Library
@@ -48,13 +49,13 @@ int BuildTexture(char *szPathName, GLuint &texid)						// Load Image And Convert
 
 	if (strstr(szPathName, "http://"))									// If PathName Contains http:// Then...
 	{
-		strcpy(szPath, szPathName);										// Append The PathName To szPath
+		strcpy_s(szPath, szPathName);										// Append The PathName To szPath
 	}
 	else																// Otherwise... We Are Loading From A File
 	{
 		GetCurrentDirectory(MAX_PATH, szPath);							// Get Our Working Directory
-		strcat(szPath, "\\");											// Append "\" After The Working Directory
-		strcat(szPath, szPathName);										// Append The PathName
+		strcat_s(szPath, "\\");											// Append "\" After The Working Directory
+		strcat_s(szPath, szPathName);										// Append The PathName
 	}
 
 	MultiByteToWideChar(CP_ACP, 0, szPath, -1, wszPath, MAX_PATH);		// Convert From ASCII To Unicode

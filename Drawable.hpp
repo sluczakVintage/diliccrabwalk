@@ -1,6 +1,6 @@
 /**
 *
-*	Klasa opisujaca klasy rysowalne
+*	Klasa abstrakcyjna opisujaca klasy rysowalne
 *
 *
 **/

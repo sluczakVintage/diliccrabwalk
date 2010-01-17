@@ -1,6 +1,7 @@
 /**
 *
-*	Klasa opisujaca model kraba
+*	Klasa opisujaca model kosci kraba
+*	Klasa odpowiedzialna za animacje
 *
 *
 **/
@@ -29,17 +30,19 @@ public:
 	void Draw();
 	void animate(); 
 
+	// Metody animacyjne
 	void animToggle();
-	void Bone::newOffset(GLfloat off);
+	// zmiana predkosci kraba (offset odnosi sie do zmiany katow miedzy konczynami
+	void newOffset(GLfloat off);
 	
 	void animInit();
+	// metody stanowe (oznaczaja stan automatu stanow animacji)
 	void animUpFront();
 	void animUpRear();
 	void animDown();
 	void animMove();
-	void animMoveToStop();
-
 	void animIdle();
+	
 
 private:
 	Bone();
@@ -65,19 +68,9 @@ private:
 	//Flaga kosci
 	int flag_;
 
-	// Rozpoczecie animacji
-	//static bool started_;
+
 	// Flaga animacji
 	int animFlag_;
-	// Uderzenie w ziemie
-	//static bool oddHit_;
-	//static bool evenHit_;
-	// Gotowosc do kroku
-	//static bool readyFront_;
-	//static bool readyRear_;
-	// Wartosc maksymalna 
-//	static float max_x;
-//	static float min_x;
 
 	
 };

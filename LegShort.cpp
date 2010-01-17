@@ -7,7 +7,7 @@ LegShort::LegShort()
 	bone = new Bone(NULL, 0.f, 0.f, 0.f, 0, compShort0, "compShort0");
 	
 	bone->boneAddChild(-75.f, 0, compShort1 , "compShort1 " );
-	cout << "LegShort has been created!" << endl;
+	cout << "LegShort stworzona!" << endl;
 	
 }
 

@@ -17,7 +17,7 @@ class LegCompLong : public Drawable
 public:
 	LegCompLong();
 	
-	void Draw();//GLfloat x, GLfloat y, GLfloat z);
+	void Draw();
 	void CreateList();
 	virtual const GLfloat ReturnH() const { return h_; };
 	virtual const GLfloat ReturnW() const { return w_; };

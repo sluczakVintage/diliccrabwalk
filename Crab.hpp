@@ -25,10 +25,13 @@ public:
 	~Crab();
 
 	void Draw(GLfloat x = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f);
+	// rysowanie bez animacji
 	void StaticDraw(GLfloat = 0.0f, GLfloat y = 0.0f, GLfloat z = 0.0f, GLfloat roty = 0.0f);
 	void DrawLegs();
+	// rysowanie bez animacji
 	void StaticDrawLegs();
 	void CreateList();
+	// przelaczanie animacji start/stop
 	void toggleAnim();
 	virtual const GLfloat ReturnH() const { return h_; };
 

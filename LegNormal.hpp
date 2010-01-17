@@ -19,14 +19,17 @@
 class LegNormal : public Leg
 {
 public:
-	LegNormal(int flag);//, GLfloat x = 0.f, GLfloat y = 0.f);
+	LegNormal(int flag);
 	~LegNormal();
 
 	void Draw();
+	//rysowanie bez animacji
 	void StaticDraw();
+	//adapter do zmiany stanu animacji nogi
 	void animToggle();
 
 private:
+	// czesci skladowe nogi
 	LegCompShort* compShort;
 	LegCompLong* compLong;
 	Bone* bone;

@@ -1,6 +1,6 @@
 /**
 *
-*	Klasa opisujaca model kraba
+*	Klasa opisujaca model podloza
 *
 *
 **/
@@ -12,11 +12,10 @@
 #include "glutFunc.hpp"
 #include "Drawable.hpp"
 
-class Plane //: public Drawable
+class Plane 
 {
 public:
 	Plane();
-	//~Plane();
 
 	void CreateList();
 

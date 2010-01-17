@@ -7,21 +7,21 @@
 
 extern float crab_y;
 extern float crab_z;
-
-static float last_equation_x = 0.0f;
+// obliczenie przesuniecia po ziemi
+static float last_equation_z = 0.0f;
 static float mov_offset = 0.0f;
 
 float global_offset = 0.8f;
-
-static float max_x = 0.0f;
-static float min_x = 0.0f;
-
+// Wartosc maksymalna ruchu po ziemi
+static float max_z = 0.0f;
+static float min_z = 0.0f;
+// Uderzenie w ziemie
 static bool oddHit_= true;
 static bool evenHit_= false;
-
+// Gotowosc do kroku
 static bool readyFront_ = false;
 static bool readyRear_ = false;
-
+// Czy animacja rozpoczeta
 static bool started_ = false;
 
 
@@ -94,7 +94,7 @@ Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh
 void Bone::newOffset(GLfloat off)
 {
 	mov_offset = 0.0f;
-	last_equation_x = 0.0f;
+	last_equation_z = 0.0f;
 
 	if(flag_ == FRONT_ODD){
 		off_ = off;
@@ -271,26 +271,26 @@ void Bone::animMove()
 	float sin_b = sinf( deg2rad(child_->a_) );
 	float cos_b = cosf( deg2rad(child_->a_) );
 	
-	float equation_x = ( cosf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) - ( child_->l_ ) * sin_b  * sinf( deg2rad(a_) ) );
+	float equation_z = ( cosf( deg2rad(a_ ) ) * ( l_ + child_->l_* cos_b ) - ( child_->l_ ) * sin_b  * sinf( deg2rad(a_) ) );
 
 	childOffsetA_ = -off_;
 	if( ( flag_ == REAR_EVEN || flag_ == REAR_ODD )) 
 	{
-		if(min_x == 0.0f)
-			min_x = equation_x;
-		if(equation_x >= max_x)
+		if(min_z == 0.0f)
+			min_z = equation_z;
+		if(equation_z >= max_z)
 			animFlag_ = AN_IDLE;
 	}
 	else if ( ( flag_ == FRONT_EVEN || flag_ == FRONT_ODD ) )  
 	{
-		if( last_equation_x == 0.0f )
-			last_equation_x = equation_x;
+		if( last_equation_z == 0.0f )
+			last_equation_z = equation_z;
 		if( mov_offset == 0.0f )
-			mov_offset = (last_equation_x - equation_x)/2;
-		if( max_x == 0.0f )
-			max_x = equation_x;
+			mov_offset = (last_equation_z - equation_z)/2;
+		if( max_z == 0.0f )
+			max_z = equation_z;
 
-		if( equation_x <= min_x )
+		if( equation_z <= min_z )
 			animFlag_ = AN_IDLE;
 		else
 			crab_z += mov_offset;

@@ -1,6 +1,6 @@
 /**
 *
-*	Klasa opisujaca klasy nog
+*	Klasa abstrakcyjna opisujaca klasy nog
 *
 *
 **/

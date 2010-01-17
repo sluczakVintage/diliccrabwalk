@@ -81,7 +81,7 @@ void LegCompLong::CreateList()
 				glEnd();	
 		glEndList();
 
-		cout << "List LONG_COMP created" << endl;
+		cout << "Lista LONG_COMP stworzona" << endl;
 }
 
 

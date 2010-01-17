@@ -5,8 +5,9 @@
 using namespace std;
 
 bool anim_toggle = false;
-//TEST
+
 extern GLfloat nRange;
+
 extern int fps;
 extern float xpos , ypos, zpos , xrot, yrot;
 float lastx, lasty;
@@ -92,224 +93,69 @@ GLfloat Deg2Rad (GLfloat Rad) {
 	return Rad / ratio;
 }
 
+void mouse (int button, int state, int x, int y) {};
+void pmotion (int x, int y) {};
 
-/*-------------------------------------------------------------------------
-  This function is passed to the glutMouseFunc and is called 
-  whenever the mouse is clicked.
--------------------------------------------------------------------------*/
-void mouse (int button, int state, int x, int y)
-{
-	switch (button)
-	{
-		//  Left Button Clicked
-		case GLUT_LEFT_BUTTON:
-
-			switch (state)
-			{
-				//  Pressed 
-				case GLUT_DOWN:
-					break;
-				//  Released
-				case GLUT_UP:
-					cout << "Mouse Left Button Released (Up)..."<< endl;  ;
-					break;
-			}
-
-			break;
-
-		//  Middle Button clicked
-		case GLUT_MIDDLE_BUTTON:
-			
-			switch (state)
-			{
-				//  Pressed
-				case GLUT_DOWN:
-					break;
-				//  Released
-				case GLUT_UP:
-					cout << "Mouse Middle Button Released (Up)..."<< endl;  ;
-					break;
-			}
-
-			break;
-
-		//  Right Button Clicked
-		case GLUT_RIGHT_BUTTON:
-			
-			switch (state)
-			{
-				//  Pressed
-				case GLUT_DOWN:
-					cout << "Mouse Right Button Pressed (Down)..."<< endl;  ;
-					break;
-				//  Released
-				case GLUT_UP:
-					cout << "Mouse Right Button Released (Up)..."<< endl;  ;
-					break;
-			}
-
-			break;
-
-	}
-}
-
-//-------------------------------------------------------------------------
-//  This function is passed to the glutMotionFunc and is called 
-//  whenever the mouse is dragged.
-//-------------------------------------------------------------------------
+//  Metoda obslugi ruchu myszy przy kliknieciu i przytrzymaniu
 void motion (int x, int y)
 {
-	int diffx=x-lastx; //check the difference between the current x and the last x position
-	int diffy=y-lasty; //check the difference between the current y and the last y position
-	lastx=x; //set lastx to the current x position
-	lasty=y; //set lasty to the current y position
-	xrot += (float) diffy; //set the xrot to xrot with the addition of the difference in the y position
-	yrot += (float) diffx;	//set the xrot to yrot with the addition of the difference in the x position
+	int diffx=x-lastx; 
+	int diffy=y-lasty; 
+	lastx=x; 
+	lasty=y; 
+	xrot += (float) diffy; 
+	yrot += (float) diffx;	
 
 	cout << "xrot " << xrot << endl;
 	cout << "yrot " << yrot << endl;
-	//  Print the mouse drag position
-	//cout << "Mouse Drag Position: "<<  x << ", " << y << endl;  
+	
 }
 
-//-------------------------------------------------------------------------
-//  This function is passed to the glutPassiveMotionFunc and is called 
-//  whenever the mouse is moved.
-//-------------------------------------------------------------------------
-void pmotion (int x, int y)
-{
-
-	//  Print mouse move positopn
-	//cout << "Mouse Move Position: "<<  x << ", " << y << endl;  
-}
-
-//-------------------------------------------------------------------------
-//  This function is passed to the glutKeyboardFunc and is called 
-//  whenever the user hits a key.
-//-------------------------------------------------------------------------
-
-
+//Obsluga zdarzen klawiatury
 void keyboard (unsigned char key, int x, int y)
 {
-	//  Print what key the user is hitting
-	cout << "User is hitting the " << key << " key."<< endl;  
-	cout << "ASCII code is "<< key << endl;  
-	
+		
 	switch (key)
 	{
-		//  User hits q key
 		case 'q':
 			exit(0);
 			break;
-		//  User hits w key
 		case 'w':
 			xpos += sinf(Deg2Rad(yrot)) ;
 			zpos -= cosf(Deg2Rad(yrot)) ;
 			ypos -= sinf(Deg2Rad(xrot)) ;
-			//Camera.MoveForwards( -0.1 ) ;
 			break;
 
-		case 'W':
-			//Camera.MoveForwards( -1.0 ) ;
-			break;
-
-		//  User hits s key
 		case 's':
 			xpos -= sinf(Deg2Rad(yrot)) ;
 			zpos += cosf(Deg2Rad(yrot)) ;
 			ypos += sinf(Deg2Rad(xrot)) ;
-			//Camera.MoveForwards( 0.1 ) ;
 			break;
-		case 'S':
-			//Camera.MoveForwards( 1.0 ) ;
-			break;
-
-		//  User hits a key
 		case 'a':
 			xpos -= cosf(Deg2Rad(yrot)) * 0.2;
 			zpos -= sinf(Deg2Rad(yrot)) * 0.2;
-			//Camera.StrafeRight(-0.5);
 			break;
 
-		//  User hits d key
 		case 'd':
 			xpos += cosf(Deg2Rad(yrot)) * 0.2;
 			zpos += sinf(Deg2Rad(yrot)) * 0.2;
-			//Camera.StrafeRight(0.5);
-			break;
-		//  User hits r key
-		case 'r':
-
-			break;
-		//  User hits f key
-		case 'f':
-
-			break;
-		//  User hits Enter
-		case '\r':
-			cout << "User is hitting the Return key."<< endl;   
-			break;
-
-		//  User hits Space
+		//SPACJA
 		case ' ':
-			anim_toggle = true;
-			cout << "User is hitting the Space key."<< endl;  
+			anim_toggle = true;  
 			break;
-
-		//  User hits back space
-		case 8:
-			cout << "User is hitting the Back Space key."<< endl; 
-			break;
-
-		//  User hits ESC key
+		//ESC
 		case 27:
 			exit(0);
 			break;
 	}
-		
-
-	//glutPostRedisplay ();
 }
 
-//-------------------------------------------------------------------------
-//  This function is passed to the glutSpecialFunc and is called 
-//  whenever the user hits a special key.
-//-------------------------------------------------------------------------
+
+//Klawisze specjalne
 void special (int key, int x, int y)
 {
-	float step = 1.0f;
-
-
 	switch (key)
 	{
-		case GLUT_KEY_F1 :
-
-			break;
-		case GLUT_KEY_F2 :
-
-			break;
-		case GLUT_KEY_F3 :	
-			break;
-		case GLUT_KEY_F4 :
-			cout << "F4 function key."<< endl;  
-			break;
-		case GLUT_KEY_F5 :
-
-			//cout << "F5 function key."<< endl;  
-			break;
-		case GLUT_KEY_F6 :
-
-			//cout << "F6 function key."<< endl;  
-			break;
-		case GLUT_KEY_F7 :
-			cout << "F7 function key."<< endl;  
-			break;
-		case GLUT_KEY_F8 :
-			cout << "F8 function key."<< endl;  
-			break;
-		case GLUT_KEY_F9 :
-			cout << "F9 function key."<< endl;  
-			break;
 		case GLUT_KEY_F10 :
 			fps = 1;
 			cout << "F10 function key."<< endl;  
@@ -325,43 +171,19 @@ void special (int key, int x, int y)
 			cout << "F12 function key."<< endl;  
 			break;
 		case GLUT_KEY_LEFT :
-			cout << "Left directional key."<< endl; 
-			//Camera.RotateY(5.0);
 			break;
 		case GLUT_KEY_UP :
 			xrot += 1;
 			if (xrot >360) xrot -= 360;
-			cout << "Up directional key."<< endl;  
-			//Camera.Move(F3dVector(0.0,0.3,0.0));
 			break;
 		case GLUT_KEY_RIGHT :
-			cout << "Right directional key."<< endl;  
-			//Camera.RotateY(-5.0);
 			break;
 		case GLUT_KEY_DOWN :
 			xrot -= 1;
 			if (xrot < -360) xrot += 360;
-			cout << "Down directional key."<< endl;  
-			//Camera.Move(F3dVector(0.0,-0.3,0.0));
 			break;
-		case GLUT_KEY_PAGE_UP :
-			//Camera.RotateX(5.0);
-			cout << "Page up directional key."<< endl;  
-			break;
-		case GLUT_KEY_PAGE_DOWN :
-			//Camera.RotateX(-5.0);
-		cout << "Page down directional key."<< endl;  
-			break;
-		case GLUT_KEY_HOME :
-			break;
-		case GLUT_KEY_END :  
-			break;
-		case GLUT_KEY_INSERT :
-			cout << "Inset directional key."<< endl;  
-			break;
+
 	}
-	
-	//glutPostRedisplay ();
 }
 
 
