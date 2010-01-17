@@ -398,11 +398,6 @@ void camera () {
 		}
 		else if(ypos > 400.f )
 		{
-			if(part[6] == false)
-			{
-				anim_toggle = true;
-				part[6] = true;
-			}
 			if(addition > 0.05f)
 				addition -= step;
 			else
@@ -424,6 +419,11 @@ void camera () {
 			a = yrot-270.0f;
 			start = yrot - 270.0f;
 		}
+	}
+	else if(crab_z >= 600.f && part[6] == false)
+	{
+		anim_toggle = true;
+		part[6] = true;
 	}
 	
 	if(part[5] == false)
