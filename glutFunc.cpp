@@ -1,6 +1,7 @@
 
 #include "glutFunc.hpp"
 
+bool show_bones = false;
 
 using namespace std;
 
@@ -111,6 +112,10 @@ void keyboard (unsigned char key, int x, int y)
 		case 'd':
 			xpos += cosf(Deg2Rad(yrot)) * 0.2;
 			zpos += sinf(Deg2Rad(yrot)) * 0.2;
+			break;
+		case 'b':
+			show_bones = !show_bones;
+			break;
 		//SPACJA
 		case ' ':
 			anim_toggle = true;  

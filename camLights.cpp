@@ -75,14 +75,17 @@ void initSpots()
 	GLfloat direction5[] = {0.0f, -0.4f, 1.0f};
       
     GLfloat noAmbient[] = {0.2f, 0.2f, 0.2f, 1.0f};       
-    GLfloat diffuse[]   = {0.6f, 0.6f, 0.55f, 1.0f};
+    GLfloat diffuse[]   = {0.6f, 0.6f, 0.5f, 1.0f};
+	GLfloat diffuseR[]   = {0.6f, 0.0f, 0.0f, 1.0f};
+	GLfloat diffuseG[]   = {0.0f, 0.6f, 0.0f, 1.0f};
+	GLfloat diffuseB[]   = {0.0f, 0.0f, 0.6f, 1.0f};
 
     glLightfv(GL_LIGHT3, GL_AMBIENT, noAmbient);  glLightfv(GL_LIGHT3, GL_DIFFUSE, diffuse);
     glLightfv(GL_LIGHT3, GL_POSITION, position3); glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, direction3);  
     glLightf(GL_LIGHT3, GL_SPOT_CUTOFF, 90); glLightf(GL_LIGHT3, GL_SPOT_EXPONENT, 128);
    
 	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, 0.00000f);
+    glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, 0.00001f);
     glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, 0.000004f);
 
 	glLightfv(GL_LIGHT4, GL_AMBIENT, noAmbient);  glLightfv(GL_LIGHT4, GL_DIFFUSE, diffuse);
@@ -90,7 +93,7 @@ void initSpots()
     glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 90); glLightf(GL_LIGHT4, GL_SPOT_EXPONENT, 128);
 
 	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.00000f);
+    glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.00001f);
 	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION,0.000004f);
 
 	glLightfv(GL_LIGHT5, GL_AMBIENT, noAmbient);  glLightfv(GL_LIGHT5, GL_DIFFUSE, diffuse);
@@ -98,7 +101,7 @@ void initSpots()
     glLightf(GL_LIGHT5, GL_SPOT_CUTOFF, 40); glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, 128);
 
 	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION, 0.0f);
-    glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, 0.00000f);
+    glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, 0.00001f);
 	glLightf(GL_LIGHT5, GL_QUADRATIC_ATTENUATION,0.000004f);
 
 	glEnable( GL_LIGHT3 );
@@ -112,13 +115,15 @@ void initSpots()
 */
 void updateSpot()
 {	
+	static int cutoff = 0;
 	GLfloat position[]  = { 0.0, 100.f, crab_z - 40.f, 1.0f };
     GLfloat direction[] = {0.0f, -1.0f, 0.33};
    
 	glLightfv(GL_LIGHT2, GL_POSITION, position);
     glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, direction);
-
-    glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 90);
+	if(cutoff < 90)
+		cutoff++;
+    glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, cutoff);
 	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 70);
 }
 /**
@@ -208,6 +213,7 @@ void camera () {
 			part[0] = true;
 			//zacznij isc
 			anim_toggle = true;
+			initSpot();
 		}
 	}
 	else if(part[1] == false) {
@@ -226,8 +232,10 @@ void camera () {
 			else
 				addition = step;
 		}
+
 		a += addition;	
 		yrot = a+270.f;
+
 		//jezeli wykonano caly obrot
 		if(a >= (360 + start)) 
 		{
@@ -306,15 +314,14 @@ void camera () {
  		if(odd%10 == 0)
 			global_offset -=step*10;
 		odd++;
-		if(frames > curr_frame + rate*2) 
+		if(frames > curr_frame + rate*3) 
 		{
-			if(odd%6 == 0)
-			global_offset +=step*100;
 			initPosLight();
-			//anim_toggle = true;
 			//zacznij uciekac
+			if(odd%8 == 0)
+				global_offset +=step*200;			
 		}
-		if(frames > curr_frame + rate*2.5)
+		if(frames > curr_frame + rate*3.5)
 			part[4] = true;
 
 	}
@@ -349,10 +356,22 @@ void camera () {
 	}
 	else if(crab_z >= 350.f && part[6] == false)
 	{
+		// przerwij animacje gdy krab nie jest widzialny
 		anim_toggle = true;
 		part[6] = true;
+		
 	}
-	
+	else if(part[7] == false)
+	{
+		static int curr_frame = frames;
+		if(frames > curr_frame + rate*20) 
+		{
+			part[7] = true;
+			exit(0);
+		}	
+	}
+	if(part[0] == true)
+		updateSpot();
 	if(part[4] == false)
 	{
 		xpos = (cRadius)*cosf(Deg2Rad(yrot-270.f));

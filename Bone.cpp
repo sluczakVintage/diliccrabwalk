@@ -7,6 +7,8 @@
 
 extern float crab_y;
 extern float crab_z;
+
+extern bool show_bones;
 // obliczenie przesuniecia po ziemi
 static float last_equation_z = 0.0f;
 static float mov_offset = 0.0f;
@@ -306,18 +308,33 @@ void Bone::Draw()
 	glPushMatrix();
 	
 	// Obroc zgodnie z zadanym katem
-	glRotatef(a_, 0.0, 0.0, 1.0);
+	glRotatef(a_, 0.0f, 0.0f, 1.0f);
 
-	glBegin(GL_LINES);
-	glColor3f(0.0, 1.0, 0.0); 	glVertex2f(0, 0);
-	glColor3f(0.0, 0.0, 1.0);	glVertex2f(l_, 0);
-	glEnd();
+	if(show_bones)
+	{
+	   	GLfloat mat_ambient_color[] = {0.8f, 0.8f, 0.2f, 1.0f};
+    	GLfloat mat_diffuse[] = {0.6f, 0.6f, 0.6f, 1.0f};
+    	GLfloat mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    	GLfloat high_shininess = 100.0f;
+    	
+   
+        glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+        glMaterialf(GL_FRONT, GL_SHININESS, high_shininess);
+        glMaterialfv(GL_FRONT, GL_EMISSION, mat_diffuse);
+
+		glBegin(GL_LINES);
+			glVertex2f(0.0f, 0.0f);
+			glVertex2f(l_, 0.0f);
+		glEnd();
+	}
 
 	// Odrysuj siatke
 	mesh_->Draw();
 
 	// Przemiesc na koncowy punkt kosci
-	glTranslatef(l_, 0.0, 0.0);
+	glTranslatef(l_, 0.0f, 0.0f);
 
 	// Jesli ma dzieci, dokonaj odrysowania zamkniecia stawow
 	if(child_!=NULL){

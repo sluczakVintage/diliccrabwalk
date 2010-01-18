@@ -35,7 +35,7 @@ char *window_title = "DIL Krab - Cmentarzysko";
 int full_screen = 0;
 
 //FPS
-int fps = 1000;
+int fps = 60;
 
 // predeklaracja funkcji inicjalizujacej OGL
 void init ();
@@ -88,8 +88,6 @@ void init ()
 	glFogf(GL_FOG_END,    250.0f);				
 	glHint(GL_FOG_HINT, GL_NICEST);					
 
-
-	initSpot();
 	initSpots();
     //initDirLight();
 
@@ -133,9 +131,7 @@ void display ()
 	  
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity();
-	updateSpot();
-
-		
+			
 	drawObject();
 	glFlush();
 
