@@ -36,7 +36,7 @@ int window_y;
 char *window_title = "DIL Krab - Cmentarzysko";
 
 //FPS
-int fps = 1000;
+int fps = 60;
 
 // predeklaracja funkcji inicjalizujacej OGL
 void init ();

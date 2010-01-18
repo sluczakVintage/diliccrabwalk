@@ -294,7 +294,7 @@ void Bone::animMove()
 
 		if( equation_z <= min_z )
 			animFlag_ = AN_IDLE;
-		else
+		
 			crab_z += mov_offset;
 	}
 
