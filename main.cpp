@@ -28,11 +28,12 @@ float crab_z = 0.f;
 int window_width = 1000;
 int window_height = 800;
 
+//  pozycja okna na ekranie
+int window_x;
+int window_y;
+
 //  Etykieta okna
 char *window_title = "DIL Krab - Cmentarzysko";
-
-//  Czy pelen ekran?
-int full_screen = 0;
 
 //FPS
 int fps = 1000;
@@ -45,11 +46,6 @@ GLfloat fogColor[4]= {0.3f, 0.1f, 0.5f, 1.0f};
 
 //glOrtho range
 GLfloat nRange = 25.0f;
-
-//  pozycja okna na ekranie
-int window_x;
-int window_y;
-
 
 //  Funkcje typu Callback
 void display (void);
@@ -188,10 +184,6 @@ int main (int argc, char **argv)
 	glutInitWindowPosition (window_x, window_y);
 	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
 	glutCreateWindow (window_title);
-
-	// pelen ekran
-	if (full_screen)
-		glutFullScreen ();
 
 	// inicjalizacja
 	init();

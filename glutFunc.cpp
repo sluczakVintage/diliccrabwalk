@@ -1,11 +1,20 @@
 
 #include "glutFunc.hpp"
 
-bool show_bones = false;
-
 using namespace std;
 
+bool show_bones = false;
+bool fullscreen = false;
 bool anim_toggle = false;
+
+//  rozmiar okna
+extern int window_width;
+extern int window_height;
+
+//  pozycja okna na ekranie
+extern int window_x;
+extern int window_y;
+
 
 extern int fps;
 int frames = 0;
@@ -115,6 +124,17 @@ void keyboard (unsigned char key, int x, int y)
 			break;
 		case 'b':
 			show_bones = !show_bones;
+			break;
+		case 'f':
+			fullscreen = !fullscreen;
+			if(fullscreen)
+				glutFullScreen();
+			else
+			{
+
+				glutReshapeWindow(window_width, window_height);
+				glutPositionWindow(window_x, window_y);
+			}
 			break;
 		//SPACJA
 		case ' ':

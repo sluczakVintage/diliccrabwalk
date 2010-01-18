@@ -364,7 +364,7 @@ void camera () {
 	else if(part[7] == false)
 	{
 		static int curr_frame = frames;
-		if(frames > curr_frame + rate*20) 
+		if(frames > curr_frame + rate*10) 
 		{
 			part[7] = true;
 			exit(0);
