@@ -26,15 +26,26 @@
 ****************************************************************************/
 // zmodyfikowane przez Sebastiana Luczaka
 
-#include <windows.h>													// Header File For Windows
-#include <gl\gl.h>														// Header File For The OpenGL32 Library
-#include <gl\glu.h>														// Header File For The GLu32 Library
-#include <olectl.h>														// Header File For The OLE Controls Library	(Used In BuildTexture)
-#include <math.h>														// Header File For The Math Library			(Used In BuildTexture)
-
 #include "TexLoader.hpp"														
 
-int BuildTexture(char *szPathName, GLuint &texid)						// Load Image And Convert To A Texture
+bool loadTex()
+{
+	//Ladowanie tekstur
+	 GLuint	texture[10];	
+
+	if (!BuildTexture("dil.jpg ", texture[0]))
+		return false;	
+	if (!BuildTexture("leg.bmp", texture[1]))
+		return false;	
+	if (!BuildTexture("plane.jpg", texture[2]))
+		return false;		
+	if (!BuildTexture("dil.jpg ", texture[3]), false)
+		return false;	
+	
+	return true;
+}
+
+int BuildTexture(char *szPathName, GLuint &texid, bool mip)						// Load Image And Convert To A Texture
 {
 	HDC			hdcTemp;												// The DC To Hold Our Bitmap
 	HBITMAP		hbmpTemp;												// Holds The Bitmap Temporarily
@@ -134,13 +145,20 @@ int BuildTexture(char *szPathName, GLuint &texid)						// Load Image And Convert
 
 	// Typical Texture Generation Using Data From The Bitmap
 	glBindTexture(GL_TEXTURE_2D, texid);								// Bind To The Texture ID
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);		// (Modify This For The Type Of Filtering You Want)
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);     // (Modify This For The Type Of Filtering You Want)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, lWidthPixels, lHeightPixels, GL_RGBA, GL_UNSIGNED_BYTE, pBits);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, lWidthPixels, lHeightPixels, 0, GL_RGBA, GL_UNSIGNED_BYTE, pBits);	// (Modify This If You Want Mipmaps)
-
+	if(mip)
+	{
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);	
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);     
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, lWidthPixels, lHeightPixels, GL_RGBA, GL_UNSIGNED_BYTE, pBits);
+	}
+	else
+	{
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);	
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);     
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, lWidthPixels, lHeightPixels, 0, GL_RGBA, GL_UNSIGNED_BYTE, pBits);	
+	}
 	DeleteObject(hbmpTemp);												// Delete The Object
 	DeleteDC(hdcTemp);													// Delete The Device Context
 

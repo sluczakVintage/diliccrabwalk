@@ -9,6 +9,7 @@ Crab::Crab() : w_(20.0f), h_(3.0f), d_(8.0f)
 {	
 	// Stworz liste
 	CreateList();
+	CreateStaticList();
 	// Dodaj nogi do korpusu
 	leg_sh = new LegShort();
 	leg_for_even = new LegNormal(FRONT_EVEN);
@@ -38,6 +39,51 @@ Crab::~Crab()
 
 	legs.clear();
 	
+}
+
+void Crab::sharedCrabList()
+{
+				//prawa strona
+				glBegin(GL_TRIANGLE_STRIP);				
+					glNormal3f(0.0f, 0.0f, -1.0f);
+					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,h_/2,d_/2); 
+					glTexCoord2f(0.5f, 1.0f); glVertex3f(-w_/2,-h_/2,d_/2); 
+					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,h_/2,d_/2); 
+					glTexCoord2f(0.5f, 0.0f); glVertex3f(w_/2,-h_/2,d_/2); 
+				glEnd();
+				//dol
+				glBegin(GL_TRIANGLE_STRIP);
+					glNormal3f(0.0f, -1.0f, 0.0f);
+					glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2,-h_/2,d_/2);
+					glTexCoord2f(0.7f, 1.0f); glVertex3f(-w_/2,-h_/2,d_/2);
+					glTexCoord2f(1.0f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
+					glTexCoord2f(0.7f, 0.0f); glVertex3f(-w_/2,-h_/2,-d_/2);	
+				glEnd();
+				//lewa strona
+				glBegin(GL_TRIANGLE_STRIP);
+					glNormal3f(0.0f, 0.0f, 1.0f);
+					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,-h_/2,-d_/2);				
+					glTexCoord2f(0.5f, 1.0f); glVertex3f(-w_/2,h_/2,-d_/2);
+					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
+					glTexCoord2f(0.5f, 0.0f); glVertex3f(w_/2,h_/2,-d_/2);
+				glEnd();	
+				//przod
+				glBegin(GL_TRIANGLE_STRIP);
+					glNormal3f(-1.0f, 0.0f, 0.0f);
+					glTexCoord2f(0.7f, 1.0f); glVertex3f(-w_/2,h_/2,-d_/2);				
+					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,-h_/2,-d_/2);
+					glTexCoord2f(0.7f, 0.5f); glVertex3f(-w_/2,h_/2,d_/2);
+					glTexCoord2f(0.6f, 0.5f); glVertex3f(-w_/2,-h_/2,d_/2);
+				glEnd();	
+				//tyl
+				glBegin(GL_TRIANGLE_STRIP);
+					glNormal3f(1.0f, 0.0f, 0.0f);
+					glTexCoord2f(0.7f, 0.5f); glVertex3f(w_/2,h_/2,d_/2);				
+					glTexCoord2f(0.6f, 0.5f); glVertex3f(w_/2,-h_/2,d_/2);
+					glTexCoord2f(0.7f, 0.0f); glVertex3f(w_/2,h_/2,-d_/2);
+					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
+				glEnd();	
+
 }
 
 void Crab::CreateList()
@@ -75,49 +121,48 @@ void Crab::CreateList()
 					glEnd();
 					}
 				}
-				//prawa strona
-				glBegin(GL_TRIANGLE_STRIP);				
-					glNormal3f(0.0f, 0.0f, -1.0f);
-					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,h_/2,d_/2); 
-					glTexCoord2f(0.5f, 1.0f); glVertex3f(-w_/2,-h_/2,d_/2); 
-					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,h_/2,d_/2); 
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(w_/2,-h_/2,d_/2); 
-				glEnd();
-					//dol
-				glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(0.0f, -1.0f, 0.0f);
-					glTexCoord2f(1.0f, 1.0f); glVertex3f(w_/2,-h_/2,d_/2);
-					glTexCoord2f(0.7f, 1.0f); glVertex3f(-w_/2,-h_/2,d_/2);
-					glTexCoord2f(1.0f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
-					glTexCoord2f(0.7f, 0.0f); glVertex3f(-w_/2,-h_/2,-d_/2);	
-				glEnd();
-				//lewa strona
-				glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(0.0f, 0.0f, 1.0f);
-					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,-h_/2,-d_/2);				
-					glTexCoord2f(0.5f, 1.0f); glVertex3f(-w_/2,h_/2,-d_/2);
-					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
-					glTexCoord2f(0.5f, 0.0f); glVertex3f(w_/2,h_/2,-d_/2);
-				glEnd();	
-				//przod
-				glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(-1.0f, 0.0f, 0.0f);
-					glTexCoord2f(0.7f, 1.0f); glVertex3f(-w_/2,h_/2,-d_/2);				
-					glTexCoord2f(0.6f, 1.0f); glVertex3f(-w_/2,-h_/2,-d_/2);
-					glTexCoord2f(0.7f, 0.5f); glVertex3f(-w_/2,h_/2,d_/2);
-					glTexCoord2f(0.6f, 0.5f); glVertex3f(-w_/2,-h_/2,d_/2);
-				glEnd();	
-				//tyl
-				glBegin(GL_TRIANGLE_STRIP);
-					glNormal3f(1.0f, 0.0f, 0.0f);
-					glTexCoord2f(0.7f, 0.5f); glVertex3f(w_/2,h_/2,d_/2);				
-					glTexCoord2f(0.6f, 0.5f); glVertex3f(w_/2,-h_/2,d_/2);
-					glTexCoord2f(0.7f, 0.0f); glVertex3f(w_/2,h_/2,-d_/2);
-					glTexCoord2f(0.6f, 0.0f); glVertex3f(w_/2,-h_/2,-d_/2);
-				glEnd();	
+				sharedCrabList();
 		glEndList();
 
 		cout << "Lista CRAB stworzona" << endl;
+}
+
+void Crab::CreateStaticList()
+{
+	glNewList(STATIC_CRAB, GL_COMPILE);
+			GLfloat no_mat[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    		GLfloat mat_ambient[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    		GLfloat mat_ambient_color[] = {0.8f, 0.8f, 0.2f, 1.0f};
+    		GLfloat mat_diffuse[] = {0.6f, 0.6f, 0.6f, 1.0f};
+    		GLfloat mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    		GLfloat no_shininess = 0.0f;
+    		GLfloat low_shininess = 5.0f;
+    		GLfloat high_shininess = 100.0f;
+	    	
+	   
+			glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+			glMaterialfv(GL_FRONT, GL_SPECULAR, no_mat);
+			glMaterialf(GL_FRONT, GL_SHININESS, low_shininess);
+			glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
+
+
+
+			glBindTexture(GL_TEXTURE_2D, 4);
+			//gora
+			glBegin(GL_TRIANGLE_STRIP);					
+				glNormal3f(0.0f, 1.0f, 0.0f);
+				glTexCoord2f(0.5f, 1.0f); glVertex3f(w_/2,h_/2,d_/2); 
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(w_/2,h_/2,-d_/2);
+				glTexCoord2f(0.5f, 0.0f); glVertex3f(-w_/2,h_/2,d_/2); 
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(-w_/2,h_/2,-d_/2); 
+			glEnd();
+				
+			sharedCrabList();
+		glEndList();
+
+		cout << "Lista STATIC CRAB stworzona" << endl;
+
 }
 
 void Crab::DrawLegs()
@@ -201,7 +246,7 @@ void Crab::StaticDraw(GLfloat x, GLfloat y, GLfloat z, GLfloat roty)
 				glRotatef(180.f, 1.0f, 0.0f, 0.0f);
 				glTranslatef( -x, -y - 2.5f, -z );
 				glRotatef(roty, 0.0f, 1.0f, 0.0f);
-				glCallList(CRAB);
+				glCallList(STATIC_CRAB);
 				glPushMatrix();
 					// Wyrysuj nogi
 					StaticDrawLegs();	

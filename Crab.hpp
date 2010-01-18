@@ -31,6 +31,8 @@ public:
 	// rysowanie bez animacji
 	void StaticDrawLegs();
 	void CreateList();
+	// lista bez mipmap i podzialu korpusu
+	void CreateStaticList();
 	// przelaczanie animacji start/stop
 	void toggleAnim();
 	virtual const GLfloat ReturnH() const { return h_; };
@@ -46,8 +48,9 @@ private:
 	LegNormal* leg_back_even;
 	LegNormal* leg_back_odd;
 		
-
 	vector<Leg*> legs;
+
+	void sharedCrabList();
 
 };
 

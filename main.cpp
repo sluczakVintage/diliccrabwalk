@@ -35,7 +35,7 @@ char *window_title = "DIL Krab - Cmentarzysko";
 int full_screen = 0;
 
 //FPS
-int fps = 60;
+int fps = 1000;
 
 // predeklaracja funkcji inicjalizujacej OGL
 void init ();
@@ -76,9 +76,10 @@ void init ()
 	glDepthFunc (GL_LEQUAL);
 	glEnable( GL_DEPTH_TEST );
 	glShadeModel( GL_SMOOTH );
+
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-	
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
 // Mg³a
 	glEnable(GL_FOG);							
 	glFogi(GL_FOG_MODE, GL_LINEAR);				
@@ -89,7 +90,6 @@ void init ()
 	glHint(GL_FOG_HINT, GL_NICEST);					
 
 	initSpots();
-    //initDirLight();
 
 	glEnable( GL_LIGHTING );
 	    
@@ -154,7 +154,7 @@ void drawObject ()
 	
 	dilCrab.Draw(0.0f, crab_y, crab_z);
 
-	for(int i = 0; i <= 2; i++)
+	for(int i = 0; i <= 3; i++)
 	{
 		dilCrab2.StaticDraw(35+(i*24), 0.f, 70+27*i, 14+27*i);
 
@@ -195,16 +195,9 @@ int main (int argc, char **argv)
 
 	// inicjalizacja
 	init();
-
-	//Ladowanie tekstur
-	 GLuint	texture[10];	
-
-	if (!BuildTexture("dil.jpg ", texture[0]))
-		return 1;	
-	if (!BuildTexture("leg.bmp", texture[1]))
-		return 1;	
-	if (!BuildTexture("plane.jpg", texture[2]))
-		return 1;		
+	// ladowanie tekstur
+	if(!loadTex())
+		return 1;
 
 	// Ustawienie metod glut
 	glutDisplayFunc (display);
