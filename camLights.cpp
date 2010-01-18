@@ -15,7 +15,8 @@ extern int frames;
 float xpos = 0.0f, ypos = 0.0f, zpos = 0.0f, xrot = 0.0f, yrot = 0.0f;
 float cRadius = 25.f;
 ///////////////////////////
-
+// kontrola sceny
+bool cam_free = false;
 
 //Swiatla 
 /**
@@ -200,6 +201,13 @@ void camera () {
 
 	static bool part[10] = {false, false, false, false, false, false, false, false};
 
+	if(cam_free)
+		for(int i = 0; i < 10; i++)
+		{
+			part[i] = true;
+			cam_free = false;
+		}
+
 	if(part[0] == false) {
 		// ustawienie obrotow
 		xrot = 30.f;
@@ -316,6 +324,7 @@ void camera () {
 		odd++;
 		if(frames > curr_frame + rate*3) 
 		{
+			// wlacz czerwone swiatlo pozycyjne
 			initPosLight();
 			//zacznij uciekac
 			if(odd%8 == 0)

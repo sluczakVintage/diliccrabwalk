@@ -15,7 +15,9 @@ extern int window_height;
 extern int window_x;
 extern int window_y;
 
+extern bool cam_free;
 
+// kontrola klatek
 extern int fps;
 int frames = 0;
 
@@ -76,7 +78,10 @@ void myTimer(int value)
 }
 
 void mouse (int button, int state, int x, int y) {};
-void pmotion (int x, int y) {};
+void pmotion (int x, int y) {
+lastx = x;
+lasty = y;
+};
 
 //  Metoda obslugi ruchu myszy przy kliknieciu i przytrzymaniu
 void motion (int x, int y)
@@ -87,10 +92,6 @@ void motion (int x, int y)
 	lasty=y; 
 	xrot += (float) diffy; 
 	yrot += (float) diffx;	
-
-	cout << "xrot " << xrot << endl;
-	cout << "yrot " << yrot << endl;
-	
 }
 
 //Obsluga zdarzen klawiatury
@@ -136,6 +137,13 @@ void keyboard (unsigned char key, int x, int y)
 				glutPositionWindow(window_x, window_y);
 			}
 			break;
+		case 'l':
+			initPosLight();
+			break;
+		//ENTER
+		case '\r':
+			cam_free = true;
+			break;
 		//SPACJA
 		case ' ':
 			anim_toggle = true;  
@@ -154,11 +162,13 @@ void special (int key, int x, int y)
 	switch (key)
 	{
 		case GLUT_KEY_F10 :
-			fps = 1;
+			fps = 60;
 			cout << "F10 function key."<< endl;  
 			break;
 		case GLUT_KEY_F11 :
 			fps++;
+			if(fps >= 1000)
+				fps = 1000;
 			cout << "F11 function key."<< endl; 
 			break;
 		case GLUT_KEY_F12 :

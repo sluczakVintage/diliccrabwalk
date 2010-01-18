@@ -8,6 +8,7 @@
 
 #include "glut.h"
 #include "Drawable.hpp"
+#include "camLights.hpp"
 #include <math.h>
 
 
