@@ -289,7 +289,7 @@ void camera () {
 		a += addition;	
 		yrot = a+270.f;
 		//zakoncz obrot w odpowiednim momencie
-		if(a >= (60 + start)) 
+		if(a >= (50 + start)) 
 		{
 			part[3] = true;
 			a = 0;

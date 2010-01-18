@@ -324,7 +324,7 @@ void Bone::Draw()
 
 	// obliczanie wartosci wierzcholkow na potrzeby przeliczenia normalnej i wyswietlenia lacznika
 		Vector3f vector1, vector2, vector3, normalV;
-		int segments = 8;
+		int segments = 12;
 		for(int i = 0; i < segments; i++)
 		{
 			vector1.x_ = child_->mesh_->ReturnD() * sinf(-deg2rad((i+1)*child_->a_/segments));

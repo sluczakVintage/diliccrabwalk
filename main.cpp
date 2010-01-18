@@ -160,15 +160,15 @@ void drawObject ()
 
 	for(int i = 0; i <= 2; i++)
 	{
-		dilCrab2.StaticDraw(35+((i%2)*24), 0.f, 90+27*i, 14+27*i);
+		dilCrab2.StaticDraw(35+(i*24), 0.f, 70+27*i, 14+27*i);
 
-		dilCrab2.StaticDraw(-60+(i)*4, 0.f, 100*+(i)*25, 25+18*i);
+		dilCrab2.StaticDraw(-60+(i)*4, 0.f, 60*+(i)*25, 25+18*i);
 
 		dilCrab2.StaticDraw(-40, 0.f, 70+70*i, 25+41*i);
 
-		dilCrab2.StaticDraw(60+(i*25), 0.f, 112+25*i, 90-67*i);
+		dilCrab2.StaticDraw(60+(i*25), 0.f, 147+25*i, 90-67*i);
 
-		dilCrab2.StaticDraw(-100+i*40, 0.f, 130, 30+19*i);
+		dilCrab2.StaticDraw(-100+i*40, 0.f, 155, 30+19*i);
 	}	
 
 	glMatrixMode (GL_PROJECTION);
