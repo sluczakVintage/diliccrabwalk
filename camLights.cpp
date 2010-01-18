@@ -321,12 +321,12 @@ void camera () {
 	else if(crab_z >= 150.f && part[5] == false)
 		{
 			
-		if(ypos < 100.f )
+		if(ypos < 50.f )
 		{
 			if(addition <= 1.0f)
 				addition += step;
 		}
-		else if(ypos > 300.f )
+		else if(ypos > 100.f )
 		{
 			if(addition > 0.05f)
 				addition -= step;
@@ -335,20 +335,19 @@ void camera () {
 		}
 				
 		cRadius += 0.4;
-		//a += addition*2;
 
-		if(xrot <= 75.f)
+		if(xrot <= 50.f)
 			xrot += addition;
-		if(yrot >= 790.f)
+		if(yrot >= 810.f)
 			yrot -=addition;
 		ypos = (cRadius)*sinf(Deg2Rad(xrot)) + crab_y;
-
-		if( ypos >= 300.f )
+		xpos = (cRadius)*cosf(Deg2Rad(yrot-270.f));
+		if( ypos >= 150.f )
 		{
 			part[5] = true;
 		}
 	}
-	else if(crab_z >= 200.f && part[6] == false)
+	else if(crab_z >= 350.f && part[6] == false)
 	{
 		anim_toggle = true;
 		part[6] = true;

@@ -117,7 +117,7 @@ void Crab::CreateList()
 				glEnd();	
 		glEndList();
 
-		cout << "List CRAB created" << endl;
+		cout << "Lista CRAB stworzona" << endl;
 }
 
 void Crab::DrawLegs()

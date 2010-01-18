@@ -29,13 +29,13 @@ int window_width = 1000;
 int window_height = 800;
 
 //  Etykieta okna
-char *window_title = "DIL Crab Walk";
+char *window_title = "DIL Krab - Cmentarzysko";
 
 //  Czy pelen ekran?
 int full_screen = 0;
 
 //FPS
-int fps = 60;
+int fps = 1000;
 
 // predeklaracja funkcji inicjalizujacej OGL
 void init ();

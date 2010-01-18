@@ -88,7 +88,7 @@ Bone::Bone(Bone* root, GLfloat x, GLfloat y, GLfloat a, int flag, Drawable *mesh
 
 	animInit();
 
-	cout << "Bone " << name << " has been created. Flag: " << flag_ << "!" << endl;
+	cout << "Bone " << name << " kosc zostala stworzona. Flag: " << flag_ << "!" << endl;
 }
 
 void Bone::newOffset(GLfloat off)
@@ -115,7 +115,7 @@ void Bone::newOffset(GLfloat off)
 void Bone::boneAddChild(GLfloat a, int flag, Drawable *mesh, string name)
 {
 	child_ = new Bone(this, 0.0f, 0.0f, a, flag, mesh, name);
-	cout << "Bone " << name << " has been added as child!" << endl;
+	cout << "Bone " << name << " kosc zostala dodana jako dziecko!" << endl;
 }
 
 Bone::~Bone()
